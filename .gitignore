@@ -1,3 +1,6 @@
 .gitignore
 .idea/
 Runtime/
+MemberController.class.php
+AdminController.class.php
+SettingController.class.php
