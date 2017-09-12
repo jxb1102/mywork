@@ -1,0 +1,418 @@
+<extend name="Public/base"/>
+<block name="active"><li class="active">网站基本设置</li></block>
+<block name="page-content">
+	<div class="page-header">
+		<h1>
+			系统设置
+			<small> <i class="icon-double-angle-right"></i>
+				系统基本设置
+			</small>
+		</h1>
+	</div>
+	<!-- /.page-header -->
+	<div class="row">
+		<div class="col-xs-12">
+			<!-- PAGE CONTENT BEGINS -->
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="space-4"></div>
+					<div class="space-2"></div>
+					<form action="{:U('index')}" class="form-horizontal" id="validation-form" method="post">
+						<div class="form-group">
+							<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="title">网站名称:</label>
+
+							<div class="col-xs-12 col-sm-9">
+								<div class="clearfix">
+									<input type="text" name="domain_title" id="title" class="col-xs-12 col-sm-6" value="{:C('DOMAIN_TITLE')}" />
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+					<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="domain_url">网站域名:</label>
+
+					<div class="col-xs-12 col-sm-9">
+						<div class="clearfix">
+							<input type="text" name="domain_url" id="domain_url" class="col-xs-12 col-sm-6" value="{:C('DOMAIN_URL')}" />
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="domain_keywords">关键词:</label>
+
+					<div class="col-xs-12 col-sm-9">
+						<div class="clearfix">
+							<input type="text" name="domain_keywords" id="domain_keywords" class="col-xs-12 col-sm-6" value="{:C('DOMAIN_KEYWORDS')}" />
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="domain_jianjie">网站简介:</label>
+
+					<div class="col-xs-12 col-sm-9">
+						<div class="clearfix">
+							<input type="text" name="domain_jianjie" id="domain_jianjie" class="col-xs-12 col-sm-6" value="{:C('DOMAIN_JIANJIE')}" />
+						</div>
+					</div>
+				</div>
+						<div class="form-group">
+							<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="title">关闭网站:</label>
+
+							<div class="col-xs-12 col-sm-9">
+								<div class="clearfix">
+									<label class="blue">
+										<input name="close_site" value="0" type="radio" class="ace"  checked <if condition="C('CLOSE_SITE')==0">checked</if>
+									/>
+									<span class="lbl">否</span>
+								</label>
+								&nbsp;&nbsp;
+								<label class="blue">
+
+									<input name="close_site" value="1" type="radio" class="ace" <if condition="C('CLOSE_SITE')==1">checked</if>
+								/>
+								<span class="lbl">是</span>
+							</label>
+
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+							<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="title">关闭批量预报:</label>
+
+							<div class="col-xs-12 col-sm-9">
+								<div class="clearfix">
+									<label class="blue">
+										<input name="yubao" value="0" type="radio" class="ace"  checked <if condition="C('YUBAO')==0">checked</if>
+									/>
+									<span class="lbl">否</span>
+								</label>
+								&nbsp;&nbsp;
+								<label class="blue">
+
+									<input name="yubao" value="1" type="radio" class="ace" <if condition="C('YUBAO')==1">checked</if>
+								/>
+								<span class="lbl">是</span>
+							</label>
+
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+							<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="title">关闭批量下单:</label>
+
+							<div class="col-xs-12 col-sm-9">
+								<div class="clearfix">
+									<label class="blue">
+										<input name="xiadan" value="0" type="radio" class="ace"  checked <if condition="C('XIADAN')==0">checked</if>
+									/>
+									<span class="lbl">否</span>
+								</label>
+								&nbsp;&nbsp;
+								<label class="blue">
+
+									<input name="xiadan" value="1" type="radio" class="ace" <if condition="C('XIADAN')==1">checked</if>
+								/>
+								<span class="lbl">是</span>
+							</label>
+
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+							<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="user_reg">新用户默认:</label>
+
+							<div class="col-xs-12 col-sm-9">
+								<div class="clearfix">
+									<label class="blue">
+										<input name="user_reg" value="0" type="radio" class="ace"  checked <if condition="C('USER_REG')==0">checked</if>
+									/>
+									<span class="lbl">启用</span>
+								</label>
+								&nbsp;&nbsp;
+								<label class="blue">
+
+									<input name="user_reg" value="1" type="radio" class="ace" <if condition="C('USER_REG')==1">checked</if>
+								/>
+								<span class="lbl">禁用</span>
+							</label>
+
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="dd_prefix">订单号前缀:</label>
+
+					<div class="col-xs-12 col-sm-9">
+						<div class="clearfix">
+							<input type="text" name="dd_prefix" id="dd_prefix" class="col-xs-12 col-sm-6" value="{:C('DD_PREFIX')}" />
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="dg_prefix">代购号前缀:</label>
+
+					<div class="col-xs-12 col-sm-9">
+						<div class="clearfix">
+							<input type="text" name="dg_prefix" id="dg_prefix" class="col-xs-12 col-sm-6" value="{:C('DG_PREFIX')}" />
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="service_tel">客服电话:</label>
+
+					<div class="col-xs-12 col-sm-9">
+						<div class="clearfix">
+							<input type="text" name="service_tel" id="service_tel" class="col-xs-12 col-sm-6" value="{:C('SERVICE_TEL')}" />
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="jishu">基数:</label>
+
+					<div class="col-xs-12 col-sm-9">
+						<div class="clearfix">
+							<input type="text" name="jishu" id="jishu" class="col-xs-12 col-sm-6" value="{:C('JISHU')}" />
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="time">营业时间:</label>
+
+					<div class="col-xs-12 col-sm-9">
+						<div class="clearfix">
+							<input type="text" name="time" id="time" class="col-xs-12 col-sm-6" value="{:C('time')}" />
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="main_coin">主货币:</label>
+
+					<div class="col-xs-12 col-sm-9">
+						<div class="clearfix">
+							<input type="text" name="main_coin" id="main_coin" class="col-xs-12 col-sm-6" value="{:C('MAIN_COIN')}" />
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="main_huilv">对人民币汇率:</label>
+
+					<div class="col-xs-12 col-sm-9">
+						<div class="clearfix">
+							<input type="text" name="main_huilv" id="main_huilv" class="col-xs-12 col-sm-6" value="{:C('MAIN_HUILV')}" />
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="main_usd_huilv">对美元汇率:</label>
+
+					<div class="col-xs-12 col-sm-9">
+						<div class="clearfix">
+							<input type="text" name="main_usd_huilv" id="main_usd_huilv" class="col-xs-12 col-sm-6" value="{:C('MAIN_USD_HUILV')}" />
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="scorelv">会员积分比率:</label>
+
+					<div class="col-xs-12 col-sm-9">
+						<div class="clearfix">
+							<input type="text" name="scorelv" id="scorelv" class="col-xs-12 col-sm-6" value="{:C('scorelv')}" />
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="sun">外币汇兑损益比率:</label>
+
+					<div class="col-xs-12 col-sm-9">
+						<div class="clearfix">
+							<input type="text" name="sun" id="sun" class="col-xs-12 col-sm-6" value="{:C('SUN')}" />例如0.03
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="meiyuan">外币汇兑损益美元:</label>
+
+					<div class="col-xs-12 col-sm-9">
+						<div class="clearfix">
+							<input type="text" name="meiyuan" id="meiyuan" class="col-xs-12 col-sm-6" value="{:C('MEIYUAN')}" />例如0.3
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="paypal_business">PayPal收款账户:</label>
+
+					<div class="col-xs-12 col-sm-9">
+						<div class="clearfix">
+							<input type="text" name="paypal_business" id="paypal_business" class="col-xs-12 col-sm-6" value="{:C('PAYPAL_BUSINESS')}" />
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="zhiacount">支付宝收款账户:</label>
+
+					<div class="col-xs-12 col-sm-9">
+						<div class="clearfix">
+							<input type="text" name="zhiacount" id="zhiacount" class="col-xs-12 col-sm-6" value="{:C('ZHIACOUNT')}" />
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="zhiid">支付宝编号:</label>
+
+					<div class="col-xs-12 col-sm-9">
+						<div class="clearfix">
+							<input type="text" name="zhiid" id="zhiid" class="col-xs-12 col-sm-6" value="{:C('ZHIID')}" />
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="zhikey">支付宝KEY:</label>
+
+					<div class="col-xs-12 col-sm-9">
+						<div class="clearfix">
+							<input type="password" name="zhikey" id="zhikey" class="col-xs-12 col-sm-6" value="{:C('ZHIKEY')}" />
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="email_smtp_host">SMTP 服务器:</label>
+
+					<div class="col-xs-12 col-sm-9">
+						<div class="clearfix">
+							<input type="text" name="email_smtp_host" id="email_smtp_host" class="col-xs-12 col-sm-6" value="{:C('EMAIL_SMTP_HOST')}" />
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="email_smtp_port">SMTP 端口:</label>
+
+					<div class="col-xs-12 col-sm-9">
+						<div class="clearfix">
+							<input type="text" name="email_smtp_port" id="email_smtp_port" class="col-xs-12 col-sm-6" value="{:C('EMAIL_SMTP_PORT')}" />
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="email_smtp_user">SMTP 用户名:</label>
+
+					<div class="col-xs-12 col-sm-9">
+						<div class="clearfix">
+							<input type="text" name="email_smtp_user" id="email_smtp_user" class="col-xs-12 col-sm-6" value="{:C('EMAIL_SMTP_USER')}" />
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="email_smtp_pass">SMTP 密码:</label>
+
+					<div class="col-xs-12 col-sm-9">
+						<div class="clearfix">
+							<input type="password" name="email_smtp_pass" id="email_smtp_pass" class="col-xs-12 col-sm-6" value="{:C('EMAIL_SMTP_PASS')}" />
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="email_from_email">发件人Email:</label>
+
+					<div class="col-xs-12 col-sm-9">
+						<div class="clearfix">
+							<input type="text" name="email_from_email" id="email_from_email" class="col-xs-12 col-sm-6" value="{:C('EMAIL_FROM_EMAIL')}" />
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="email_from_name">发件人名称:</label>
+
+					<div class="col-xs-12 col-sm-9">
+						<div class="clearfix">
+							<input type="text" name="email_from_name" id="email_from_name" class="col-xs-12 col-sm-6" value="{:C('EMAIL_FROM_NAME')}" />
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="list_rows">每页显示数:</label>
+
+					<div class="col-xs-12 col-sm-9">
+						<div class="clearfix">
+							<input type="text" name="list_rows" id="list_rows" class="col-xs-12 col-sm-6" value="{:C('LIST_ROWS')}" />
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="gou_fu">代购服务费率:</label>
+
+					<div class="col-xs-12 col-sm-9">
+						<div class="clearfix">
+							<input type="text" name="gou_fu" id="gou_fu" class="col-xs-12 col-sm-6" value="{:C('gou_fu')}" />
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="kefu">QQ客服:</label>
+
+					<div class="col-xs-12 col-sm-9">
+						<div class="clearfix">
+							<input type="text" name="kefu" id="kefu" class="col-xs-12 col-sm-6" value="{:C('kefu')}" />
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="mobile_user">短信接口账号:</label>
+
+					<div class="col-xs-12 col-sm-9">
+						<div class="clearfix">
+							<input type="text" name="mobile_user" id="mobile_user" class="col-xs-12 col-sm-6" value="{:C('mobile_user')}" />
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="mobile_pwd">短信接口密码:</label>
+
+					<div class="col-xs-12 col-sm-9">
+						<div class="clearfix">
+							<input type="password" name="mobile_pwd" id="mobile_pwd" class="col-xs-12 col-sm-6" value="{:C('mobile_pwd')}" />
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="email_from_name">&nbsp;</label>
+
+					<div class="col-xs-12 col-sm-9">
+						<div class="clearfix">
+							<button type="submit" class="btn btn-success btn-sm btn-next no-border">更新设置</button>
+						</div>
+					</div>
+				</div>
+				
+			</form>
+		</div>
+	</div>
+</div>
+</div>
+
+</block>
+<block name="jiazaijs">
+	<script type="text/javascript" src="__COMMONJS__/thinkbox/jquery.thinkbox.js"></script>
+</block>
+<block name="script">
+	
+	<script type="text/javascript">
+		$("form").submit(function(){
+
+    		var self = $(this);
+    		$.post(self.attr("action"), self.serialize(), success, "json");
+    		return false;
+    		function success(data){
+
+    			if(data.status){
+    				$.thinkbox.success(data.info)
+					setTimeout('location.reload()',1500);
+
+    			} else {
+    				$.thinkbox.error(data.info);
+
+    			}
+
+    		}
+
+    	});
+	</script>
+</block>

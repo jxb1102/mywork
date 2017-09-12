@@ -1,0 +1,616 @@
+<extend name="Public/base"/>
+<block name="active"><li class="active">国际包裹管理</li></block>
+<block name="page-content">
+	<div class="page-header">
+		<h1>
+			国际包裹管理
+			<small> <i class="icon-double-angle-right"></i>
+				包裹列表
+			</small>
+		</h1>
+	</div>
+	<!-- /.page-header -->	
+	<div class="row">
+		<div class="col-xs-12">
+			<div>
+				<ul class="nav nav-tabs" id="myTab">
+					<li <eq name="data['status']" value=""> class="active" </eq>>
+						<a href="{:U('Yundan/baoguolist')}"> <i class="green icon-home bigger-110"></i>
+							全部
+						</a>
+					</li>
+
+					<li <eq name="data.status" value="3"> class="active" </eq>>
+						<a  href="{:U('Yundan/baoguolist','status=3')}">
+							已打包
+						</a>
+					</li>
+					<li <eq name="data.status" value="4"> class="active" </eq>>
+						<a  href="{:U('Yundan/baoguolist','status=4')}">
+							已付款
+						</a>
+					</li>
+					<li <eq name="data.status" value="5"> class="active" </eq>>
+						<a  href="{:U('Yundan/baoguolist','status=5')}">
+							已发货
+						</a>
+					</li>
+					<li <eq name="data.status" value="6"> class="active" </eq>>
+						<a  href="{:U('Yundan/baoguolist','status=6')}">
+							已收货
+						</a>
+					</li>
+					<li <eq name="data.status" value="9"> class="active" </eq>>
+						<a  href="{:U('Yundan/baoguolist','status=9')}">
+							已暂扣
+						</a>
+					</li>
+					<!-- <li <eq name="data.status" value="6"> class="active" </eq>>
+						<a  href="{:U('Yundan/baoguolist','status=7')}">
+							已评价
+						</a>
+					</li> -->
+					<eq name="data.status" value="4">
+					<!-- <a href="{:U('baoguoexport','status='.$data['status'].'&keyword='.$_GET['keyword'])}" style="display:block;float: right;margin-left: 10px;" class="btn btn-danger btn-minier">全部导出Excel</a> -->
+					<a href="{:U('baoguodayinlist','status='.$data['status'].'&keyword='.$_GET['keyword'])}" target="_blank" style="display:block;float: right;" class="btn btn-success btn-minier">打印全部</a>
+				</eq>
+				</ul>
+			</div>
+			<!-- PAGE CONTENT BEGINS -->		
+			<table id="sample-table-1" class="table table-striped table-bordered table-hover" style="font-size: 12px;">
+				<thead>
+					<tr>
+						<eq name="data.status" value="4">
+							<th class="center" style="width:50px;"><label><input type="checkbox" class="ace" id="checkall" ><span class="lbl"></span></label></th>
+						</eq>
+						<eq name="data.status" value="3">
+							<th class="center" style="width:50px;"><label><input type="checkbox" class="ace" id="checkall" ><span class="lbl"></span></label></th>
+						</eq>
+						<th class="center" style="width:80px;">运单号</th>
+						<th>用户</th>
+						<th>所属订单</th>
+						<th class="hidden-480">运送方式</th>
+						<th>长cm</th>
+						<th>宽cm</th>
+						<th>高cm</th>
+						<th>体积重量</th>
+						<th>重量kg</th>
+						<th>收费类型</th>
+						<th>运费</th>
+						<th>备注</th>
+						<th>状态</th>
+						<th class="hidden-990">时间</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<if condition="$list">
+					<volist name="list" id="v">
+						<tr <gt name="v.bgleixing" value="0">style="color:red;font-weight:bold;"</gt>>
+							<eq name="data.status" value="4">
+								<td class="center"><input type="checkbox" name="ydids[]" class="ace" value="{$v.id}"><span class="lbl"></span></td>
+							</eq>
+							<eq name="data.status" value="3">
+								<td class="center"><input type="checkbox" name="ydids[]" class="ace" value="{$v.id}"><span class="lbl"></span></td>
+							</eq>
+							<td class="center" style="position:relative"><if condition="$v.hastracking gt 0"><a href="javascript:;" class="hastracking">{$v.bgsn}</a><div style="position:absolute;border:1px solid #ccc;background:#fff;width:300px;min-height:100px;top:-1px;left:100px;display:none;">
+								<div style="height:30px;border-bottom:1px solid #ccc;line-height:30px;">物流信息</div>
+								<div id="track{$v.bgsn}" style="padding:10px;text-align:left;line-height:20px;">加载中...</div>
+							</div><else/>{$v.bgsn}</if></td>
+							<td>{$v.user.username}</td>
+							<td><a href="{:U('Yundan/lists','keyword='.$v['dingdan']['sn'])}">{$v.dingdan.sn}</a></td>
+							<td class="hidden-480">{$v.dname}</td>
+							<td>{$v.chang}</td>
+							<td>{$v.kuan}</td>
+							<td>{$v.gao}</td>
+							<td>{$v.voweight}</td>
+							<td>{$v.weight}</td>
+							<td>{$v.shoufeileixing}</td>
+							<td>{$v.freight}</td>
+							<td>{$v.remark}</td>
+							<td>{$v.status|getyundanstatus}</td>
+							<td class="hidden-990">{$v.addtime|date="Y-m-d",###}</td>
+							<td class="action-buttons">
+								
+							<eq name="v.status" value="4">
+								
+								<a href="javascript:;" class="qufahuo" uid="{$v.id}" title="去发货">发货</a>
+							
+							</eq>
+							<eq name="v.status" value="3">
+								<eq name="v.haspay" value="0">
+									<a href="javascript:;" class="zhifu" yid="{$v.id}">支付</a>
+									<a href="javascript:;" class="zankou" yid="{$v.id}">暂扣</a>
+								</eq>
+							</eq>
+							<eq name="v.status" value="5">
+								<a href="{:U('Yundan/tracking','bgsn='.$v['bgsn'])}" target="_blank">物流设置</a>
+							</eq>
+							<eq name="v.status" value="9">
+								<a href="javascript:;" class="zankou" yid="{$v.id}">取消暂扣</a>
+							</eq>
+								<a class="blue editbaoguo" href="#modal-table" data-toggle="modal" uid="{$v.id}"> <i class="icon-pencil bigger-130"></i>
+								</a>
+							</td>
+						</tr>
+					</volist>
+					<else />
+					<eq name="data.status" value="4">
+						<tr><td colspan="16">没有您要的信息</td></tr>
+						<else/>
+						<tr><td colspan="15">没有您要的信息</td></tr>
+					</eq>
+				</if>
+				</tbody>
+			</table>
+			<eq name="data.status" value="4">
+				<div style="float: left;">
+					<a href="javascript:;" style="display:block;float: left;margin-right: 10px;" class="btn btn-danger btn-minier" id="fahuocheck">选中发货</a>
+					<!-- <a href="javascript:;" style="display:block;float: left;margin-right: 10px;" class="btn btn-danger btn-minier" id="daochucheck">导出选中</a> -->
+
+					<a href="javascript:;" target="_blank" style="display:block;float: right;" class="btn btn-success btn-minier" id="dayincheck">打印选中</a>
+				</div>
+			</eq>
+			<eq name="data.status" value="3">
+				<div style="float: left;">
+					<a href="javascript:;" style="display:block;float: left;margin-right: 10px;" class="btn btn-danger btn-minier" id="zhifucheck">支付选中</a>
+					<!-- <a href="javascript:;" style="display:block;float: left;margin-right: 10px;" class="btn btn-danger btn-minier" id="daochucheck">导出选中</a> -->
+
+					<a href="javascript:;" target="_blank" style="display:block;float: right;" class="btn btn-success btn-minier" id="zankoucheck">暂扣选中</a>
+				</div>
+			</eq>
+			<div class="page">{$_page}</div>
+			<div id="modal-table" class="modal fade" tabindex="-1">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header no-padding">
+							<div class="table-header">
+								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+									<span class="white">&times;</span>
+								</button>
+								编辑包裹
+							</div>
+						</div>
+						<form class="form-horizontal" id="edit" style="padding:10px;" method="post" action="{:U('editbaoguo')}">
+							<div class="modal-body no-padding">
+
+								<div class="form-group">
+									<label class="control-label col-sm-3 no-padding-right" for="uname">所属用户:</label>
+
+									<div class="col-sm-9">
+										<div class="clearfix">
+											<input type="text" name="uname" id="uname" class="col-xs-12 col-sm-6" value="" disabled />			
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-3 no-padding-right" for="bgsn">运单号码:</label>
+
+									<div class="col-sm-9">
+										<div class="clearfix">
+											<input type="text" name="bgsn" id="bgsn" class="col-xs-12 col-sm-6" value="" />			
+										</div>
+									</div>
+								</div>
+								
+								<!-- <div class="form-group">
+									<label class="control-label col-sm-3 no-padding-right" for="deliveryid">运送方式:</label>
+
+									<div class="col-sm-9">
+										<div class="clearfix">
+											<select name="deliveryid" id="deliveryid">
+												
+											</select>
+										</div>
+									</div>
+								</div> -->
+								<div class="form-group">
+									<label class="control-label col-sm-3 no-padding-right" for="weight">称重:</label>
+
+									<div class="col-sm-9">
+										<div class="clearfix">
+											<input type="text" name="weight" id="weight" class="col-xs-12 col-sm-6" value="" />	kg		
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-3 no-padding-right" for="chang">体积:</label>
+
+									<div class="col-sm-9">
+										<div class="clearfix">
+											<input type="text" name="chang" id="chang" size="3" value="{$info.shenbao}" />*
+											<input type="text" name="kuan" id="kuan" size="3">*<input type="text" name="gao" id="gao" size="3">/<input type="text" name="jishu" id="jishu" size="3">=<input type="text" name="voweight" id="voweight"  size="3">	
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-3 no-padding-right" for="banpao">是否半泡:</label>
+
+									<div class="col-sm-9">
+										<div class="clearfix">
+											<input type="checkbox" name="banpao" value="1" id="banpao"> 半泡
+						<input type="text" name="bpweight" value="" id="bpweight" size="2" placeholder="半泡重">kg
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-3 no-padding-right" for="freight">运费:</label>
+
+									<div class="col-sm-9">
+										<div class="clearfix">
+											<input type="text" name="freight" value="" id="freight">
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-3 no-padding-right" for="chengben">成本:</label>
+
+									<div class="col-sm-9">
+										<div class="clearfix">
+											<input type="text" name="chengben" value="" id="chengben">
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-3 no-padding-right" for="bgleixing">包裹类型:</label>
+
+									<div class="col-sm-9">
+										<div class="clearfix">
+											<select name="bgleixing" id="bgleixing">
+												<option value="0">普通货物</option>
+												<option value="1">敏感货物</option>
+												<!-- <option value="2">带电池货物</option> -->
+											</select>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-3 no-padding-right" for="chuhuogs">出货公司:</label>
+
+									<div class="col-sm-9">
+										<div class="clearfix">
+											<input type="text" name="chuhuogs" value="" id="chuhuogs">
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-3 no-padding-right" for="remark">备注:</label>
+
+									<div class="col-sm-9">
+										<div class="clearfix">
+											<input type="text" name="remark" id="remark" class="col-xs-12 col-sm-6" value="{$info.remark}" />			
+										</div>
+									</div>
+								</div>
+
+								<div style="clear:both;"></div>
+							</div>
+							<div class="modal-footer no-margin-top">
+								<input type="hidden" name="id" id="bgid" value="">			
+								<button type="submit" class="btn btn-sm btn-success"> <i class="icon-ok"></i>
+									提交
+								</button>
+								<button class="btn btn-sm btn-danger" data-dismiss="modal"> <i class="icon-remove"></i>
+									取消
+								</button>
+							</div>
+						</form>
+					</div>
+
+					<!-- /.modal-content -->			
+				</div>
+				<!-- /.modal-dialog -->			
+			</div>
+		</div>
+	</div>
+
+</block>
+<block name="jiazaijs">
+	<script src="__JS__/bootbox.min.js"></script>
+	<script src="__JS__/jquery.gritter.min.js"></script>
+	<script src="__JS__/chosen.jquery.min.js"></script>
+	<script type="text/javascript" src="__COMMONJS__/thinkbox/jquery.thinkbox.js"></script>
+</block>
+<block name="script">
+
+		<script type="text/javascript">
+		jQuery(function($){
+			$('.hastracking').hover(function(){
+				$(this).next().show();
+				var bgsn=$(this).html();
+				$.post("{:U('gettracking')}",{'bgsn':bgsn},function(data){
+					$('#track'+data.bgsn).html(data.track);
+				});
+			},function(){
+				$(this).next().hide();
+			})
+			$('#chang,#kuan,#gao,#jishu').blur(function(){
+				var chang=$('#chang').val(),kuan=$('#kuan').val(),gao=$('#gao').val(),jishu=$('#jishu').val();
+				var voweight=(chang*kuan*gao)/jishu;
+				$('#voweight').val(voweight.toFixed(3));
+				var weight=$('#weight').val();
+				if ($('#banpao').is(':checked')) {
+					var bpweight=(parseFloat(weight)+parseFloat(voweight))/2;
+					$('#bpweight').val(bpweight.toFixed(3));
+				}else{
+					$('#bpweight').val('');
+				};
+				
+			})
+			$('#weight').blur(function(){
+				$('#chang').blur();
+			})
+			$('#banpao').change(function(){
+				$('#chang').blur();
+			})
+			$('#daochucheck,#dayincheck').click(function(){
+				var checkstr="";
+				$('input[name="ydids[]"]:checked').each(function(){
+					checkstr+=$(this).val()+',';
+				})
+				if (checkstr=="") {
+					$.thinkbox.error('至少选择一条数据');
+					return false;
+				};
+			})
+			$('#fahuocheck').click(function(){
+				var checkstr="";
+				$('input[name="ydids[]"]:checked').each(function(){
+					checkstr+=$(this).val()+',';
+				})
+				if (checkstr=="") {
+					$.thinkbox.error('至少选择一条数据');
+					return false;
+				};
+			bootbox.confirm("确定更改为已发货状态么?", function(result){
+				if (result) {
+					$.post("{:U('baoguoqufahuo')}",{'id':checkstr},function(data){
+						if (data.status) {
+							$.gritter.add({
+									text: data.info,
+									class_name: 'gritter-success gritter-light'
+								});
+							setTimeout('location.reload()',1000);
+						};
+					})
+				};
+			})
+			})
+			$('#zhifucheck').click(function(){
+				var checkstr="";
+				$('input[name="ydids[]"]:checked').each(function(){
+					checkstr+=$(this).val()+',';
+				})
+				if (checkstr=="") {
+					$.thinkbox.error('至少选择一条数据');
+					return false;
+				};
+			bootbox.confirm("确定更改为已发货状态么?", function(result){
+				if (result) {
+					$.post("{:U('paybaoguo')}",{'id':checkstr},function(data){
+						if (data.status) {
+							$.thinkbox.success(data.info);
+							setTimeout('location.reload()',1000);
+						}else{
+							$.thinkbox.error(data.info);
+						};
+					})
+				};
+			})
+			})
+			$('#zankoucheck').click(function(){
+				var checkstr="";
+				$('input[name="ydids[]"]:checked').each(function(){
+					checkstr+=$(this).val()+',';
+				})
+				if (checkstr=="") {
+					$.thinkbox.error('至少选择一条数据');
+					return false;
+				};
+			bootbox.confirm("确定更改为暂扣状态么?", function(result){
+				if (result) {
+					$.post("{:U('zankou')}",{'id':checkstr},function(data){
+						if (data.status) {
+							$.gritter.add({
+									text: data.info,
+									class_name: 'gritter-success gritter-light'
+								});
+							setTimeout('location.reload()',1000);
+						};
+					})
+				};
+			})
+			})
+			$('input[name="ydids[]"]').change(function(){
+				var checkstr="";
+				$('input[name="ydids[]"]:checked').each(function(){
+					checkstr+=$(this).val()+',';
+				})
+				$('#daochucheck').attr('href','{:U("baoguoexport","status=".$data["status"]."&keyword=".$_GET["keyword"])}?ydids='+checkstr);
+				$('#dayincheck').attr('href','{:U("baoguodayinlist","status=".$data["status"]."&keyword=".$_GET["keyword"])}?ydids='+checkstr);
+			})
+			$('#checkall').change(function(){
+				var selected=$(this).is(':checked');
+					$('input[name="ydids[]"]').each(function(index,item){
+                		$(item).prop('checked',selected);
+            		});
+				var checkstr="";
+				$('input[name="ydids[]"]:checked').each(function(){
+					checkstr+=$(this).val()+',';
+				})
+				$('#daochucheck').attr('href','{:U("baoguoexport","status=".$data["status"]."&keyword=".$_GET["keyword"])}?ydids='+checkstr);
+				$('#dayincheck').attr('href','{:U("baoguodayinlist","status=".$data["status"]."&keyword=".$_GET["keyword"])}?ydids='+checkstr);
+			})
+			$('.zankou').click(function(){
+				var id=$(this).attr('yid');
+				$.post("{:U('zankou')}",{'id':id},function(data){
+					if (data.status) {
+						$.thinkbox.success(data.info);
+						setTimeout('location.reload()',1000);
+					};
+				})
+			})
+			$('.zhifu').click(function(){
+				var id=$(this).attr('yid');
+				$.post('{:U("paybaoguo")}',{'id':id},function(data){
+					if (data.status) {
+							$.thinkbox.success(data.info);
+							setTimeout('location.reload()',1000);
+						}else{
+							$.thinkbox.error(data.info);
+						};
+				})
+			})
+	$('.delete').click(function(){
+					var id=$(this).attr('sid');
+					bootbox.confirm("确定要删除么?", function(result){
+						if(result) {
+							$.post("{:U('delete')}",{'id':id,'ajax':1},success,'json');
+							function success(data){
+								if (data.status) {
+									$.gritter.add({
+										// (string | mandatory) the heading of the notification
+										title: '提交成功',
+										// (string | mandatory) the text inside the notification
+										text: data.info,
+										class_name: 'gritter-success gritter-light'
+									});
+									setTimeout('location.reload()',1000);
+								}else{
+									$.gritter.add({
+										title: '提交失败',
+										text: data.info,
+										class_name: 'gritter-error gritter-light'
+									});
+								};
+							}
+						}
+					})
+					
+				})
+	$('.editbaoguo').click(function(){
+		var id=$(this).attr('uid');
+		$.post("{:U('getbaoguo')}",{'id':id},function(data){
+			$('#uname').val(data.uname);
+			$('#bgsn').val(data.bgsn);
+			$('#chang').val(data.chang);
+			$('#kuan').val(data.kuan);
+			$('#gao').val(data.gao);
+			$('#jishu').val(data.jishu);
+			$('#voweight').val(data.voweight);
+			$('#weight').val(data.weight);
+			$('#freight').val(data.freight);
+			$('#remark').val(data.remark);
+			$('#bgleixing').val(data.bgleixing);
+			$('#bgid').val(data.id);
+			$('#chengben').val(data.chengben);
+			$('#chuhuogs').val(data.chuhuogs);
+			if (data.banpao==1) {
+				$('#banpao').prop('checked',true);
+				$('#bpweight').val(data.bpweight);
+			}else{
+				$('#banpao').prop('checked',false);
+				$('#bpweight').val('');
+			};
+		})
+	})
+	$('.ruku').click(function(){
+		var id=$(this).attr('uid');
+		$.post("{:U('getyubao')}",{'id':id},function(data){
+			$('#rukuuname').val(data.uname);
+			$('#rukukdsn').val(data.kdsn);
+			$('#rukukdname').val(data.kdname);
+			$('#rukubgname').val(data.bgname);
+			$('#rukuybid').val(data.id);
+			
+		})
+	})
+	$('.queren').click(function(){
+		var id=$(this).attr('uid');
+		bootbox.confirm("确定要确认订单么?", function(result){
+			if (result) {
+				$.post("{:U('queren')}",{'id':id},function(data){
+			if (data.status) {
+				$.gritter.add({
+						text: data.info,
+						class_name: 'gritter-success gritter-light'
+					});
+				setTimeout('location.reload()',1000);
+			};
+		})
+			};
+		
+	})
+	})
+	$('.qufahuo').click(function(){
+		var id=$(this).attr('uid');
+		bootbox.confirm("确定更改为已发货状态么?", function(result){
+			if (result) {
+				$.post("{:U('baoguoqufahuo')}",{'id':id},function(data){
+			if (data.status) {
+				$.gritter.add({
+						text: data.info,
+						class_name: 'gritter-success gritter-light'
+					});
+				setTimeout('location.reload()',1000);
+			};
+		})
+			};
+		
+	})
+	})
+	$(".chosen-select").chosen(); 
+				$('#ruku-table').on('shown.bs.modal', function () {
+					$(this).find('.chosen-container').each(function(){
+						$(this).find('a:first-child').css('width' , '210px');
+						$(this).find('.chosen-drop').css('width' , '210px');
+						$(this).find('.chosen-search input').css('width' , '200px');
+					});
+				})
+	})
+		$("form#edit").submit(function(){
+    		var self = $(this);
+    		$.post(self.attr("action"), self.serialize(), success, "json");
+    		return false;
+    		function success(data){
+    			if(data.status){
+    				$.gritter.add({
+						title: '更新成功',
+						text: data.info,
+						class_name: 'gritter-success gritter-light'
+					});
+					setTimeout('location.reload()',1500);
+    			} else {
+    				$.gritter.add({
+						title: '更新失败',
+						text: data.info,
+						class_name: 'gritter-success gritter-light'
+					});
+    			}
+    		}
+    	});
+    	$("form#ruku").submit(function(){
+    		var self = $(this);
+    		alert(self.serialize());
+    		$.post(self.attr("action"), self.serialize(), success, "json");
+    		return false;
+    		function success(data){
+    			if(data.status){
+    				$.gritter.add({
+						title: '更新成功',
+						text: data.info,
+						class_name: 'gritter-success gritter-light'
+					});
+					setTimeout('location.reload()',1000);
+    			} else {
+    				$.gritter.add({
+						title: '更新失败',
+						text: data.info,
+						class_name: 'gritter-success gritter-light'
+					});
+    			}
+    		}
+    	});
+</script>
+</block>

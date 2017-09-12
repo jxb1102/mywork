@@ -1,0 +1,230 @@
+<include file="Public:header" />
+<div style="clear:both;"></div>
+<style>
+	.lgs-main{font-size:16px;color: #8c8c8c;}
+</style>
+<div class="lgs-main">
+	<div class="main_r">
+	<div style="border:1px dashed #dfdfdf;border-bottom: none;font-size: 14px;color:#333;padding: 5px 10px;">
+	填写订单信息
+</div>
+	<style type="text/css">
+		.addedcell{position: relative;}
+		.addedcell .delcell{position: absolute;top: 1px;right: 0;display: block;background: red;color: #fff;padding: 2px 10px;height: 16px;line-height: 16px;}
+		.listcell{position: relative;}
+		.listcell .dellistcell{position: absolute;top: 1px;right: 0;display: block;background: red;color: #fff;padding: 2px 10px;height: 16px;line-height: 16px;}
+		#addresslist{display: none;position: relative;}
+
+		.carthead{border:1px solid #dfdfdf;background: #fafafa;height: 30px;line-height: 30px;}
+		.carthead li{float: left;text-align: center;}
+		.cartgoodsbox{width: 100%;border-left: 1px solid #dfdfdf;border-top: 1px solid #dfdfdf;}
+		.cartgoodsbox td,.cartgoodsbox th{border-right: 1px solid #dfdfdf;border-bottom: 1px solid #dfdfdf;padding: 5px 1%;}
+		.cartgoodsbox th{background: #fafafa;text-align: left;}
+		.goodsnumjian,.goodsnumjia{width: 20px;text-align: center;line-height: 20px;background: green;color:#fff;display: inline-block;font-weight: bold;cursor: pointer;margin: 0 3px;}
+	</style>
+	<div class="main_r_con" style="padding: 10px;border: 1px dashed #dfdfdf;min-height: 400px;">
+
+				<div style="padding: 0px;">
+					商品信息
+					<form action="{:U('User/yubaoinsert')}" method="post">
+					<ul class="carthead">
+	<li style="width:65%;">商品</li>
+	<li style="width:10%;">单价(RMB)</li>
+	<li style="width:5%;">数量</li>
+	<li style="width:10%;">小计(RMB)</li>
+	<li style="width:10%;">国内运费(RMB)</li>
+	<div class="clear"></div>
+</ul>
+<div class="blank"></div>
+<volist name="list" id="v">
+<table cellspacing="0" cellpadding="0" class="cartgoodsbox">
+	<tr><th colspan="6">店铺：{$v.goodsseller} &nbsp;&nbsp;&nbsp;</th></tr>
+	<volist name="v.goods" id="g">
+	<tr>
+		<td style="width:65%;">
+			<div class="fl"><a href="{$g.goodsurl}" target="_blank"><img src="{$g.goodsimg}" width="60" height="60"></a></div>
+			<div class="fl" style="width:400px;font-size: 12px;padding-left: 10px;">
+				<a href="{$g.goodsurl}" target="_blank" style="color:green;">{$g.goodsname}</a> <br>
+				<span>尺寸：{$g.goodssize} &nbsp; 颜色：{$g.goodscolor}</span><br>
+				<span>备注：{$g.goodsremark}</span> 
+			</div>
+		</td>
+		<td style="width:10%;">{$g.goodsprice}</td>
+		<td style="width:5%;">{$g.goodsnum}</td>
+		<td style="width:10%;" class="xiaoji"><?php echo sprintf('%.2f',$g['goodsprice']*$g['goodsnum']) ?></td>
+		<if condition="$key eq 0">
+		<td style="width:10%;" rowspan="{$v.goodscount}" class="goodsfreight">{$v.max(goodsfreight)}</td>
+		</if>
+
+	</tr>
+</volist>
+</table>
+<div class="blank"></div>
+</volist>
+				<a href="{:U('Cart/index')}" style="font-size:16px; color:#8c8c8c;">返回购物车</a>
+				<div class="blank"></div>
+				<table class="yubao-add" cellpadding="0" cellspacing="0" style="line-height: 20px;">
+					<tr>
+						<th style="font-size:14px;">{:L('delivery_address')}</th>
+						<th style="font-size:14px;">{:L('shipping_method')}</th>
+					</tr>
+					<tr>
+						<td style="padding:10px;width: 50%;">
+							<div id="defaddress">
+								<if condition="$address">
+								<div style="margin-bottom: 10px;">
+									{:L('consignee')}：{$address.consignee} &nbsp;&nbsp;{:L('telphone')}：{$address.tel}<br>
+									{:L('country')}：{$address.areaname} <br>
+									{:L('address')}：{$address.address} ({$address.zipcode}) <br>
+								</div>
+							</if><input type="hidden" name="addressid" id="addressinputid" value="{$address.id}">
+								<a href="###" id="newaddress" style="color:red;">{:L('check')}{:L('delivery_address')}</a>
+							</div>
+							<div id="addresslist">
+								<ul>
+									<volist name="addresslist" id="v">
+										<li style="padding: 5px 0;border-bottom: 1px dashed #dfdfdf; width:468px; height:52px;">
+											<span style="float: left;display:block;width: 25px;padding: 10px 0;">
+												<input type="radio" name="id" value="{$v.id}" class="addressid" <eq name="v.def" value="1">checked</eq>
+											>
+										</span>
+										<span style="float: left;display: block;width: 295px;">
+											{$v.consignee} ({$v.tel})&nbsp;{$v.areaname} &nbsp; {$v.address} ({$v.zipcode})
+										</span>
+										<div class="clear"></div>
+									</li>
+								</volist>
+							</ul>
+							<style>
+                              .blank{margin-top: 10px;}
+							</style>
+							<div class="blank"></div>
+							<a href="###" class="btnqx addnewaddress" style="font-size:14px; color:#8c8c8c;">{:L('new_address')}</a>
+							<a href="###" class="btnqd querenaddress" style="font-size:14px;">{:L('confirm_select')}</a>
+							<div class="address-form">
+
+								<input type="text" name="consignee"  placeholder="{:L('consignee')}">							
+								<div class="blank"></div>
+								<input type="text" name="tel"  placeholder="{:L('mobile')}">							
+								<div class="blank"></div>
+								<select name="areaid" style="width:100%;">
+									<option value="0">{:L('select_country')}</option>
+									<volist name="state" id="v">
+										<option value="{$v.id}">{$v.name}</option>
+									</volist>
+								</select>
+								<div class="blank"></div>
+								<textarea name="address" placeholder="{:L('city_street')}" style="width: 96%;padding: 2%;"></textarea>
+								<div class="blank"></div>
+								<input type="text" name="zipcode" placeholder="{:L('zipcode')}">							
+								<div class="blank"></div>
+								<div style="">
+									<button type="button" class="btnqx quxiaoaddaddress">{:L('cancel')}</button>
+									<button type="button" class="btnqd querenaddaddress">{:L('confirm_address')}</button>
+								</div>
+
+							</div>
+							</div>
+						</td>
+						<td style="padding:10px 20px;width: 50%; font-size:14px;">
+							<if condition="$delivery">
+								<volist name="delivery" id="d">
+									<div><input type="radio" name="deliveryid" value="{$d.id}" checked> &nbsp;{$d.dname} </div>
+								</volist>
+								<else />
+								{:L('select_address_first')}
+							</if>
+						</td>
+					</tr>
+				</table>
+				<div class="blank"></div>
+				<div style="border: 1px solid #dfdfdf;background: #fafafa;text-align: right;padding:10px 20px;line-height: 30px;font-size: 16px;">
+					商业保险：<input type="radio" name="isxian" value="0" checked>否&nbsp;<input type="radio" name="isxian" value="1">是<br>
+					代购服务费:<span id="goufei"> {$price.goufei} </span> RMB<br>
+					商品金额：
+					<span id="totalgoodsprice">{$price.totalgoodsprice}</span>
+					RMB + 国内运费：
+					<span id="totalgoodsfreight">{$price.totalgoodsfreight}</span>
+					RMB
+				</div>
+				<div class="blank"></div>
+				<div style="text-align: right;">
+					<a href="{:U('Cart/index')}" class="cartbtn" style="background: #dfdfdf;color:#333;">返回购物车</a>
+					<a href="javascript:;" class="cartbtn tijiaodingdan">立即下单</a>
+				</div>
+				<div class="blank"></div>
+				</form>
+			</div>
+		</div>
+</div>
+</div>
+<div style="clear:both;"></div>
+<include file="Public:footer" />
+<script type="text/javascript">
+	$(function(){
+		$('.tijiaodingdan').click(function(){
+			var addressid=$('#addressinputid').val();
+			var deliveryid=$('input[name="deliveryid"]:checked').val();
+			var isxian=$('input[name="isxian"]:checked').val();
+			var freight=$('#totalgoodsfreight').text();
+			$.post("{:U('tjdingdan')}",{'addressid':addressid,'deliveryid':deliveryid,'freight':freight,'isxian':isxian},function(data){
+				if (data.status) {
+					$.thinkbox.success(data.info);
+					setTimeout(jumpurl(data.url),1500);
+				}else{
+					$.thinkbox.error(data.info);
+				};
+			});
+		})
+
+		$('.dellistcell').click(function(){
+			var id=$(this).parent().parent().find('.listid').val();
+			$.post("{:U('User/yubaocartdel')}",{'id':id},function(data){
+				if (data.status) {
+					$('.listid').each(function(){
+						if (data.info==$(this).val()) {
+							$(this).parent().remove();
+						};
+					})
+				}else{
+					$.thinkbox.error(data.info);
+				};
+			});
+		})
+		$('#newaddress').click(function(){
+			$(this).parent().hide();
+			$(this).parent().next().show();
+		})
+		$('.querenaddress').click(function(){
+			var id=$('.addressid:checked').val();
+			$.post("{:U('User/changeaddress')}",{'id':id},function(data){
+				if (data.status) {
+					$.thinkbox.success(data.info);
+					setTimeout('location.reload()',700);
+				};
+			})
+		})
+		$('.addnewaddress').click(function(){
+			$(this).parent().find('.address-form').show();
+		})
+		$('.quxiaoaddaddress').click(function(){
+			$(this).parents('.address-form').hide();
+		})
+		$('.querenaddaddress').click(function(){
+			var consignee=$(this).parents('.address-form').find('input[name="consignee"]').val();
+			var tel=$(this).parents('.address-form').find('input[name="tel"]').val();
+			var areaid=$(this).parents('.address-form').find('select[name="areaid"]').val();
+			var address=$(this).parents('.address-form').find('textarea[name="address"]').val();
+			var zipcode=$(this).parents('.address-form').find('input[name="zipcode"]').val();
+			$.post("{:U('User/addressadd')}",{'consignee':consignee,'tel':tel,'areaid':areaid,'address':address,'zipcode':zipcode},function(data){
+				if (data.status) {
+						$.thinkbox.success(data.info);
+						setTimeout('location.reload()',1000);
+					}else{
+						$.thinkbox.error(data.info);
+					};
+			})
+		})
+
+	})
+</script>

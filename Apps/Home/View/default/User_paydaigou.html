@@ -1,0 +1,158 @@
+<extend name="default/Public/user"/>
+<block name="user-right">
+	<div class="user-right">
+		<div class="user-head">
+			<h2>支付代购订单</h2>
+		</div>
+		<div style="padding:10px;">
+					<table class="yubao-add yubao-list" cellpadding="0" cellspacing="0" style="line-height: 25px;">
+						<tr>
+							<th colspan="3" style="padding:0 10px;text-align: left;">代购单号:{$info.dgsn}&nbsp;&nbsp;|&nbsp;&nbsp;{$info.consignee}&nbsp;&nbsp;|&nbsp;&nbsp;{$info.addtime|date="Y-m-d H:i:s",###}</th>
+						</tr>
+						<volist name="info.goods" id="g">
+						<tr>
+							<td>
+								<div class="fl">
+									<a href="{$g.goodsurl}" target="_blank" title="{$g.goodsname}">
+										<img src="{$g.goodsimg}" width="60" height="60"></a>
+								</div>
+								<div class="fl" style="width:300px;font-size: 12px;padding-left: 10px;">
+									<a href="{$g.goodsurl}" target="_blank" style="color:green;">{$g.goodsname}</a>
+									<br>
+									<span>尺寸：{$g.goodssize} &nbsp; 颜色：{$g.goodscolor}</span>
+									<br>
+									<span>备注：{$g.goodsremark}</span>
+								</div>
+							</td>
+							
+							<td>快递单号：<if condition="$g.kdsn neq ''">{$g.kdsn}<else />暂无</if><br><br>国际单号：<if condition="$g.bgsn neq ''">{$g.bgsn}<else />暂无</if></td>
+							
+							<td rowspan="{$v.goodscount}" >
+								￥: {$g.goodsnum}/*{$g.goodsprice}(RMB) <br>
+								<if condition="$v.status eq 1">
+								<div style="text-align: center;margin-top: 5px;"><a href="{:U('User/paydaigou','id='.$v['id'])}" style="display:inline-block;background: red;color: #fff;padding: 2px 2px;">支付</a> | <a href="javascript:void(0);" style="display:inline-block;background: red;color: #fff;padding: 2px 2px;" did="{$v.id}" class="deldaigou">删除</a></div>
+							</if>
+							</td>
+						<input type="hidden" value="{$g.dgid}" id="id">
+						</tr>
+					</volist>
+					</table>
+					<div class="blank"></div>
+					<div style="border: 1px solid #dfdfdf;background: #fafafa;text-align: right;padding:10px 20px;line-height: 30px;font-size: 14px;">
+					<if condition="$baomoney neq ''">
+						商业保险：<span id="baomoney">{$baomoney}&nbsp;{:C('MAIN_COIN')}</span><br>
+					<else />
+					    商业保险：<span id="baomoney">0&nbsp;{:C('MAIN_COIN')}</span><br>
+					</if>
+					商品金额：
+					<span id="totalgoodsprice">{$info.totalgoodsprice}</span>
+					RMB + 运费：
+					<span id="totalgoodsfreight">{$info.totalgoodsfreight}</span>
+					RMB
+					<br>
+					商品代购费：<span id="goufei">{$info.goufei}</span> RMB<br>				
+					总金额：
+					<span id="totalprice">{$info.totalprice}</span>
+					RMB &nbsp; 共需支付金额：
+					<span id="zhifuprice" style="color:red; font-weight:600;font-size:16px;">{$info.zhifuprice}</span>
+					{:C('MAIN_COIN')} <br>
+					{:L('your_balance')}：{$user.money} ({:C('MAIN_COIN')}) &nbsp;
+				</div>
+				<div class="blank"></div>
+				<div style="width:200px;float: right;line-height: 20px;">
+					<a href="{:U('User/chongzhi')}" target="_blank" class="btnqd" id="quchongzhi">{:L('recharge')}</a>&nbsp;&nbsp;&nbsp;
+					<a href="javascript:;" class="btnqd" style="background:#2CDE98;border: 1px solid #2CDE98;" id="querenzhifu">{:L('confirm_pay')}</a>
+				</div>
+				<input type="hidden" value="{$ziliao}" id="pz">
+				<div class="blank"></div>
+				<div style="border:1px #ddd solid; width:150px; float:right; line-height:20px;">
+					<input type="radio" value="0" name="xuanzhi" checked id="alpay"> 支付宝
+					<input type="radio" value="1" name="xuanzhi" id="paypal"> Paypal<br>
+					<a  target="_blank" class="btnqd" id="zhifu">直接支付</a>
+				</div>
+				<div class="blank"></div>
+				<input type="hidden" id='shenhe' value="{$info.shenhe}">
+		</div>
+		<div class="clear"></div>
+	</div>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			if (<?php echo $info['zhifuprice'] ?><=<?php echo $user['money']+$user['xinyong'] ?>) {
+			$('#querenzhifu').show();
+			$('#quchongzhi').hide();
+		}else{
+			$('#querenzhifu').hide();
+			$('#quchongzhi').show();
+		};
+		if (<?php echo $info['zhifuprice'] ?><=0.00) {
+			$('#querenzhifu').hide();
+			$('#quchongzhi').hide();
+		};
+		$('#querenzhifu').click(function(){
+			var id=<?php echo $info['id'] ?>;
+			var baomoney=$('#baomoney').html();
+			var loading=$.thinkbox.loading('Loading');
+			$.post('{:U("paydaigouadd")}',{'id':id,'baomoney':baomoney},function(data){
+				if (data.status) {
+					loading.hide();
+					$.thinkbox.success(data.info);
+					setTimeout(jumpurl(data.url),1500);
+				}else{
+					loading.hide();
+					$.thinkbox.error(data.info);
+				};
+			})
+		})
+			$('.deldaigou').click(function(){
+				var id=$(this).attr('did');
+				$.thinkbox.confirm('确定要删除代购单么',{
+				 	'dataEle' : this,
+				 	'title':'温馨提示',
+                    'ok':'确认删除',
+                    'cancel':'关闭',
+				 	'afterHide':function(data){
+				 		if (data==true) {
+				 			$.post("{:U('User/deldaigou')}",{'id':id},function(data){
+					if (data.status) {
+						$.thinkbox.success(data.info);
+						setTimeout('location.reload()',1500);
+					}else{
+						$.thinkbox.error(data.info);
+					};
+				})
+				 		};
+				 	},
+				 })
+			})
+			var shenhe=$('#shenhe').val();
+			var price=$('#zhifuprice').html();
+			var id=$("#id").val();
+			var yp=price+'&oid='+id;
+			var pz=$('#pz').val();
+			var huilv=<?php echo C('MAIN_USD_HUILV') ?>;
+			var zhi =100*huilv;
+			$('#zhifu').attr('href',"{:U('User/zjpaydai')}?price="+yp);
+			$('#alpay').click(function(){
+		       $('#zhifu').attr('href',"{:U('User/zjpaydai')}?price="+yp);
+	        })
+	        $('#paypal').click(function(){
+	          if(shenhe>0){
+		          if(price>=zhi){
+		          	if(pz>0){
+		          	   $("#zhifu").attr('href','{:U("Pay/paypal2")}?price='+yp);
+		          	}else{
+		          	   alert('金额大于100美金，请联系客服提交身份证或护照或其他有效证件');
+			           return false;
+		          	}
+		          }else{
+		          	$("#zhifu").attr('href','{:U("Pay/paypal2")}?price='+yp);
+		          }
+	          }else{
+	          	alert('请等待管理员审核订单！');
+	          	return false;
+	          }
+		       
+	        })
+		})
+	</script>
+</block>

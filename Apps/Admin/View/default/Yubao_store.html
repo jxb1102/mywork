@@ -1,0 +1,129 @@
+<extend name="Public/base"/>
+<block name="active"><li class="active">库位管理</li></block>
+<block name="page-content">
+	<style type="text/css">
+		.kwbox{background: #F0F0F0;width: 150px;height: 50px;float: left;margin: 8px;text-align: center;position: relative;}
+		.kwbox .kwtitle{display: block;line-height: 50px;}
+		.kwbox .ybshu{position: absolute;top: 0;right: 0;display: block;background: red;width: 20px;height: 20px;text-align: center;color: #fff;}
+		.kwbox .kwbtn{position: absolute;top: -22px;left: 17px;display: none}
+	</style>
+	<div class="page-header">
+		<h1>
+			库位管理
+			<small> <i class="icon-double-angle-right"></i>
+				库位设置
+			</small>
+		</h1>
+	</div>
+	<!-- /.page-header -->
+	<div class="row">
+		<div class="col-xs-12" style="">
+			<div class="col-sm-12" style="background: #f3f3f3;padding: 10px;margin-bottom: 20px;">
+			<form <if condition="$info"> action="{:U('Yubao/storesave')}"<else/> action="{:U('Yubao/storeadd')}"</if> method="post">
+				<span style="display:inline-block;float: left;">名称：<input type="text" name="title" value="{$info.title}" id="storename"> &nbsp;</span>
+				<span style="display:inline-block;float: left;">最大数量：<input type="text" name="shuliang" <eq name="info.maxshuliang" value="">value="10"<else/> value="{$info.maxshuliang}"</eq> id="storeshuliang" style="width:50px;"> &nbsp;</span>
+				<span style="display:inline-block;float: left;">上级：<select name="pid">
+					<option value="0">货架</option>
+				<volist name="kwlist" id="v">
+					<option value="{$v.id}" <eq name="v.id" value="$info.pid">selected</eq>>{$v.title}</option>
+				</volist>
+				</select> &nbsp;</span>
+				<if condition="$info">
+					<input type="hidden" name="id" value="{$info.id}">
+					<input type="submit" value="编辑" class="btn btn-sm btn-danger no-border" style="padding: 2px 9px;float: left;">
+					<a href="{:U('Yubao/store','kwid='.$info['pid'])}" class="btn btn-sm btn-default no-border" style="padding: 2px 9px;float: left;">取消</a>
+					<else/>
+				<input type="submit" value="添加" class="btn btn-sm btn-success no-border" style="padding: 2px 9px;float: left;">
+			</if>
+			</form>
+		</div>
+		</div>
+		<div style="height: 20px;"></div>
+		<div class="col-xs-12">
+			<div class="col-sm-12">
+				<volist name="list" id="v">
+					<div class="kwbox">
+						<eq name="v.pid" value="0">
+							<a href="{:U('Yubao/store','kwid='.$v['id'])}" class="kwtitle">{$v.title}</a>
+							<span class="ybshu">{$v.shuliang}</span>
+							<else/>						
+							<a href="{:U('Yubao/lists','status=2&keyword='.$v['title'])}" style="line-height: 50px;">{$v.title}({$v.maxshuliang})</a>
+							<span class="ybshu">{$v.shuliang}</span>
+						</eq>
+						<div class="kwbtn">
+						<a href="{:U('Yubao/store','id='.$v['id'].'&kwid='.$v['pid'])}" class="btn btn-minier btn-success no-border kwedit">编辑</a>
+						<a href="###" did="{$v.id}" class="btn btn-minier btn-danger no-border kwdelete">删除</a>
+						<if condition="$kwid">
+						<a href="{:U('Yubao/store')}" class="btn btn-minier btn-default no-border">返回</a></if>
+					</div>
+					</div>
+				</volist>
+			</div>
+		</div>
+	</div>
+
+</block>
+<block name="jiazaijs">
+	<script src="__JS__/bootbox.min.js"></script>
+	<script src="__JS__/jquery.gritter.min.js"></script>
+	<script src="__JS__/chosen.jquery.min.js"></script>
+</block>
+<block name="script">
+
+		<script type="text/javascript">
+		jQuery(function($){
+			$('.kwbox').hover(function(){
+				$(this).find('.kwbtn').show();
+			},function(){
+				$(this).find('.kwbtn').hide();
+			})
+			$('.kwdelete').click(function(){
+				var id=$(this).attr('did');
+					bootbox.confirm("确定要删除么?", function(result){
+						if(result) {
+							$.post("{:U('storedel')}",{'id':id,'ajax':1},success,'json');
+							function success(data){
+								if (data.status) {
+									$.gritter.add({
+										// (string | mandatory) the heading of the notification
+										title: '提交成功',
+										// (string | mandatory) the text inside the notification
+										text: data.info,
+										class_name: 'gritter-success gritter-light'
+									});
+									setTimeout('location.reload()',1000);
+								}else{
+									$.gritter.add({
+										title: '提交失败',
+										text: data.info,
+										class_name: 'gritter-error gritter-light'
+									});
+								};
+							}
+						}
+					})
+			})
+	
+	})
+
+    	$("form").submit(function(){
+    		var self = $(this);
+    		$.post(self.attr("action"), self.serialize(), success, "json");
+    		return false;
+    		function success(data){
+    			if(data.status){
+    				$.gritter.add({
+						text: data.info,
+						class_name: 'gritter-success  gritter-center'
+					});
+					setTimeout('location.reload()',1000);
+    			} else {
+    				$.gritter.add({
+						text: data.info,
+						class_name: 'gritter-error  gritter-center'
+					});
+    			}
+    		}
+    	});
+</script>
+</block>

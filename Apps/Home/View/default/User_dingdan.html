@@ -1,0 +1,110 @@
+<extend name="default/Public/user"/>
+<block name="user-right">
+	<div class="user-right">
+		<div class="user-head" style="height:50px;">
+			<h2>{:L('order_list')}</h2>
+			<ul class="head-nav">
+			<li><eq name="status" value=""><span>{:L('all')}</span><else /><a href="{:U('User/dingdan')}">{:L('all')}</a></eq></li>
+			<li><eq name="status" value="1"><span>{:L('pending_confirm')}</span><else /><a href="{:U('User/dingdan','status=1')}">{:L('pending_confirm')}</a></eq></li>
+			<li><eq name="status" value="2"><span>{:L('pending_dabao')}</span><else /><a href="{:U('User/dingdan','status=2')}">{:L('pending_dabao')}</a></eq></li>
+			<li><eq name="status" value="3"><span style="color:red;">{:L('pending_pay')}</span><else /><a href="{:U('User/dingdan','status=3')}" style="color:red;">{:L('pending_pay')}</a></eq></li>
+			<li><eq name="status" value="4"><span>{:L('pending_shipped')}</span><else /><a href="{:U('User/dingdan','status=4')}">{:L('pending_shipped')}</a></eq></li>
+			<li><eq name="status" value="5"><span>{:L('pending_receipt')}</span><else /><a href="{:U('User/dingdan','status=5')}">{:L('pending_receipt')}</a></eq></li>
+			<li><eq name="status" value="6"><span>{:L('has_receipt')}</span><else /><a href="{:U('User/dingdan','status=6')}">{:L('has_receipt')}</a></eq></li>
+		</ul>
+		<div style="position: absolute;bottom: -1px;left: 30px;width: 200px;height: 29px;">
+			<form action="{:U('User/dingdan','status='.$_GET['status'])}" method="get">
+			<input type="text" name="keywords" value="<?php echo $_GET['keywords'] ?>" style="width: 100px;margin-top: 2px;padding: 2px;" placeholder=""> <input type="submit" value="{:L('search')}" style="border: none;background: red;color:#fff;height: 22px;padding: 0 10px;">
+			</form>
+		</div>
+		</div>
+		<div style="padding:10px;">
+			<table class="yubao-add yubao-list" cellpadding="0" cellspacing="0" style="line-height: 25px;">
+				<tr>
+					<th width="100">{:L('order_num')}</th>
+					<th width="260">{:L('delivery_info')}</th>
+					<th width="120">{:L('shipping_method')}</th>
+					<th width="70">{:L('freight')}({:C('MAIN_COIN')})</th>
+					<th width="80">{:L('add_time')}</th>
+					<th width="">{:L('remark')}</th>
+					<th width="60">{:L('status')}</th>
+				</tr>
+				<if condition="$list">
+					<volist name="list" id="v">
+						<tr>
+							<td><a href="{:U('User/dingdanview','id='.$v['id'])}"><font color="blue">{$v.sn}</font></a></td>
+							<td>{$v.consignee} ({$v.tel})</td>
+							<td>{$v.delivery.dname}</td>
+							<td>{$v.freight}</td>
+							<td>{$v.addtime|date="Y-m-d",###}</td>
+							<td>{$v.remark}</td>
+							<td>
+								<elt name="v.status" value="3">
+								{$v.status|getyundanstatus}
+								</elt>
+								<eq name="v.status" value="4">
+									<eq name="v.payed" value="2">
+										{:L('part_daifa')}
+										<else/>
+										{$v.status|getyundanstatus}
+									</eq>
+								</eq>
+								<eq name="v.status" value="5">
+									<eq name="v.payed" value="2">
+										{:L('part_daishou')}
+										<else/>
+										{$v.status|getyundanstatus}
+									</eq>
+								</eq>
+								<eq name="v.status" value="6">
+									<eq name="v.payed" value="2">
+										{:L('part_shouhuo')}
+										<else/>
+										{$v.status|getyundanstatus}
+									</eq>
+								</eq>
+								<eq name="v.status" value="3">
+									<a href="{:U('User/paydingdan','id='.$v['id'])}" style="display:inline-block;background: red;color: #fff;padding: 2px 2px;">{:L('go_payment')}</a>
+								</eq>
+								<eq name="v.status" value="5">
+									<a href="javascript:shouhuo({$v.id});" style="display:inline-block;background: red;color: #fff;padding: 2px 2px;margin-bottom: 2px;">{:L('confirm_receipt')}</a>
+									<eq name="v.payed" value="2">
+										<a href="{:U('User/paydingdan','id='.$v['id'])}" style="display:inline-block;background: red;color: #fff;padding: 2px 2px;">{:L('pay_yukuan')}</a>
+									</eq>
+								</eq>
+								
+								<eq name="v.status" value="4">
+									<eq name="v.payed" value="2">
+										<a href="{:U('User/paydingdan','id='.$v['id'])}" style="display:inline-block;background: red;color: #fff;padding: 2px 2px;">{:L('pay_yukuan')}</a>
+									</eq>
+								</eq>
+								<eq name="v.status" value="6">
+									<eq name="v.payed" value="2">
+										<a href="{:U('User/paydingdan','id='.$v['id'])}" style="display:inline-block;background: red;color: #fff;padding: 2px 2px;">{:L('pay_yukuan')}</a>
+									</eq>
+								</eq>
+							</td>
+						</tr>
+					</volist>
+					<else />
+					<tr>
+						<td colspan="8">{:L('no_infos')}</td>
+					</tr>			
+				</if>
+			</table>
+			<div class="page">{$_page}</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		function shouhuo(id){
+			$.post("{:U('shouhuo')}",{'id':id},function(data){
+				if (data.status) {
+					$.thinkbox.success(data.info);
+					setTimeout(jumpurl(data.url),1000);
+				}else{
+					$.thinkbox.error(data.info);
+				};
+			})
+		}
+	</script>
+</block>

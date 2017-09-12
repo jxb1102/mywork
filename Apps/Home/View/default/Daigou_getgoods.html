@@ -1,0 +1,135 @@
+  <script  type="text/javascript" charset="utf-8">
+            skustr='{$arrjson}';
+             ss=eval("("+skustr+")");
+             
+            $(function(){
+
+
+                $(".prop_preview").on("click",function(){
+                    var name=$(this).attr("title");
+                    //alert(name);
+                    $(this).attr('name',name);
+
+
+                    if(!$(this).hasClass("prop_preview_selected")){
+
+                        $(".prop_preview").removeClass("prop_unavailable");
+
+                    } 
+                    var m=$(this).attr("value");
+                    $(this).parent().siblings().find(".prop_preview").removeClass("prop_preview_selected");
+                    $(this).addClass("prop_preview_selected").parent().parent().parent().addClass("prop_selected");
+                    if($(this).hasClass("prop_preview_selected")){
+
+                             var s=$("dl.prop").length;
+                        var v=$(".prop_selected").length;
+						 
+                        if(s==v){
+							if(s>1){
+						   var f= $(".prop_preview_selected").eq(0).attr("value");                            
+                            var j=$(".prop_preview_selected").eq(1).attr("value");
+                           var price=ss[f][j]['price'];
+                           var quantity=ss[f][j]['num'];
+						   $('#quantity').val(quantity);
+                           $("#price").val(price); 
+						   }
+						    
+                          $("input[name=sku_a]").val($(".prop_preview_selected").eq(0).attr("name"));
+                           $("input[name=sku_b]").val($(".prop_preview_selected").eq(1).attr("name"));
+                        }
+
+
+                    }
+
+                    $(this).parent().parent().parent().siblings().find(".prop_preview").each(function(i,t){
+                            var c=$(t).attr("value");
+                            
+                           if(ss[m][c]['num']==0){
+                                $(t).addClass("prop_unavailable");
+                           }        
+
+                    });
+
+                      
+                });
+
+            });
+   
+
+        </script>
+            
+
+
+
+<div class="boxleft fl">
+                <span><if condition="$pic"><img src="{$pic}" width="230" height="230" id="goodsimg"><else /><img src="__IMG__/noimg.png" width="230" height="230" id="goodsimg"></if></span>
+                <span style="font-size:14px;">商品图片</span>
+            </div>
+            <div class="boxright fr">
+<form id="insertcart" action="{:U('insertcart')}" method="post">
+        		<ul class="infolist">
+        			<li>
+        				<label><span>商品地址：</span><input name="goodsurl" id="goodsurl" type="text" readonly="readonly" value="{$url}" /></label>
+        			</li>
+        			<li>
+        				<label><span>商品名称：</span><input type="text" name="goodsname" id="goodsname" value="{$title}"></label>
+        			</li>
+        			<li>
+        				<label><span>商品价格：</span><input type="text" name="goodsprice" id="price" style="width: 80px;" value="{$price}"></label> <span>如价格抓取错误，请手动修改</span>
+        			</li>
+        			<li>
+        				<label><span>国内运费：</span><input type="text" name="goodsfreight" value="{$domestic_freight}" id="goodsfreight" style="width: 80px;"></label> <span>国内运费以到达<b style="color:red;">上海仓库</b>为准，如抓取错误，请手动修改</span>
+        			</li>
+              <input type="hidden" name="maxnum" id="quantity" value="" />
+        			<li>
+              <if condition="$data">
+        <volist name="data" id="good">
+            <dl class="prop">
+                <dt data-id="{$good['p']}"><span>{$good['v']}:</span></dt>
+                  <dd>
+                      <volist name="good['item']" id="item">
+                          <if condition="$item[4]">
+                            <span class="prop-box">
+                                <span class="prop_preview " data-img="true" id="prop-{$item.0}" style="background:url({$item.4}_30x30.jpg) no-repeat; width: 30px; height:30px;" title="{$item.3}" value="{$item.0}:{$item.1}" ></span>
+                               <!--  <div class="hide prop-img" data-img="{$item.4}_310x310.jpg"></div> -->
+                              
+                            </span>
+                          <else />
+                          <span class="prop-box">
+                                    <span class="prop_preview " id="prop-{$item.0}" style="padding: 0 2px;" title="{$item.3}" value="{$item.0}:{$item.1}">{$item.3}</span>
+                                     
+                           </span>
+                         </if>
+    </volist>
+                                    </dd>
+                                    <div style="clear:both;"></div>
+             </dl>
+
+
+        </volist>
+        <input type="hidden" name="goodsseller" id="goodsseller" value="{$dianpu}">
+        <else />
+         <label><span>商品尺寸：</span><input type="text" name="sku_b" id="sku_b" style="width: 80px;"></label>&nbsp;&nbsp;&nbsp;&nbsp;<label><span>商品颜色：</span><input type="text" name="sku_a" id="sku_a" style="width: 80px;"></label>
+        <li> <label><span>商家店铺：</span><input type="text" name="goodsseller" id="goodsseller" value=""></label></li>
+      </if>
+        <input type="hidden" name="sku_a" id="sku_a" value=""/>
+         <input type="hidden" name="sku_b" id="sku_b" value=""/>
+        			</li>
+        			<li>
+        				<label><span>购买数量：</span><input type="text" name="goodsnum" id="goodsnum" style="width: 80px;" value="1"></label>
+        			</li>
+        			<li>
+        				<label><span class="fl">商品备注：</span><textarea name="goodsremark" id="goodsremark" style="width: 500px;height: 35px;padding: 5px; font-size:14px;" placeholder="如抓取图片失败，请在此处填写代购商品信息，如：颜色，尺码/尺寸，类型等，在颜色和尺寸框中填写“无”
+"></textarea></label>
+        			</li>
+        			<li style="padding-left: 80px;">
+        				<button class="cartbtn" type="submit">加入购物车</button>
+        			</li>
+        		</ul>
+        		<input type="hidden" name="goodsimg" id="goodsimghidden" value="{$pic}">
+<!--         		<input type="hidden" name="shopname" id="shopname" value="">
+        		<input type="hidden" name="maxnum" id="maxnum" value=""> -->
+        	</form>
+            </div>
+
+

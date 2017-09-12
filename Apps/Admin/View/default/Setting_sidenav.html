@@ -1,0 +1,372 @@
+<extend name="Public/base"/>
+<block name="active">
+	<li class="active">侧边栏导航设置</li>
+</block>
+<block name="page-content">
+
+	<div class="page-header">
+		<h1>
+			导航设置
+			<small> <i class="icon-double-angle-right"></i>
+				侧边栏导航
+			</small>
+		</h1>
+	</div>
+	<!-- /.page-header -->
+
+	<div class="row">
+		<div class="col-xs-12">
+			<!-- PAGE CONTENT BEGINS -->
+
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="space-4"></div>
+					<div class="space-2"></div>
+					<form <if condition="$info">
+						action="{:U('sidenavedit')}"
+						<else/>
+						action="{:U('sidenav')}"
+					</if>
+					class="form-horizontal" id="validation-form" method="post">
+					<div class="form-group">
+						<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="title">显示名称:</label>
+
+						<div class="col-xs-12 col-sm-9">
+							<div class="clearfix">
+								<input type="text" name="title" id="title" class="col-xs-12 col-sm-6" value="{$info.title}" />
+							</div>
+						</div>
+					</div>
+
+					<div class="space-2"></div>
+
+					<div class="form-group">
+						<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="uri">连接地址:</label>
+
+						<div class="col-xs-12 col-sm-9">
+							<div class="clearfix">
+								<input type="text" name="uri" id="uri" class="col-xs-12 col-sm-6" value="{$info.uri}" />
+							</div>
+						</div>
+					</div>
+
+					<div class="space-2"></div>
+
+					<div class="form-group">
+						<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="pid">所属分组:</label>
+
+						<div class="col-xs-12 col-sm-9">
+							<div class="clearfix">
+								<select class="input-medium" id="pid" name="pid">
+									<option value="0">请选择...</option>
+									<volist name="sidelist" id="v">
+										<option value="{$v.id}" <eq name="v.id" value="$info.pid">selected</eq>
+										>{$v.title}
+									</option>
+									<volist name="v.children" id="s">
+									<option value="{$s.id}" <eq name="s.id" value="$info.pid">selected</eq>
+										>&nbsp;&nbsp;├&nbsp;{$s.title}</option>
+								</volist>
+								</volist>
+							</select>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="status">是否启用:</label>
+
+					<div class="col-xs-12 col-sm-9">
+						<div class="clearfix">
+							<label class="blue">
+								<input name="status" value="1" type="radio" class="ace" checked <eq name="info.status" value="1">checked</eq>
+							/>
+							<span class="lbl">启用</span>
+						</label>
+						&nbsp;&nbsp;
+						<label class="blue">
+							<input name="status" value="0" type="radio" class="ace" <eq name="info.status" value="0">checked</eq>
+						/>
+						<span class="lbl">不启用</span>
+					</label>
+				</div>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="sort">排序:</label>
+
+			<div class="col-xs-12 col-sm-9">
+				<div class="clearfix">
+					<input type="text" name="sort" id="sort" class="col-xs-12 input-mini" <if condition="$info">
+					value="{$info.sort}"
+					<else/>
+					value="1"
+				</if>
+				/>
+			</div>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="control-label col-xs-12 col-sm-3 no-padding-right">&nbsp;</label>
+
+		<div class="col-xs-12 col-sm-9">
+			<div class="clearfix">
+
+				<if condition="$info">
+					<button type="submit" class="btn btn-success btn-next no-border">确认编辑</button><a href="{:U('sidenav')}" class="btn btn-light btn-next no-border">取消</a>
+					<input type="hidden" name="id" value="{$info.id}">
+					<else/>
+					<button type="submit" class="btn btn-success btn-next no-border">确认添加</button>
+				</if>
+				&nbsp;&nbsp;
+				<span id="result"></span>
+
+			</div>
+		</div>
+	</div>
+
+</form>
+</div>
+<div class="col-sm-6">
+<div class="dd" id="nestable">
+	<ol class="dd-list">
+		<volist name="sidelist" id="v">
+			<li class="dd-item  item-orange" data-id="{$v.id}">
+				<div class="dd-handle">
+					<span class="blue">{$v.title}</span>
+					<span class="lighter grey">&nbsp; {$v.uri}</span>
+					<div class="pull-right action-buttons">
+						<eq name="v.status" value="0">
+							<a href="#" class="blue" title="已禁用"> <i class="pull-right bigger-130 icon-warning-sign orange2"></i>
+							</a>
+						</eq>
+						<a class="blue" href="{:U('sidenav','id='.$v['id'])}">
+							<i class="icon-pencil bigger-130"></i>
+						</a>
+
+						<a class="red delsidenav" href="###" sid="{$v.id}" onclick="return false;">
+							<i class="icon-trash bigger-130"></i>
+						</a>
+					</div>
+				</div>
+				<if condition="$v.children neq ''">
+					<ol class="dd-list">
+						<volist name="v.children" id="c">
+							<li class="dd-item item-blue2" data-id="{$c.id}">
+								<div class="dd-handle">
+									<span class="orange">{$c.title}</span>
+									<span class="lighter grey">&nbsp; {$c.uri}</span>
+									<div class="pull-right action-buttons">
+										<eq name="c.status" value="0">
+											<a href="#" class="blue" title="已禁用">
+												<i class="pull-right bigger-130 icon-warning-sign orange2"></i>
+											</a>
+										</eq>
+										<a class="blue" href="{:U('sidenav','id='.$c['id'])}">
+											<i class="icon-pencil bigger-130"></i>
+										</a>
+
+										<a class="red delsidenav" href="###" sid="{$c.id}" onclick="return false;">
+											<i class="icon-trash bigger-130"></i>
+										</a>
+									</div>
+								</div>
+								<if condition="$c.son neq ''">
+									<ol class="dd-list">
+						<volist name="c.son" id="s">
+							<li class="dd-item item-blue2" data-id="{$s.id}">
+								<div class="dd-handle">
+									<span class="orange">{$s.title}</span>
+									<span class="lighter grey">&nbsp; {$s.uri}</span>
+									<div class="pull-right action-buttons">
+										<eq name="s.status" value="0">
+											<a href="#" class="blue" title="已禁用">
+												<i class="pull-right bigger-130 icon-warning-sign orange2"></i>
+											</a>
+										</eq>
+										<a class="blue" href="{:U('sidenav','id='.$s['id'])}">
+											<i class="icon-pencil bigger-130"></i>
+										</a>
+
+										<a class="red delsidenav" href="###" sid="{$s.id}" onclick="return false;">
+											<i class="icon-trash bigger-130"></i>
+										</a>
+									</div>
+								</div>
+							</li>
+						</volist>
+					</ol>
+								</if>
+							</li>
+						</volist>
+					</ol>
+				</if>
+			</li>
+		</volist>
+
+	</ol>
+</div>
+</div>
+</div>
+<!-- PAGE CONTENT ENDS -->
+</div>
+<!-- /.col -->
+</div>
+<!-- /.row -->
+<!-- <textarea id='nestable-output' style="width:100%;height: 50px;"></textarea> -->
+
+</block>
+<block name="jiazaijs">
+<script src="__JS__/jquery.nestable.min.js"></script>
+<script src="__JS__/fuelux/fuelux.wizard.min.js"></script>
+<script src="__JS__/jquery.validate.min.js"></script>
+<script src="__JS__/additional-methods.min.js"></script>
+<script src="__JS__/bootbox.min.js"></script>
+<script src="__JS__/jquery.maskedinput.min.js"></script>
+<script src="__JS__/select2.min.js"></script>
+<!-- ace scripts -->
+</block>
+<block name="script">
+<script src="__JS__/jquery.gritter.min.js"></script>
+<script type="text/javascript">
+			jQuery(function($){
+				 var updateOutput = function(e)
+    				{
+        				var list   = e.length ? e : $(e.target),
+        				    output = list.data('output');
+        				if (window.JSON) {
+        				    output.val(window.JSON.stringify(list.nestable('serialize')));//, null, 2));
+        				} else {
+        				    output.val('JSON browser support required for this demo.');
+        				}
+    				};
+
+    // activate Nestable for list 1
+
+    $('.dd').nestable({
+        group: 1
+    })
+    .on('change', updateOutput);
+			updateOutput($('.dd').data('output', $('#nestable-output')));
+				$('.dd').nestable('collapseAll');
+			
+				$('.dd-handle a').on('mousedown', function(e){
+					e.stopPropagation();
+				});
+				$('[data-rel="tooltip"]').tooltip();
+				$('#validation-form').validate({
+					errorElement: 'div',
+					errorClass: 'help-block',
+					focusInvalid: true,
+					rules: {
+						title: 'required',
+						status: 'required',
+						uri: 'required',
+						sort:'required',
+						
+					},
+			
+					messages: {
+						title: '请输入名称',
+						status:"请选择是否启用",
+						uri:'请填写连接地址',
+						sort:'请填写排序',
+					},
+			
+					invalidHandler: function (event, validator) { //display error alert on form submit   
+						$('.alert-danger', $('.login-form')).show();
+					},
+			
+					highlight: function (e) {
+						$(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+					},
+			
+					success: function (e) {
+						$(e).closest('.form-group').removeClass('has-error').addClass('has-info');
+						$(e).remove();
+					},
+			
+					errorPlacement: function (error, element) {
+						if(element.is(':checkbox') || element.is(':radio')) {
+							var controls = element.closest('div[class*="col-"]');
+							if(controls.find(':checkbox,:radio').length > 1) controls.append(error);
+							else error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
+						}
+						else if(element.is('.select2')) {
+							error.insertAfter(element.siblings('[class*="select2-container"]:eq(0)'));
+						}
+						else if(element.is('.chosen-select')) {
+							error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
+						}
+						else error.insertAfter(element.parent());
+					},
+			
+					submitHandler: function (form) {
+						$("button:submit").removeClass("log-in").attr("disabled", false);
+					},
+					invalidHandler: function (form) {
+						$("button:submit").addClass("log-in").attr("disabled", true);
+					}
+				});
+				
+				$('.delsidenav').click(function(){
+					var id=$(this).attr('sid');
+					bootbox.confirm("确定要删除么?", function(result){
+						if(result) {
+							$.post("{:U('sidenavdel')}",{'id':id,'ajax':1},success,'json');
+							function success(data){
+								if (data.status) {
+									$.gritter.add({
+										// (string | mandatory) the heading of the notification
+										title: '导航删除成功',
+										// (string | mandatory) the text inside the notification
+										text: '删除成功',
+										class_name: 'gritter-success gritter-light'
+									});
+									setTimeout('location.reload()',1000);
+								}else{
+									$.gritter.add({
+										title: 'This is a warning notification',
+										text: 'Just add a "gritter-light" class_name to your $.gritter.add or globally to $.gritter.options.				class_name',
+										class_name: 'gritter-error gritter-light'
+									});
+								};
+							}
+						}
+					})
+					
+				})
+
+			
+			 });
+				
+
+$(document).ajaxStart(function(){$("button:submit").addClass("log-in").attr("disabled", true);}).ajaxStop(function(){$("button:submit").removeClass("log-in").attr("disabled", false);});
+$("form#validation-form").submit(function(){
+
+    		var self = $(this);
+    		$.post(self.attr("action"), self.serialize(), success, "json");
+
+    		return false;
+
+
+
+    		function success(data){
+
+    			if(data.status){
+    				$("#result").html(data.info);
+    				window.location.href = data.url;
+
+    			} else {
+
+    				$("#result").html(data.info);
+
+    			}
+
+    		}
+
+    	});
+		</script>
+</block>

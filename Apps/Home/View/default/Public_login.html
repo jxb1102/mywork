@@ -1,0 +1,54 @@
+<include file="Public:header" />
+<div style="clear:both;"></div>
+<div class="lgs-main">
+	<div class="lgs-loginbox">
+		<div class="loginform" style="margin-top:-10px;">
+			<div class="formbg"></div>
+			<div class="formlist" style="margin-top:-20px;">
+				<!-- &nbsp;&nbsp;&nbsp;&nbsp;<span style="font-size: 16px;font-weight:600;margin-bottom: 5px;">{:L('login')}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<a href="{:U('Public/reg')}" style="color:#333; font-size:16px;">{:L('reg')}</a> -->
+                <span class="formtitle formtitlebg2">{:L('login')}</span>
+				<span class="formtitle formtitlebg"><a href="{:U('Public/reg')}">{:L('reg')}</a></span>
+				<div class="blank"></div>
+				<form method="post" id="login"  action="{:U('Public/checklogin')}" name="login">
+				    <div class="blank" style="height:10px;"></div>
+					<input type="text" name="username" id="username"  class="gray" placeholder="{:L('username')}" value="{$Think.cookie.local_username}">
+					<div class="blank" style="height:10px;"></div>
+					<input type="password" name="password" id="password"  placeholder="{:L('password')}" class="gray" value="{$Think.cookie.local_password}">
+					<div class="blank" style="height:10px;"></div>
+			        <span style="float:left;font-size: 16px;color: #333;">{:L('yzm')}：&nbsp;</span><img src="{:U('Public/verify')}" title="看不清点我刷新" onclick="this.src=this.src+'?'+Math.random()" style="float:left;" id="code"/>&nbsp;&nbsp;<input type="text" name="verify" id="verify" value="" class="required" maxlength="6" placeholder="{:L('yzm')}" style="width:88px;">
+					<div class="blank" style="height:10px;"></div>
+					<label><input type="checkbox" name="rememberpassword" <neq name="Think.cookie.local_password" value="">checked</neq> value="1"> {:L('remember_pass')}</label>
+					<div class="blank" style="height:10px;"></div>
+					<input type="hidden" name="backurl" value="{$backurl}">
+					<button type="submit" class="loginbtn" id="submit">{:L('login')}</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<div style="clear:both;"></div>
+<include file="Public:footer" />
+<script type="text/javascript">
+	$(function(){
+			$('form#login').submit(function(){
+				var verify=$('#verify').val();
+			    if(verify==""){
+					alert('验证码不能为空');
+					return false;
+			    }
+				var self = $(this);
+					$.post(self.attr("action"), self.serialize(), success, "json");
+					return false;
+					function success(data){
+						if (data.status) {
+							$.thinkbox.success(data.info);
+							setTimeout(jumpurl(data.url),1500);
+						}else{
+							$.thinkbox.error(data.info);
+							$('#code').click();
+						};
+					}
+			})
+	})
+</script>

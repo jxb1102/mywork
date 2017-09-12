@@ -1,0 +1,212 @@
+<extend name="Public/base"/>
+<block name="active">
+	<li class="active">包裹汇总</li>
+</block>
+<block name="page-content">
+	<div class="page-header">
+		<h1>
+			包裹汇总
+			<small> <i class="icon-double-angle-right"></i>
+				包裹重量金额汇总
+			</small>
+		</h1>
+	</div>
+	<!-- /.page-header -->
+	<div class="row">
+
+<div class="col-sm-12">
+	<div style="margin-bottom: 20px;">
+		<form method="{:U('Caiwu/bghuizong')}" method="get">
+		<span style="float: left;display: block;"><input name="starttime" value="<?php echo $_GET['starttime'] ?>" class="form-control date-picker" id="id-date-picker-1" type="text" data-date-format="yyyy-mm-dd" placeholder="开始时间" style="width: 200px;"/></span> 
+		<span style="float: left;display:block;height: 33px;line-height: 33px;padding: 0 20px;">--</span>
+		<span style="float:left;display: block;"><input name="endtime" value="<?php echo $_GET['endtime'] ?>" class="form-control date-picker" id="id-date-picker-1" type="text" data-date-format="yyyy-mm-dd" placeholder="结束时间" style="width: 200px;"/></span>
+		<span style="float:left;display: block;margin-left: 10px;"><input name="uname" value="<?php echo $_GET['uname'] ?>" class="form-control"  type="text"  placeholder="用户名" style="width: 100px;"/></span>
+		<span style="float:left;display: block;padding-left: 20px;"><button class="btn btn-sm">查询</button></span>
+		</form>
+		<div style="clear:both;"></div>
+	</div>
+<table id="sample-table-1" class="table table-striped table-bordered table-hover"  style="font-size: 12px;">
+<thead>
+	<tr>
+		<th>时间</th>
+		<th>用户</th>
+		<th>运单号</th>
+		<th>目的地</th>
+		<th>出货公司</th>
+		<th>重量 kg</th>
+		<th>体积 kg</th>
+		<th>包裹类型</th>
+		<th>支付类型</th>
+		<th>付款时间</th>
+		<th>运费 {:C('MAIN_COIN')}</th>
+		<th>出货费用</th>
+		<th>利润{:C('MAIN_COIN')}</th>
+	</tr>
+</thead>
+
+<tbody>
+	<if condition="$ydbglist">
+	<volist name="ydbglist" id="v">
+		<tr>
+
+			<td>{$v.fahuotime|date='m-d',###}</td>
+			<td>{$v.uname}(ID:{$v.uid})</td>
+			<td>{$v.bgsn}</td>
+			<td>{$v.dd.areaname}</td>
+			<td>{$v.chuhuogs}</td>
+			<td>{$v.weight}</td>
+			<td>{$v.voweight}</td>
+			<td>{$v.bgleixing|getbgleixing}</td>
+			<td><eq name="v.payedby" value="1">后台支付<else/>用户支付</eq></td>
+			<td>{$v.paytime|date="Y-m-d H:i",###}</td>
+			<td>{$v.freight}</td>
+			<td>{$v.chengben}</td>
+			<td>{$v['freight']-$v['chengben']|sprintf="%01.2f",###}</td>
+		</tr>
+	</volist>
+	<tr>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td>{$ydbginfo.weight}</td>
+		<td>{$ydbginfo.voweight}</td>
+		<td></td>
+		<td></td><td></td>
+		<td>{$ydbginfo.freight}</td>
+		<td>{$ydbginfo.chengben}</td>
+		<td>{$ydbginfo.lirun}</td>
+	</tr>
+	<else/>
+	<tr><td colspan="12">没有查询到信息</td></tr>
+</if>
+</tbody>
+</table>
+<div style="float: left;">
+	<a href="{:U('Caiwu/bgbaobiao','starttime='.$_GET['starttime'].'&endtime='.$_GET['endtime'].'&uname='.$_GET['uname'].'&type=dayin')}" target="_blank" style="display:block;float: right;" class="btn btn-success btn-minier">打印报表</a>
+</div>
+<div class="page">{$_page}</div>
+</div>
+</div>
+
+</block>
+<block name="jiazaijs">
+<script src="__JS__/bootbox.min.js"></script>
+<script src="__JS__/jquery.gritter.min.js"></script>
+<script src="__JS__/jquery.validate.min.js"></script>
+<script src="__JS__/date-time/bootstrap-datepicker.min.js"></script>
+<script src="__JS__/jquery.dataTables.min.js"></script>
+<script src="__JS__/jquery.dataTables.bootstrap.js"></script>
+<script src="__JS__/chosen.jquery.min.js"></script>
+</block>
+<block name="script">
+
+<script type="text/javascript">
+jQuery(function($){
+
+	$('.date-picker').datepicker({autoclose:true}).next().on(ace.click_event, function(){
+					$(this).prev().focus();
+				});
+	$(".chosen-select").chosen(); 
+				$('#ruku-table').on('shown.bs.modal', function () {
+					$(this).find('.chosen-container').each(function(){
+						$(this).find('a:first-child').css('width' , '210px');
+						$(this).find('.chosen-drop').css('width' , '210px');
+						$(this).find('.chosen-search input').css('width' , '200px');
+					});
+				})
+	$('.weidaozhang').click(function(){
+					var id=$(this).attr('sid');
+					bootbox.confirm("确定未充值成功么？确定后会退回用户已支付余额", function(result){
+						if(result) {
+							$.post("{:U('weichongzhi')}",{'id':id,'ajax':1},success,'json');
+							function success(data){
+								if (data.status) {
+									$.gritter.add({
+										// (string | mandatory) the heading of the notification
+										title: '提交成功',
+										// (string | mandatory) the text inside the notification
+										text: data.info,
+										class_name: 'gritter-success gritter-light'
+									});
+									setTimeout('location.reload()',1000);
+								}else{
+									$.gritter.add({
+										title: '提交失败',
+										text: data.info,
+										class_name: 'gritter-error gritter-light'
+									});
+								};
+							}
+						}
+					})
+					
+				})
+	$('#chongzhi').click(function(){
+					var id=$(this).attr('sid');
+					bootbox.confirm("确定已充值成功么?", function(result){
+						if(result) {
+							$.post("{:U('zhifubaoyichongzhi')}",{'id':id,'ajax':1},success,'json');
+							function success(data){
+								if (data.status) {
+									$.gritter.add({
+										// (string | mandatory) the heading of the notification
+										title: '提交成功',
+										// (string | mandatory) the text inside the notification
+										text: data.info,
+										class_name: 'gritter-success gritter-light'
+									});
+									setTimeout(jumpu(data.url),1000);
+								}else{
+									$.gritter.add({
+										title: '提交失败',
+										text: data.info,
+										class_name: 'gritter-error gritter-light'
+									});
+								};
+							}
+						}
+					})
+					
+				})
+	})
+		$("form#validation-form").submit(function(){
+
+    		var self = $(this);
+    		$.post(self.attr("action"), self.serialize(), success, "json");
+
+    		return false;
+
+    		function success(data){
+
+    			if(data.status){
+    				$.gritter.add({
+										// (string | mandatory) the heading of the notification
+										title: '提交成功',
+										// (string | mandatory) the text inside the notification
+										text: data.info,
+										class_name: 'gritter-success gritter-light'
+									});
+									setTimeout(jumpu(data.url),1000);
+
+    			} else {
+
+    				$.gritter.add({
+										// (string | mandatory) the heading of the notification
+										title: '提交失败',
+										// (string | mandatory) the text inside the notification
+										text: data.info,
+										class_name: 'gritter-success gritter-light'
+									});
+
+    			}
+
+    		}
+
+    	});
+    	function jumpu(uri){
+    		window.location.href=uri;
+    	}
+														</script>
+</block>

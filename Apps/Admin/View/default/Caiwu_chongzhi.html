@@ -1,0 +1,262 @@
+<extend name="Public/base"/>
+<block name="active">
+	<li class="active">汇款充值</li>
+</block>
+<block name="page-content">
+	<div class="page-header">
+		<h1>
+			汇款充值
+			<small> <i class="icon-double-angle-right"></i>
+				汇款充值
+			</small>
+		</h1>
+	</div>
+	<!-- /.page-header -->
+	<div class="row">
+		<div class="col-sm-3">
+			<h3 class="header smaller lighter green"> <i class="icon-bullhorn"></i>
+				会员后台充值
+			</h3>
+			<form action="{:U('houtaichongzhi')}" class="form-horizontal" id="validation-form" method="post">
+			<div class="form-group">
+				<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="uid">用户:</label>
+
+				<div class="col-xs-12 col-sm-9">
+					<div class="clearfix">
+						<select class="width-70 chosen-select" data-placeholder="用户" id="form-field-select-3" name="uid">
+							<option value="">&nbsp;</option>
+							<volist name="userlist" id="v">
+								<option value="{$v.uid}">{$v.username}&nbsp;(ID:{$v.uid})</option>
+							</volist>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="amount">金额:</label>
+
+				<div class="col-xs-12 col-sm-9">
+					<div class="clearfix">
+						<input type="text" name="amount" id="amount" class="col-xs-12 col-sm-6" value="" /> &nbsp;&nbsp;<span style="line-height: 29px;">{:C('MAIN_COIN')}</span>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="huikuantime">时间:</label>
+
+				<div class="col-xs-12 col-sm-8">
+					<div class="input-group">
+						<input class="form-control date-picker" id="id-date-picker-1" type="text" data-date-format="yyyy-mm-dd" />					
+						<span class="input-group-addon"> <i class="icon-calendar bigger-110"></i>
+						</span>
+					</div>
+				</div>
+			</div>
+
+		<div class="form-group">
+			<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="remark">备注:</label>
+
+			<div class="col-xs-12 col-sm-9">
+				<div class="clearfix">
+					<textarea class="col-sm-10" name="remark" id="remark">{$info.remark}</textarea>
+		</div>
+		</div>
+		</div>
+<div class="form-group">
+	<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="title">&nbsp;</label>
+
+	<div class="col-xs-12 col-sm-9">
+		<div class="clearfix">
+			
+				
+				<button type="submit" class="btn btn-success btn-next no-border">确认充值</button>
+			
+		</div>
+	</div>
+</div>
+
+</form>
+</div>
+
+<div class="col-sm-9">
+<h3 class="header smaller lighter green">
+<i class="icon-bullhorn"></i>
+用户汇款单
+</h3>
+<table id="sample-table-1" class="table table-striped table-bordered table-hover"  style="font-size: 12px;">
+<thead>
+	<tr>
+		<th class="center" style="width:20px;">ID</th>
+		<th width="70">用户</th>
+		<th width="70">汇款方式</th>
+		<th width="85">金额</th>
+		<th>币种</th>
+		<th>汇款银行名称</th>
+		<th>汇款人名称</th>
+		<th>汇入银行名称</th>
+		<th>汇款时间</th>
+		<th>汇款人邮箱</th>
+		<th>操作</th>
+		
+	</tr>
+</thead>
+
+<tbody>
+	<volist name="list" id="v">
+		<tr>
+			<td class="center">{$v.id}</td>
+			<td>{$v.uname}</td>
+			<td>{$v.fangshi}</td>
+			<td>{$v.amount}</td>
+			<td>{$v.bizhong}</td>
+			<td>{$v.yhname}</td>
+			<td>{$v.zhname}</td>
+			<td>{$v.runame}</td>
+			<td>{$v.huikuantime|date="Y-m-d",###}</td>
+			<td id="email">{$v.email}</td>
+			<td class="action-buttons">
+				<eq name="v.status" value="1">
+					已充值
+					<else />
+					<eq name="v.status" value="2">
+						未到账
+						<else />
+				<a class="blue" href="javascript:;" sid="{$v.id}" id="chongzhi" title="确认到账充值">
+					<i class="icon-check bigger-130"></i>
+				</a>
+				<a class="red weidaozhang" href="javascript:;" sid="{$v.id}" onclick="return false;" title="未到账">
+					<i class="icon-ban-circle bigger-130"></i>
+				</a>
+				</eq>
+				</eq>
+
+			</td>
+			
+		</tr>
+	</volist>
+</tbody>
+</table>
+<div class="page">{$_page}</div>
+</div>
+</div>
+
+</block>
+<block name="jiazaijs">
+<script src="__JS__/bootbox.min.js"></script>
+<script src="__JS__/jquery.gritter.min.js"></script>
+<script src="__JS__/jquery.validate.min.js"></script>
+<script src="__JS__/date-time/bootstrap-datepicker.min.js"></script>
+<script src="__JS__/jquery.dataTables.min.js"></script>
+<script src="__JS__/jquery.dataTables.bootstrap.js"></script>
+<script src="__JS__/chosen.jquery.min.js"></script>
+</block>
+<block name="script">
+
+<script type="text/javascript">
+
+jQuery(function($){
+	$(".chosen-select").chosen(); 
+				$('#ruku-table').on('shown.bs.modal', function () {
+					$(this).find('.chosen-container').each(function(){
+						$(this).find('a:first-child').css('width' , '210px');
+						$(this).find('.chosen-drop').css('width' , '210px');
+						$(this).find('.chosen-search input').css('width' , '200px');
+					});
+				})
+	$('.weidaozhang').click(function(){
+					var id=$(this).attr('sid');
+					var email=$('#email').html();
+					bootbox.confirm("确定要设置为未到账么?设置后用户需重新提交汇款信息", function(result){
+						if(result) {
+							$.post("{:U('weidaozhang')}",{'id':id,'email':email,'ajax':1},function(data){
+								if (data.status) {
+									$.gritter.add({
+										// (string | mandatory) the heading of the notification
+										title: '提交成功',
+										// (string | mandatory) the text inside the notification
+										text: data.info,
+										class_name: 'gritter-success gritter-light'
+									});
+									setTimeout(jumpu(data.url),1000);
+								}else{
+									$.gritter.add({
+										title: '提交失败',
+										text: data.info,
+										class_name: 'gritter-error gritter-light'
+									});
+								};
+							},'json');
+						}
+					})
+					
+				})
+	$('#chongzhi').click(function(){
+					var id=$(this).attr('sid');
+					var email=$('#email').html();
+					bootbox.confirm("确定已到账，充值到该用户账户么?", function(result){
+						if(result) {
+							$.post("{:U('querenchongzhi')}",{'id':id,'email':email,'ajax':1},function(data){
+								if (data.status) {
+									$.gritter.add({
+										// (string | mandatory) the heading of the notification
+										title: '提交成功',
+										// (string | mandatory) the text inside the notification
+										text: data.info,
+										class_name: 'gritter-success gritter-light'
+									});
+									setTimeout(jumpu(data.url),1000);
+								}else{
+									$.gritter.add({
+										title: '提交失败',
+										text: data.info,
+										class_name: 'gritter-error gritter-light'
+									});
+								};
+							},'json');
+						}
+					})
+					
+				})
+	$('.date-picker').datepicker({autoclose:true}).next().on(ace.click_event, function(){
+					$(this).prev().focus();
+				});
+	})
+		$("form#validation-form").submit(function(){
+
+    		var self = $(this);
+    		$.post(self.attr("action"), self.serialize(), success, "json");
+
+    		return false;
+
+    		function success(data){
+
+    			if(data.status){
+    				$.gritter.add({
+										// (string | mandatory) the heading of the notification
+										title: '提交成功',
+										// (string | mandatory) the text inside the notification
+										text: data.info,
+										class_name: 'gritter-success gritter-light'
+									});
+									setTimeout(jumpu(data.url),1000);
+
+    			} else {
+
+    				$.gritter.add({
+										// (string | mandatory) the heading of the notification
+										title: '提交失败',
+										// (string | mandatory) the text inside the notification
+										text: data.info,
+										class_name: 'gritter-success gritter-light'
+									});
+
+    			}
+
+    		}
+
+    	});
+    	function jumpu(uri){
+    		window.location.href=uri;
+    	}
+														</script>
+</block>

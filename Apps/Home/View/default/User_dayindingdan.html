@@ -1,0 +1,99 @@
+	<link href="__CSS__/printcss.css" rel="stylesheet" type="text/css" />
+	<script src="__JS__/jquery-1.8.2.js" type="text/javascript"></script>
+	<script type="text/javascript" src="__COMMONJS__/jquery.print.js"></script>
+		<div style="padding:10px;">
+			<div id="printarea">
+				<div style="text-align: center;font-size: 16px;padding: 10px;">{:L('order_info')} - {$ddinfo.status|getyundanstatus}</div>
+			<table class="dayin_box" cellpadding="0" cellspacing="0">
+						<tr>
+							<td>{:L('order_num')}：</td>
+							<td>{$ddinfo.sn}</td>
+							<td>{:L('add_time')}：</td>
+							<td>{$ddinfo.addtime|date="Y-m-d",###}</td>
+						</tr>
+						<tr>
+							<td>{:L('shipping_method')}：</td>
+							<td>{$ddinfo.delivery.dname} [<a href="{$ddinfo.delivery.url}">{:L('official_website')}</a>]</td>
+							<td>{:L('jiazhi')}：</td>
+							<td>{$ddinfo.shenbaojiazhi}</td>
+						</tr>
+						<tr>
+							<td>{:L('delivery_info')}：</td>
+							<td colspan="3">{$ddinfo.consignee}({$ddinfo.tel}) &nbsp; {$ddinfo.areaname} {$ddinfo.address}({$ddinfo.zipcode})</td>
+						</tr>
+						
+			</table>
+			<div class="blank"></div>
+			<b style="display: inline-block;padding: 5px 0;color: red;">{:L('forecast_list')}</b>
+			<table class="dayin_box" cellpadding="0" cellspacing="0">
+						<tr>
+							<th width="80">{:L('ex_num')}</th>
+							<th width="80">{:L('ex_name')}</th>
+							<th width="80">{:L('baoguo_name')}</th>
+							<th>{:L('jiazhi')}</th>
+							<th width="80">{:L('baoguo_leixing')}</th>
+							<th>{:L('unpacking')}</th>
+							<th>{:L('remark')}</th>
+							<th>{:L('status')}</th>
+							<th>{:L('operation')}</th>
+						</tr>
+						<volist name="yblist" id="v">
+						<tr>
+							<td>{$v.kdsn}</td>
+							<td>{$v.kdname}</td>
+							<td>{$v.bgname}</td>
+							<td>{$v.shenbao}</td>
+							<td><eq name="v.bgleixing" value="0">{:L('common_goods')}</eq><eq name="v.bgleixing" value="1">{:L('sensitive_goods')}</eq></td>
+							<td><eq name="v.chaibao" value="0">{:L('no_unpacking')}</eq><eq name="v.chaibao" value="1">{:L('unpacking')}</eq></td>
+							<td>{$v.remark}</td>
+							<td>{$v.status|getyubaostatus}</td>
+							<td></td>
+						</tr>
+					</volist>
+			</table>
+			<div class="blank"></div>
+			<b style="display: inline-block;padding: 5px 0;color: red;">{:('parcel_list')}</b>
+			<table class="dayin_box" cellpadding="0" cellspacing="0">
+						<tr>
+							
+							<th>{:('guoji_delivery_num')}</th>
+							<th>{:L('long')}cm</th>
+							<th>{:L('widt')}cm</th>
+							<th>{:L('high')}cm</th>
+							<th width="80">{:L('index_volume')}</th>
+							<th width="80">{:L('weight')}</th>
+							<th>{:L('remark')}</th>
+							<th width="80">{:L('freight')}{:C('MAIN_COIN')}</th>
+						</tr>
+						<if condition="$bglist">
+						<volist name="bglist" id="v">
+						<tr>
+							
+							<td>{$v.bgsn}</td>
+							<td>{$v.chang}</td>
+							<td>{$v.kuan}</td>
+							<td>{$v.gao}</td>
+							<td>{$v.voweight}</td>
+							<td>{$v.weight}</td>
+							<td>{$v.remark}</td>
+							<td align="right"><b style="color:red;" class="freight">{$v.freight}</b></td>
+						</tr>
+					</volist>
+					<else />
+					<tr><td colspan="8">{:('no_infos')}</td></tr>
+				</if>
+			</table>
+			<div class="blank"></div>
+		</div>
+			<div style="border: 1px solid #dfdfdf;padding: 10px;font-size: 14px;text-align: center;line-height: 30px;">
+				<a href="###" id="printbtn">{:L('confirm_print')}</a>
+				<div class="clear"></div>
+			</div>
+		</div>
+	<script type="text/javascript">
+		$(function(){
+			$('#printbtn').click(function(){
+				$("#printarea").printArea();
+			})
+		})
+	</script>

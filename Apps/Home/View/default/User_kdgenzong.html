@@ -1,0 +1,105 @@
+<extend name="default/Public/user"/>
+<block name="user-right">
+<div class="user-right">
+	<div class="user-head">
+		<h2>我的信息</h2>
+	</div>
+	<div style="padding: 20px;">
+		<div style="">
+			<form action="{:U('User/kdgenzong')}" methon="get">
+				<input type="text" name="kdsn" value="<?php echo $_GET['kdsn'] ?>" placeholder="请输入快递单号">
+				<input type="submit" value="查询">
+			</form>
+		</div>
+		<div class="blank"></div>
+		<table class="yubao-add yubao-list" cellpadding="0" cellspacing="0" style="line-height: 25px;">
+			<tr>
+				<th width="80">时间</th>
+				<th width="100">单号</th>
+				<th>状态</th>
+			</tr>
+			<if condition="$ybinfo neq ''">
+					<tr>
+						<td>{$ybinfo.addtime|date="Y-m-d",###}</td>
+						<td>{$ybinfo.kdsn}</td>
+						<td>添加预报信息</td>
+					</tr>
+					<if condition="$ybinfo.status gt 1">
+						<tr>
+						<td>{$ybinfo.rukutime|date="Y-m-d",###}</td>
+						<td>{$ybinfo.kdsn}</td>
+						<td>快递包裹入库</td>
+					</tr>
+					</if>
+					<if condition="$ybinfo.status gt 2">
+					<tr>
+						<td>{$ybinfo.chukutime|date="Y-m-d",###}</td>
+						<td>{$ybinfo.kdsn}</td>
+						<td>快递包裹出库</td>
+					</tr>
+					</if>
+					<if condition="$ybinfo.ydid neq ''">
+					<tr>
+						<td>{$ybinfo.yundan.addtime|date="Y-m-d",###}</td>
+						<td>{$ybinfo.kdsn}</td>
+						<td>提交订单 <a href="{:U('User/dingdanview','id='.$ybinfo['ydid'])}">{$ybinfo.yundan.sn}</a></td>
+					</tr>
+					</if>
+					<if condition="$ybinfo.bgid neq ''">
+					<tr>
+						<td>{$ybinfo.ydbaoguo.addtime|date="Y-m-d",###}</td>
+						<td>{$ybinfo.kdsn}</td>
+						<td>运单打包，所属国际运单号 <a href="{:U('User/baoguolist','id='.$ybinfo['bgid'])}">{$ybinfo.ydbaoguo.bgsn}</a></td>
+					</tr>
+					<eq name="ybinfo.ydbaoguo.status" value="9">
+					<tr>
+						<td>{$ybinfo.ydbaoguo.addtime|date="Y-m-d",###}</td>
+						<td>{$ybinfo.kdsn}</td>
+						<td>国际运单号 <a href="{:U('User/baoguolist','id='.$ybinfo['bgid'])}">{$ybinfo.ydbaoguo.bgsn}</a> 已暂扣</td>
+					</tr>
+						<else/>
+					<gt name="ybinfo.ydbaoguo.status" value="3">
+					<tr>
+						<td>{$ybinfo.ydbaoguo.paytime|date="Y-m-d",###}</td>
+						<td>{$ybinfo.kdsn}</td>
+						<td>际运单号 <a href="{:U('User/baoguolist','id='.$ybinfo['bgid'])}">{$ybinfo.ydbaoguo.bgsn}</a> 付款</td>
+					</tr>
+					</gt>
+					<gt name="ybinfo.ydbaoguo.status" value="4">
+					<tr>
+						<td>{$ybinfo.ydbaoguo.paytime|date="Y-m-d",###}</td>
+						<td>{$ybinfo.kdsn}</td>
+						<td>际运单号 <a href="{:U('User/baoguolist','id='.$ybinfo['bgid'])}">{$ybinfo.ydbaoguo.bgsn}</a> 发货</td>
+					</tr>
+					</gt>
+					<gt name="ybinfo.ydbaoguo.status" value="5">
+					<tr>
+						<td>{$ybinfo.ydbaoguo.paytime|date="Y-m-d",###}</td>
+						<td>{$ybinfo.kdsn}</td>
+						<td>际运单号 <a href="{:U('User/baoguolist','id='.$ybinfo['bgid'])}">{$ybinfo.ydbaoguo.bgsn}</a> 收货确认</td>
+					</tr>
+					</gt>
+				</eq>
+					</if>
+				<else/>		
+				<tr>
+					<td colspan="3">请输入您要查询的快递单号</td>
+				</tr>
+			</if>
+		</table>
+		<div class="page">{$_page}</div>
+	</div>
+	<div id="liuyanform" style="display: none;">
+		<form action="{:U('User/liuyanadd')}" methon="post">
+			<textarea name="content" style="height: 80px;width: 300px;padding: 5px;" placeholder="请填写留言内容"></textarea>
+			<div style="text-align: right;"><button>提交留言</button></div>
+		</form>
+	</div>
+	
+</div>
+<script type="text/javascript">
+	$(function(){
+
+	})
+</script>
+</block>

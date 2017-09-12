@@ -1,0 +1,217 @@
+<extend name="Public/base"/>
+<block name="active">
+	<li class="active">银行账户</li>
+</block>
+<block name="page-content">
+	<div class="page-header">
+		<h1>
+			银行账户
+			<small> <i class="icon-double-angle-right"></i>
+				添加/编辑 银行账户
+			</small>
+		</h1>
+	</div>
+	<!-- /.page-header -->
+	<div class="row">
+		<div class="col-sm-5">
+			<h3 class="header smaller lighter green"> <i class="icon-bullhorn"></i>
+				<if condition="$info">
+					编辑银行账户
+					<else/>
+					添加新银行账户
+				</if>
+			</h3>
+			<form <if condition="$info">
+				action="{:U('yinhangedit')}"
+				<else/>
+				action="{:U('yinhangadd')}"
+			</if>
+			class="form-horizontal" id="validation-form" method="post">
+			<div class="form-group">
+				<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="title">银行名称:</label>
+
+				<div class="col-xs-12 col-sm-9">
+					<div class="clearfix">
+						<input type="text" name="title" id="title" class="col-xs-12 col-sm-6" value="{$info.title}" />
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="zhname">账户名:</label>
+
+				<div class="col-xs-12 col-sm-9">
+					<div class="clearfix">
+						<input type="text" name="zhname" id="zhname" class="col-xs-12 col-sm-6" value="{$info.zhname}" />
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="zhanghao">银行账号:</label>
+
+				<div class="col-xs-12 col-sm-9">
+					<div class="clearfix">
+						<input type="text" name="zhanghao" id="zhanghao" class="col-xs-12 col-sm-6" value="{$info.zhanghao}" />
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="currency">币种:</label>
+
+				<div class="col-xs-12 col-sm-9">
+					<div class="clearfix">
+						<input type="text" name="currency" id="currency" class="col-xs-12 col-sm-6" value="{$info.currency}" />
+					</div>
+				</div>
+			</div>
+
+		<div class="form-group">
+			<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="remark">备注:</label>
+
+			<div class="col-xs-12 col-sm-9">
+				<div class="clearfix">
+					<textarea class="col-sm-10" name="remark" id="remark">{$info.remark}</textarea>
+		</div>
+		</div>
+		</div>
+<div class="form-group">
+	<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="title">&nbsp;</label>
+
+	<div class="col-xs-12 col-sm-9">
+		<div class="clearfix">
+			<if condition="$info">
+				<input type="hidden" name="id" value="{$info.id}">
+				<button type="submit" class="btn btn-success btn-next no-border">确认编辑</button><a href="{:U('yinhang')}" class="btn btn-light btn-next no-border">取消</a>
+				<else/>
+				<button type="submit" class="btn btn-success btn-next no-border">确认添加</button>
+			</if>
+		</div>
+	</div>
+</div>
+
+</form>
+</div>
+
+<div class="col-sm-7">
+<h3 class="header smaller lighter green">
+<i class="icon-bullhorn"></i>
+银行账户列表
+</h3>
+<table id="sample-table-1" class="table table-striped table-bordered table-hover">
+<thead>
+	<tr>
+		<th class="center" style="width:20px;">ID</th>
+		<th>银行名称</th>
+		<th>账户名称</th>
+		<th>银行账号</th>
+		<th>币种</th>
+		<th>备注</th>
+		<th>操作</th>
+	</tr>
+</thead>
+
+<tbody>
+	<volist name="yhlist" id="v">
+		<tr>
+			<td class="center">{$v.id}</td>
+
+			<td>{$v.title}</td>
+			<td>{$v.zhname}</td>
+			<td>{$v.zhanghao}</td>
+			<td>{$v.currency}</td>
+			<td>{$v.remark}</td>
+			<td class="action-buttons">
+				<a class="blue" href="{:U('yinhang','id='.$v['id'])}">
+					<i class="icon-pencil bigger-130"></i>
+				</a>
+
+				<a class="red delyinhang" href="javascript:;" sid="{$v.id}" onclick="return false;">
+					<i class="icon-trash bigger-130"></i>
+				</a>
+
+			</td>
+		</tr>
+	</volist>
+</tbody>
+</table>
+</div>
+</div>
+
+</block>
+<block name="jiazaijs">
+	<script src="__JS__/bootbox.min.js"></script>
+<script src="__JS__/jquery.gritter.min.js"></script>
+<script src="__JS__/jquery.validate.min.js"></script>
+<script src="__JS__/jquery.dataTables.min.js"></script>
+<script src="__JS__/jquery.dataTables.bootstrap.js"></script>
+</block>
+<block name="script">
+
+<script type="text/javascript">
+
+jQuery(function($){
+	$('.delyinhang').click(function(){
+					var id=$(this).attr('sid');
+					bootbox.confirm("确定要删除么?", function(result){
+						if(result) {
+							$.post("{:U('yinhangdel')}",{'id':id,'ajax':1},function(data){
+								if (data.status) {
+									$.gritter.add({
+										// (string | mandatory) the heading of the notification
+										title: '提交成功',
+										// (string | mandatory) the text inside the notification
+										text: data.info,
+										class_name: 'gritter-success gritter-light'
+									});
+									setTimeout(jumpu(data.url),1000);
+								}else{
+									$.gritter.add({
+										title: '提交失败',
+										text: data.info,
+										class_name: 'gritter-error gritter-light'
+									});
+								};
+							},'json');
+						}
+					})
+					
+				})
+	})
+		$("form#validation-form").submit(function(){
+
+    		var self = $(this);
+    		$.post(self.attr("action"), self.serialize(), success, "json");
+
+    		return false;
+
+    		function success(data){
+
+    			if(data.status){
+    				$.gritter.add({
+										// (string | mandatory) the heading of the notification
+										title: '提交成功',
+										// (string | mandatory) the text inside the notification
+										text: data.info,
+										class_name: 'gritter-success gritter-light'
+									});
+									setTimeout(jumpu(data.url),1000);
+
+    			} else {
+
+    				$.gritter.add({
+										// (string | mandatory) the heading of the notification
+										title: '提交失败',
+										// (string | mandatory) the text inside the notification
+										text: data.info,
+										class_name: 'gritter-success gritter-light'
+									});
+
+    			}
+
+    		}
+
+    	});
+    	function jumpu(uri){
+    		window.location.href=uri;
+    	}
+														</script>
+</block>

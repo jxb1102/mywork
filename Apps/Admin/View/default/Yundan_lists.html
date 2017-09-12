@@ -1,0 +1,532 @@
+<extend name="Public/base"/>
+<block name="active"><li class="active">订单管理</li></block>
+<block name="page-content">
+	<div class="page-header">
+		<h1>
+			订单管理
+			<small> <i class="icon-double-angle-right"></i>
+				订单列表
+			</small>
+		</h1>
+	</div>
+	<!-- /.page-header -->	
+	<div class="row">
+		<div class="col-xs-12">
+			<div>
+				<ul class="nav nav-tabs" id="myTab">
+					<li <eq name="data['status']" value=""> class="active" </eq>>
+						<a href="{:U('Yundan/lists')}"> <i class="green icon-home bigger-110"></i>
+							全部
+						</a>
+					</li>
+					<li <eq name="data['status']" value="1"> class="active" </eq>>
+						<a href="{:U('Yundan/lists','status=1')}">
+							待确认
+						</a>
+					</li>
+
+					<li <eq name="data.status" value="2"> class="active" </eq>>
+						<a  href="{:U('Yundan/lists','status=2')}">
+							已确认
+							<!-- <span class="badge badge-danger">4</span> -->
+						</a>
+					</li>
+
+					<li <eq name="data.status" value="3"> class="active" </eq>>
+						<a  href="{:U('Yundan/lists','status=3')}">
+							已打包
+						</a>
+					</li>
+					<li <eq name="data.status" value="4"> class="active" </eq>>
+						<a  href="{:U('Yundan/lists','status=4')}">
+							已付款
+						</a>
+					</li>
+					<li <eq name="data.status" value="5"> class="active" </eq>>
+						<a  href="{:U('Yundan/lists','status=5')}">
+							已发货
+						</a>
+					</li>
+					<li <eq name="data.status" value="6"> class="active" </eq>>
+						<a  href="{:U('Yundan/lists','status=6')}">
+							已收货
+						</a>
+					</li>
+					<!-- <li <eq name="data.status" value="6"> class="active" </eq>>
+						<a  href="{:U('Yundan/lists','status=7')}">
+							已评价
+						</a>
+					</li> -->
+					<eq name="data.status" value="2">
+					<a href="{:U('exportexcel','status='.$data['status'].'&keyword='.$_GET['keyword'])}" style="display:block;float: right;margin-left: 10px;" class="btn btn-danger btn-minier">全部导出Excel</a>
+					<a href="{:U('dayinlist','status='.$data['status'].'&keyword='.$_GET['keyword'])}" target="_blank" style="display:block;float: right;" class="btn btn-success btn-minier">打印全部</a>
+				</eq>
+				</ul>
+			</div>
+			<!-- PAGE CONTENT BEGINS -->		
+			<table id="sample-table-1" class="table table-striped table-bordered table-hover" style="font-size: 12px;">
+				<thead>
+					<tr>
+						<eq name="data.status" value="2">
+							<th class="center" style="width:50px;"><label><input type="checkbox" class="ace" id="checkall" ><span class="lbl"></span></label></th>
+						</eq>
+						<th class="center" style="width:80px;">订单号</th>
+						<th>用户</th>
+						<th width="40%">收货信息</th>
+						<th class="hidden-480">运送方式</th>
+						<!-- <th>是否拆包</th> -->
+						<!-- <th>货物类型</th> -->
+						<th>价值</th>
+						<th>备注</th>
+						<th>状态</th>
+						<th class="hidden-990">添加时间</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<if condition="$list">
+					<volist name="list" id="v">
+						<tr>
+							<eq name="data.status" value="2">
+								<td class="center"><input type="checkbox" name="ydids[]" class="ace" value="{$v.id}"><span class="lbl"></span></td>
+							</eq>
+							<td class="center"><a href="{:U('Yundan/view','id='.$v['id'])}">{$v.sn}</a></td>
+							<td>{$v.user.username}</td>
+							<td>收货人：{$v.consignee} 电话：{$v.tel} <a href="{:U('Yundan/dayinyundan','ydid='.$v['id'])}" target="_blank">打印运单</a>
+								<br>国家：{$v.areaname} 地址：{$v.address}</td>
+							<td class="hidden-480">{$v.dname}</td>
+							<!-- <td><eq name="v.chaibao" value="0">不拆包</eq><eq name="v.chaibao" value="1">拆包</eq></td> -->
+							<!-- <td>{$v.bgleixing|getbgleixing}</td> -->
+							<td>&yen;{$v.shenbao}</td>
+							<td>{$v.remark}</td>
+							<td>{$v.status|getyundanstatus}<eq name="v.status" value="1"> <br>{$v.daoqi}</eq></td>
+							<td class="hidden-990">{$v.addtime|date="Y-m-d",###}</td>
+							<td class="action-buttons">
+								<if condition="$v.status lt 2">
+								<a class="blue queren" href="javascript:;" uid="{$v.id}" title="确认订单"> 确认
+								</a>
+							</if>
+							<if condition="$v.status eq 2">
+								<a class="blue dabao" href="{:U('dabao','id='.$v['id'])}" uid="{$v.id}" title="打包订单"> 打包
+								</a>
+								<a href="###" class="blue chexiaodd" uid="{$v.id}" title="撤销订单">撤销</a>
+							</if>
+							<if condition="$v.status eq 3">
+								<a class="blue zhifu" href="javascript:;" uid="{$v.id}" title="支付订单"> 支付
+								</a>
+								<a href="###" class="blue chexiaodd" uid="{$v.id}" title="撤销订单">撤销</a>
+							</if>
+							<eq name="v.status" value="4">
+								<a href="javascript:;" class="qufahuo" uid="{$v.id}" title="去发货">发货</a>
+							</eq>
+								<a class="blue edityundan" href="#modal-table" data-toggle="modal" uid="{$v.id}"> <i class="icon-pencil bigger-130"></i>
+								</a>
+								<!-- <if condition="$v.status lt 2">
+									<a class="red delete" href="###" sid="{$v.id}" onclick="return false;"> <i class="icon-trash bigger-130"></i>
+									</a>
+								</if> -->
+							</td>
+						</tr>
+					</volist>
+					<else />
+					<tr><td colspan="12">没有您要的信息</td></tr>
+				</if>
+				</tbody>
+			</table>
+			<eq name="data.status" value="2">
+				<div style="float: left;">
+					<a href="javascript:;" style="display:block;float: left;margin-right: 10px;" class="btn btn-danger btn-minier" id="daochucheck">导出选中</a>
+
+					<a href="javascript:;" target="_blank" style="display:block;float: right;" class="btn btn-success btn-minier" id="dayincheck">打印选中</a>
+				</div>
+			</eq>
+			<div class="page">{$_page}</div>
+			<div id="modal-table" class="modal fade" tabindex="-1">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header no-padding">
+							<div class="table-header">
+								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+									<span class="white">&times;</span>
+								</button>
+								编辑预报
+							</div>
+						</div>
+						<form class="form-horizontal" id="edit" style="padding:10px;" method="post" action="{:U('edit')}">
+							<div class="modal-body no-padding">
+
+								<div class="form-group">
+									<label class="control-label col-sm-3 no-padding-right" for="uname">所属用户:</label>
+
+									<div class="col-sm-9">
+										<div class="clearfix">
+											<input type="text" name="uname" id="uname" class="col-xs-12 col-sm-6" value="" disabled />			
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-3 no-padding-right" for="sn">订单号码:</label>
+
+									<div class="col-sm-9">
+										<div class="clearfix">
+											<input type="text" name="sn" id="sn" class="col-xs-12 col-sm-6" value="" disabled />			
+										</div>
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="control-label col-sm-3 no-padding-right" for="deliveryid">运送方式:</label>
+
+									<div class="col-sm-9">
+										<div class="clearfix">
+											<select name="deliveryid" id="deliveryid">
+												
+											</select>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-3 no-padding-right" for="shenbao">价值:</label>
+
+									<div class="col-sm-9">
+										<div class="clearfix">
+											<input type="text" name="shenbao" id="shenbao" class="col-xs-12 col-sm-6" value="{$info.shenbao}" />			
+										</div>
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="control-label col-sm-3 no-padding-right" for="bgleixing">包裹类型:</label>
+
+									<div class="col-sm-9">
+										<div class="clearfix">
+											<select name="bgleixing" id="bgleixing">
+												<option value="0">普通货物</option>
+												<option value="1">敏感货物</option>
+												<option value="2">带电池货物</option>
+											</select>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-3 no-padding-right" for="chaibao">是否拆包:</label>
+
+									<div class="col-sm-9">
+										<div class="clearfix">
+											<select name="chaibao" id="chaibao">
+												<option value="0">不拆包</option>
+												<option value="1">拆包</option>
+											</select>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-3 no-padding-right" for="consignee">收货人:</label>
+
+									<div class="col-sm-9">
+										<div class="clearfix">
+											<input type="text" name="consignee" id="consignee" class="col-xs-12 col-sm-6" value="{$info.consignee}" />			
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-3 no-padding-right" for="tel">电话:</label>
+
+									<div class="col-sm-9">
+										<div class="clearfix">
+											<input type="text" name="tel" id="tel" class="col-xs-12 col-sm-6" value="{$info.tel}" />			
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-3 no-padding-right" for="areaid">国家:</label>
+
+									<div class="col-sm-9">
+										<div class="clearfix">
+											<select name="areaid" id="areaid">
+												<volist name="area" id="v">
+												<option value="{$v.id}">{$v.name}</option>
+											</volist>
+											</select>			
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-3 no-padding-right" for="address">收货地址:</label>
+
+									<div class="col-sm-9">
+										<div class="clearfix">
+											<input type="text" name="address" id="address" class="col-xs-12 col-sm-6" value="{$info.address}" />			
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-3 no-padding-right" for="zipcode">邮政编码:</label>
+
+									<div class="col-sm-9">
+										<div class="clearfix">
+											<input type="text" name="zipcode" id="zipcode" class="col-xs-12 col-sm-6" value="{$info.zipcode}" />			
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-3 no-padding-right" for="remark">备注:</label>
+
+									<div class="col-sm-9">
+										<div class="clearfix">
+											<input type="text" name="remark" id="remark" class="col-xs-12 col-sm-6" value="{$info.remark}" />			
+										</div>
+									</div>
+								</div>
+
+								<div style="clear:both;"></div>
+							</div>
+							<div class="modal-footer no-margin-top">
+								<input type="hidden" name="id" id="ybid" value="">			
+								<button type="submit" class="btn btn-sm btn-success"> <i class="icon-ok"></i>
+									提交
+								</button>
+								<button class="btn btn-sm btn-danger" data-dismiss="modal"> <i class="icon-remove"></i>
+									取消
+								</button>
+							</div>
+						</form>
+					</div>
+
+					<!-- /.modal-content -->			
+				</div>
+				<!-- /.modal-dialog -->			
+			</div>
+		</div>
+	</div>
+
+</block>
+<block name="jiazaijs">
+	<script src="__JS__/bootbox.min.js"></script>
+	<script src="__JS__/jquery.gritter.min.js"></script>
+	<script src="__JS__/chosen.jquery.min.js"></script>
+	<script type="text/javascript" src="__COMMONJS__/thinkbox/jquery.thinkbox.js"></script>
+</block>
+<block name="script">
+
+		<script type="text/javascript">
+		jQuery(function($){
+			$('.chexiaodd').click(function(){
+				var id=$(this).attr('uid');
+				$.thinkbox.confirm('确认要撤销订单么？订单撤销后，原预报单号会显示在途状态，需要重新入库。',{
+				 	'dataEle' : this,
+                    'ok':'确认撤销',
+                    'cancel':'关闭',
+				 	'afterHide':function(data){
+				 		if (data==true) {
+				 			$.post('{:U("chexiaodd")}',{'id':id},function(data){
+					if (data.status) {
+						$.thinkbox.success(data.info);
+						setTimeout('location.reload()',1500);
+					}else{
+						$.thinkbox.error(data.info);
+					};
+				})
+				 		};
+                        
+				 	},
+				 });
+			})
+			$('#daochucheck,#dayincheck').click(function(){
+				var checkstr="";
+				$('input[name="ydids[]"]:checked').each(function(){
+					checkstr+=$(this).val()+',';
+				})
+				if (checkstr=="") {
+					$.thinkbox.error('至少选择一条数据');
+					return false;
+				};
+			})
+			$('input[name="ydids[]"]').change(function(){
+				var checkstr="";
+				$('input[name="ydids[]"]:checked').each(function(){
+					checkstr+=$(this).val()+',';
+				})
+				$('#daochucheck').attr('href','{:U("exportexcel","status=".$data["status"]."&keyword=".$_GET["keyword"])}?ydids='+checkstr);
+				$('#dayincheck').attr('href','{:U("dayinlist","status=".$data["status"]."&keyword=".$_GET["keyword"])}?ydids='+checkstr);
+			})
+			$('#checkall').change(function(){
+				var selected=$(this).is(':checked');
+					$('input[name="ydids[]"]').each(function(index,item){
+                		$(item).prop('checked',selected);
+            		});
+				var checkstr="";
+				$('input[name="ydids[]"]:checked').each(function(){
+					checkstr+=$(this).val()+',';
+				})
+				$('#daochucheck').attr('href','{:U("exportexcel","status=".$data["status"]."&keyword=".$_GET["keyword"])}?ydids='+checkstr);
+				$('#dayincheck').attr('href','{:U("dayinlist","status=".$data["status"]."&keyword=".$_GET["keyword"])}?ydids='+checkstr);
+			})
+	$('.delete').click(function(){
+					var id=$(this).attr('sid');
+					bootbox.confirm("确定要删除么?", function(result){
+						if(result) {
+							$.post("{:U('delete')}",{'id':id,'ajax':1},success,'json');
+							function success(data){
+								if (data.status) {
+									$.gritter.add({
+										// (string | mandatory) the heading of the notification
+										title: '提交成功',
+										// (string | mandatory) the text inside the notification
+										text: data.info,
+										class_name: 'gritter-success gritter-light'
+									});
+									setTimeout('location.reload()',1000);
+								}else{
+									$.gritter.add({
+										title: '提交失败',
+										text: data.info,
+										class_name: 'gritter-error gritter-light'
+									});
+								};
+							}
+						}
+					})
+					
+				})
+	$('.edityundan').click(function(){
+		var id=$(this).attr('uid');
+		$.post("{:U('getdelivery')}",{'id':id},function(result){
+			$('#deliveryid option').remove();
+			$.each(result,function(i,lx){
+                var value=lx.id;
+                var text=lx.dname;
+                $('#deliveryid').append("<option value='"+value+"'>"+text+"</option>");
+            })
+		})
+		$.post("{:U('getyundan')}",{'id':id},function(data){
+			$('#uname').val(data.uname);
+			$('#sn').val(data.sn);
+			$('#deliveryid').val(data.deliveryid);
+			$('#shenbao').val(data.shenbao);
+			$('#remark').val(data.remark);
+			$('#bgleixing').val(data.bgleixing);
+			$('#ybid').val(data.id);
+			$('#chaibao').val(data.chaibao);
+			$('#consignee').val(data.consignee);
+			$('#tel').val(data.tel);
+			$('#address').val(data.address);
+			$('#zipcode').val(data.zipcode);
+			$('#areaid').val(data.areaid);
+		})
+	})
+	$('.ruku').click(function(){
+		var id=$(this).attr('uid');
+		$.post("{:U('getyubao')}",{'id':id},function(data){
+			$('#rukuuname').val(data.uname);
+			$('#rukukdsn').val(data.kdsn);
+			$('#rukukdname').val(data.kdname);
+			$('#rukubgname').val(data.bgname);
+			$('#rukuybid').val(data.id);
+			
+		})
+	})
+	$('.queren').click(function(){
+		var id=$(this).attr('uid');
+		bootbox.confirm("确定要确认订单么?", function(result){
+			if (result) {
+				$.post("{:U('queren')}",{'id':id},function(data){
+			if (data.status) {
+				$.thinkbox.success(data.info);
+				setTimeout('location.reload()',1500);
+			}else{
+
+				$.thinkbox.error(data.info);
+			};
+		})
+			};
+		
+	})
+	})
+	$('.zhifu').click(function(){
+		var id=$(this).attr('uid');
+		bootbox.confirm("确定要支付订单么？",function(result){
+			if (result) {
+				$.post("{:U('paydingdan')}",{'ydid':id},function(data){
+					if (data.status) {
+						$.thinkbox.success(data.info);
+						setTimeout('location.reload()',1500);
+					}else{
+						$.thinkbox.error(data.info);
+					};
+				})
+			};
+		})
+	})
+	$('.qufahuo').click(function(){
+		var id=$(this).attr('uid');
+		bootbox.confirm("确定更改为已发货状态么?", function(result){
+			if (result) {
+				$.post("{:U('qufahuo')}",{'id':id},function(data){
+			if (data.status) {
+				$.gritter.add({
+						text: data.info,
+						class_name: 'gritter-success gritter-light'
+					});
+				setTimeout('location.reload()',1000);
+			};
+		})
+			};
+		
+	})
+	})
+	$(".chosen-select").chosen(); 
+				$('#ruku-table').on('shown.bs.modal', function () {
+					$(this).find('.chosen-container').each(function(){
+						$(this).find('a:first-child').css('width' , '210px');
+						$(this).find('.chosen-drop').css('width' , '210px');
+						$(this).find('.chosen-search input').css('width' , '200px');
+					});
+				})
+	})
+		$("form#edit").submit(function(){
+    		var self = $(this);
+    		$.post(self.attr("action"), self.serialize(), success, "json");
+    		return false;
+    		function success(data){
+    			if(data.status){
+    				$.gritter.add({
+						title: '更新成功',
+						text: data.info,
+						class_name: 'gritter-success gritter-light'
+					});
+					setTimeout('location.reload()',1000);
+    			} else {
+    				$.gritter.add({
+						title: '更新失败',
+						text: data.info,
+						class_name: 'gritter-success gritter-light'
+					});
+    			}
+    		}
+    	});
+    	$("form#ruku").submit(function(){
+    		var self = $(this);
+    		alert(self.serialize());
+    		$.post(self.attr("action"), self.serialize(), success, "json");
+    		return false;
+    		function success(data){
+    			if(data.status){
+    				$.gritter.add({
+						title: '更新成功',
+						text: data.info,
+						class_name: 'gritter-success gritter-light'
+					});
+					setTimeout('location.reload()',1000);
+    			} else {
+    				$.gritter.add({
+						title: '更新失败',
+						text: data.info,
+						class_name: 'gritter-success gritter-light'
+					});
+    			}
+    		}
+    	});
+</script>
+</block>

@@ -1,0 +1,46 @@
+<include file="Public:header" />
+	<div class="blank"></div>
+	<style type="text/css">
+		.catelist li{line-height: 30px;border-bottom: 1px dashed #dfdfdf;font-weight: bold;}
+		.catelist li a{display: block;padding-left: 30px; font-size: 14px;}
+		.catelist li a:hover{background: #f2f2f2;}
+		.main_r .articlelist li{border-bottom: 1px dashed #dfdfdf;list-style: none;background: none;text-indent: 0;padding:5px 10px;}
+		.main_r .articlelist li a{font-size: 14px;color: #666;font-weight: bold;}
+		.main_r .articlelist li a:hover{text-decoration: underline;}
+		.main_r .articlelist li p{margin: 0;text-indent: 2em;line-height: 18px;color: #8c8c8c;font-size: 12px;}
+		a{text-decoration: none; color: #8c8c8c;}
+        a:hover{color: #333;}
+	</style>
+<!--zhuti1 begin-->
+<div class="lgs-main">
+	<div class="fl" style="width: 250px;height: auto;">
+<div style="border:1px dashed #dfdfdf;border-bottom: none;font-size: 16px;color:#333;padding: 5px 10px;font-weight: bold;">{:L('bangzhuzhongxin')}</div>
+<div style="width: 228px;padding:10px;height: auto;border: 1px dashed #dfdfdf;">
+	<ul class="catelist">
+		<volist name="catelist" id="c">
+		<li><a href="{:U('Cate/bangzhu','id='.$c['id'])}" <eq name="c.id" value="$articleinfo.cid">style="background:#f2f2f2;"</eq>>{$c.title}</a></li>
+	</volist>
+	</ul>
+</div>
+</div>
+
+
+
+<div class="main_r" style="width:930px;height: auto; margin-left:269px;">
+<div style="border:1px dashed #dfdfdf;border-bottom: none;font-size: 14px;color:#333;padding: 5px 10px;">{:L('your_position')}：<a href="{:U('Index/index')}">{:L('site_index')}</a> > <a href="{:U('Cate/bangzhu','id='.$articleinfo['cid'])}">{$articleinfo.catetitle}</a> > {$articleinfo.title}</div>
+</div>
+<style type="text/css">
+		p{display: block;margin-bottom: 10px;}
+	</style>
+<div style="width: 898px;margin-left:270px;border: 1px dashed #ccc;padding:15px;min-height: 400px;">
+	<div style="font-size: 16px;font-weight: bold;text-align: center;border-bottom: 1px solid #ccc;padding-bottom: 15px;">{$articleinfo.title}</div>
+	<div style="padding: 10px 5px; font-size:14px; line-height:24px;">
+		{$articleinfo.content}
+	</div>
+</div>
+
+<div class="clear"></div>
+</div>
+<!--zhuti1 end-->
+<div class="clear"></div>
+<include file="Public:footer" />

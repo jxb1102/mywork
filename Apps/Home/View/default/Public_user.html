@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>{$title}星松科技</title>
+<link href="__CSS__/style.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="__CSS__/shopping-nav.css" />
+<script type="text/javascript" src="__JS__/jquery.min.js"></script>
+<script type="text/javascript" src="__JS__/tabulous.js"></script>
+<script type="text/javascript" src="__JS__/lrtk.js"></script>
+<script type="text/javascript" src="__JS__/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="__JS__/shopping_nav.js"></script>
+<script type="text/javascript" src="__COMMONJS__/thinkbox/jquery.thinkbox.js"></script>
+<script type="text/javascript" src="__JS__/style.js"></script>
+<script type="text/javascript" src="__JS__/bigpicroll.js"></script>
+<SCRIPT>
+	function toueme(){
+		document.getElementById("top_adv").style.display="none";
+	}
+</SCRIPT>
+</head>
+<style>
+a{text-decoration: none; color: #8c8c8c;}
+a:hover{color: #333;}
+.user-left{color:#8c8c8c;}
+</style>
+<body>
+<!-- <div id="top_adv">
+  <a style="CURSOR: hand" onClick="toueme();">
+    <img src="__IMG__/close.jpg" width="18" height="16" />
+  </a>
+</div> -->
+<div class="top">
+  <dl class="head_nav">
+  <if condition="$Think.session.user_auth neq ''">
+    <dt>{:L('welcome_ni')}，{$user.nickname}！ <a href="{:U('Public/logout')}">{:L('logout')}</a></dt>
+    <else />
+    <dt>{:L('welcome_ni')}，{:L('welcome_fangwen')}{:L('domain_title')}&nbsp;<a href="{:U('Public/login')}">{:L('login')}</a>&nbsp;{:L('huo')}&nbsp;<a href="{:U('Public/reg')}">{:L('reg')}</a></dt>
+  </if>
+    <dd>
+      <a href="/">{:L('site_index')}</a> | <a href="{:U('User/index')}">{:L('my_account')}</a> | <a href="{:U('Cart/index')}">{:L('mycart')}({$cartcount}) |<a href="{:U('User/baoguolist')}"> {:L('yundanchaxun')} | <a href="{:U('Cate/gjyf')}">{:L('guojiyunfei')}</a> | <a href="{:U('Cate/bangzhu')}">{:L('bangzhuzhongxin')}</a>
+    </dd>
+  </dl>
+  <dl class="logo column1200">
+    <dt><a href="/"><img src="__IMG__/logo.jpg"  alt="神州代运"/></a><span>{:L('zhuti')}</span></dt>
+    <dd>
+      <div class="search">
+        <a style="background:#C30D24;color:#FFF;padding:8px 24px;">{:L('daigou')}</a><a href="{:U('User/yubaoonly')}" style="background:#92d050;color:#FFF;">{:L('guojizhuanyun')}</a>
+        <div class="search_container">
+          <div>
+            <form action="{:U('Daigou/index')}" method="get">
+              <input name="url" type="text" class="search_bk" id="url" value="{:L('dglian')}">
+              <input type="submit" value="{:L('mydaigou')}" class="search_btn">
+            </form>
+          </div>
+          <!-- <div id="tabs-2">
+            <form action="" method="get">
+              <input name="" type="text" class="search_bk">
+              <input name="" type="搜索" value="我要代运" class="search_btn">
+            </form>
+          </div> -->
+        </div>
+        <!--End tabs container--> 
+        
+      </div>
+      <script type="text/javascript" >
+    $(document).ready(function($) {
+        $('#tabs').tabulous({effect: 'scale'});
+        });
+    </script> 
+    </dd>
+  </dl>
+  <ul class="mainnav column1200">
+    <li><a href="{:U('Index/index')}">{:L('site_index')}</a></li>
+    <li><a href="{:U('User/yubaoonly')}">{:L('guojizhuanyun')}</a></li>
+    <li><a href="{:U('Daigou/index')}">{:L('daigou')}</a></li>
+    <li><a href="{:U('Cate/gwzn')}">{:L('gouwuzhinan')}</a></li>
+    <li><a href="{:U('Cate/active')}">{:L('youhuihuodong')}</a></li>
+    <li><a href="{:U('Cate/lists','id=13')}">{:L('shangyehezuo')}</a></li>
+  </ul>
+</div>
+<div class="user-main">
+	<div class="user-left">
+		<div class="user-home">
+			<a href="{:U('User/index')}" style="color:red; font-weight:600;">{:L('usercenter_index')}</a>
+		</div>
+    <div class="user-home" style="margin-top: 10px;">
+      {:L('daigoufw')}
+    </div>
+		<hr class="hr0" />
+		<ul class="user-yubao">
+      <li><a href="{:U('Daigou/index')}">{:L('mydaigou')}</a></li>
+      <li><a href="{:U('User/daigou')}">{:L('daigoulist')}</a></li>
+      <li><a href="{:U('Cart/index')}">{:L('mycart')}({$cartcount})</a></li>
+			
+			<!-- <li><a href="{:U('User/kdgenzong')}">{:L('parcel_find')}</a></li> -->
+		</ul>
+		<div class="user-home" style="margin-top: 10px;">
+			{:L('guojizhuanyun')}
+		</div>
+		<hr class="hr0" />
+		<ul class="user-yubao">
+			<li><a href="{:U('User/yubaoonly')}">{:L('forecast')}</a></li>
+      <li><a href="{:U('User/yubaoadd')}">{:L('daiyun_order')}</a></li>
+      <li><a href="{:U('User/yubaolist')}">{:L('forecast_list')}</a></li>
+		</ul>
+    <div class="user-home" style="margin-top: 10px;">
+      {:L('ddguan')}
+    </div>
+    <hr class="hr0" />
+    <ul class="user-yubao">
+      <li><a href="{:U('User/dingdan')}">{:L('daiyun_order_list')}</a></li>
+      <li><a href="{:U('User/baoguolist')}">{:L('parcel_list')}</a></li>
+    </ul>
+     <div class="user-home" style="margin-top: 10px;">
+      {:L(cwguan)}
+    </div>
+    <hr class="hr0" />
+    <ul class="user-yubao">
+      <li><a href="{:U('User/chongzhi')}">{:L('zhcz')}</a></li>
+      <li><a href="{:U('User/myaccount')}">{:L('my_account')}</a></li>
+      <li><a href="{:U('User/huikuan')}">{:L('hkju')}</a></li>
+      <li><a href="{:U('User/myscore')}">{:L('myjifen')}</a></li>
+    </ul>
+		<div class="user-home" style="margin-top: 10px;">
+			{:L('xxguan')}
+		</div>
+		<hr class="hr0" />
+		<ul class="user-yubao">
+			<li><a href="{:U('User/setting')}">{:L('setting_user')}</a></li>
+			
+			<!-- <li><a href="{:U('User/daichongzhi')}">{:L('alipay_chongzhi')}</a></li> -->
+      
+			<li><a href="{:U('User/address')}">{:L('delivery_address')}</a></li>
+			
+			
+		</ul>
+    <div class="user-home" style="margin-top: 10px;">
+      {:L('kfzx')}
+    </div>
+    <hr class="hr0" />
+    <ul class="user-yubao">
+      <li><a href="{:U('User/msg')}">{:L('my_msg')}</a></li>
+      <li><a href="{:U('User/msg','type=notice')}">{:L('zhanneixin')}({$ncount})</a></li>
+    </ul>
+
+	</div>
+	<block name="user-right"></block>
+	<div class="clear"></div>
+</div>
+<block name="javascript">
+	<script type="text/javascript">
+	$(document).ready(function(){
+	$('#changelanguage').hover(function(){
+			$(this).css({'background':'#fff','border-right':'1px solid #dfdfdf','border-left':'1px solid #dfdfdf'});
+			$(this).find('ul').show();
+		},function(){
+			$(this).css({'background':'#fafafa','border-right':'1px solid #fafafa','border-left':'1px solid #fafafa'});
+			$(this).find('ul').hide();
+		})
+	$('#topregbtn').click(function(){
+		window.location.href="{:U('Public/reg')}";
+	})
+	$('.user-right').css('min-height',$('.user-left').height()-2);
+})
+	</script>
+	</block>
+<block name="footer">
+	<div class="clear"></div>
+<div class="bottom mg_T10">
+    <div class="column1200">
+     <ul class="bottom_list">
+         <volist name="cateaa" id="ct">
+             <li><h2>{$ct.title}</h2><div class="blank"></div>
+                <volist name="ct['article']" id="at">
+                <a href="{:U('Article/bangarticle','id='.$at['id'])}">{$at.title}</a>
+                </volist>
+            </li>
+        </volist>
+         <li style="border:none;font-family:'微软雅黑';width:180px;"><div class="erweima"><img src="__IMG__/erweima.png" width="109" height="109" style="padding-bottom:5px;"/><br />&nbsp;&nbsp;关注<font style="color:#E7291D;">神州代运</font></div><div class="share">
+             <a href="{:C('facebook')}" target="_blank"><img src="__IMG__/face.png" title="神州代运facebook官方主页"></a>
+            <a href="{:C('weibo')}" target="_blank"><img src="__IMG__/weobo.png" title="神州代运新浪微博"></a>
+            <a href="{:C('twitter')}" target="_blank"><img src="__IMG__/twitter.png" title="神州代运推特官方主页"></a>
+         </div></li>
+     </ul>
+     
+             <p class="bottom_text" style="margin-right:20px;">备案/许可证编号为：沪ICP备14038017号<br />         神州代运所有权©上海纯通经贸发展有限公司</p>
+            
+        
+         
+     </div>
+</div>
+</block>
+	</body>
+		<script>
+
+function initPlaceHolders(){
+    if('placeholder' in document.createElement('input')){ //如果浏览器原生支持placeholder
+        return ;
+    }
+    function target (e){
+        var e=e||window.event;
+        return e.target||e.srcElement;
+    };
+    function _getEmptyHintEl(el){
+        var hintEl=el.hintEl;
+        return hintEl && g(hintEl);
+    };
+    function blurFn(e){
+        var el=target(e);
+        if(!el || el.tagName !='INPUT' && el.tagName !='TEXTAREA') return;//IE下，onfocusin会在div等元素触发 
+        var    emptyHintEl=el.__emptyHintEl;
+        if(emptyHintEl){
+            //clearTimeout(el.__placeholderTimer||0);
+            //el.__placeholderTimer=setTimeout(function(){//在360浏览器下，autocomplete会先blur再change
+                if(el.value) emptyHintEl.style.display='none';
+                else emptyHintEl.style.display='';
+            //},600);
+        }
+    };
+    function focusFn(e){
+        var el=target(e);
+        if(!el || el.tagName !='INPUT' && el.tagName !='TEXTAREA') return;//IE下，onfocusin会在div等元素触发 
+        var emptyHintEl=el.__emptyHintEl;
+        if(emptyHintEl){
+            //clearTimeout(el.__placeholderTimer||0);
+            emptyHintEl.style.display='none';
+        }
+    };
+    if(document.addEventListener){
+        document.addEventListener('focus',focusFn, true);
+        document.addEventListener('blur', blurFn, true);
+    }
+    else{
+        document.attachEvent('onfocusin',focusFn);
+        document.attachEvent('onfocusout',blurFn);
+    }
+
+    var elss=[document.getElementsByTagName('input'),document.getElementsByTagName('textarea')];
+    for(var n=0;n<2;n++){
+        var els=elss[n];
+        for(var i =0;i<els.length;i++){
+            var el=els[i];
+            var placeholder=el.getAttribute('placeholder'),
+                emptyHintEl=el.__emptyHintEl;
+            if(placeholder && !emptyHintEl){
+                emptyHintEl=document.createElement('span');
+                emptyHintEl.innerHTML=placeholder;
+                emptyHintEl.className='emptyhint';
+                emptyHintEl.onclick=function (el){return function(){try{el.focus();}catch(ex){}}}(el);
+                if(el.value) emptyHintEl.style.display='none';
+                el.parentNode.insertBefore(emptyHintEl,el);
+                el.__emptyHintEl=emptyHintEl;
+            }
+        }
+    }
+}
+
+initPlaceHolders();
+
+</script>
+<script type="text/javascript">
+$(document).ready(function(){
+  $(".side ul li").hover(function(){
+    $(this).find(".sidebox").stop().animate({"width":"124px"},200).css({"opacity":"1","filter":"Alpha(opacity=100)","background":"#ae1c1c"})  
+  },function(){
+    $(this).find(".sidebox").stop().animate({"width":"54px"},200).css({"opacity":"0.8","filter":"Alpha(opacity=80)","background":"#000"}) 
+  });
+  
+});
+//回到顶部
+function goTop(){
+  $('html,body').animate({'scrollTop':0},600); //滚回顶部的时间，越小滚的速度越快~
+}
+</script>
+<script>
+   $(document).ready(function(){
+      $('.search_btn').click(function(){
+        var url=$("#url").val();
+        var urlreg = /(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?/;
+        if(url==''){
+          return false;
+        }
+        if(!urlreg.test(url)){
+          $('#url').val('请输入有效的网址').css({'color':'red'});
+          return false;
+        }
+      })
+      $('#url').focus(function(){
+        $('#url').val('').css({'color':''});
+      })
+   })
+ </script>
+<div class="side">
+  <ul>
+      <li><a href="http://wpa.qq.com/msgrd?v=3&uin={:C('KEFU')}&site=qq&menu=yes" target="_blank"><div class="sidebox"><img src="__IMG__/side_icon04.png">QQ客服</div></a></li>
+    <li style="border:none;"><a href="javascript:goTop();" class="sidetop"><img src="__IMG__/side_icon05.png"></a></li>
+  </ul>
+</div>
+</html>

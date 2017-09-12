@@ -1,0 +1,160 @@
+<include file="Public:header" />
+<!--daigou begin-->
+<div style="clear:both"></div>
+<div class="lgs-daigouform">
+	<div class="lgs-form">
+		<form id="daigouurl" action="{:U('Daigou/getgoods')}" method="post">
+			<div class="daigouinputbg"><input type="text" name="url" placeholder="{:L('lianjie')}" id="maingoodsurl" value="<?php echo $_GET['url'] ?>"></div>
+			<button type="button" onclick="getinfos(this)" class="daigoubtn1">{:L('mydaigou')}</button>
+		</form>
+		<div class="clear"></div>
+		<div id="urlerror" style="color: red;margin-top: 5px;display: none;">{:L('lianjiecuowu')}</div>
+	</div>
+</div>
+<!--daigou end-->
+<div class="blank"></div>
+<div class="column1200 nod">
+      <h3 class="process_title">{:L('daigou')}<span style="color:#CF0000;">{:L('liucheng')}</span></h3>
+      <ul class="process_list2 mg_T10">
+
+        <li><span><b style="padding-top:100px;">{:L('tjlianjie')}</b>{:L('fzlianjie')}<br />
+          {:L('tiandan')}</span></li>
+        <li><span><b>{:L('zhifei')}</b>{:L('zhishangpin')}<br />
+          {:L('dlyunfei')}</span></li>
+        <li><span><b style="padding-top:100px;">{:L('szshouhuo')}</b>{:L('szshouhuo')}<br />
+          {:L('cunku')}</span></li>
+        <li><span><b>{:L('tjjs')}</b>{:L('suishi')}<br />
+          {:L('funei')}</span></li>
+        <li><span><b style="padding-top:100px;">{:L('qrshouhuo')}</b>{:L('manyi')}<br />
+          {:L('jiuzai')}</span></li>
+      </ul>
+      <div class="process_btn"><a href="{:U('Cate/dgyanshi')}"><img src="__IMG__/process_btn2.jpg" width="192" height="50" alt="代购操作演示"/></a></div>
+    </div>
+<div class="lgs-main">
+        <div class="daigou-box" style="display: none; width:1000px; margin:0 auto;">
+        	
+        		
+
+
+
+        	
+        	<div class="blank"></div>
+        	<div class="blank"></div>
+        </div>
+
+</div>
+<div style="width:490px; margin:0 auto;">
+    <style>
+      .prop-box span{float: left; margin-left:5px; }
+       .prop{width: 710px;}
+       .prop dt{height:auto;width:66px;float:left;}
+       .prop dd{height:auto;float:left;}
+     
+    .prop_preview {
+    border: 2px solid #bcbcbc;
+    cursor: pointer;
+    display: inline-block;
+    height: 30px;
+    line-height: 30px;
+    margin-bottom: 5px;
+    min-width: 26px;
+    overflow: hidden;
+    text-align: center;
+    }
+.prop_preview_selected {
+    background: url("__IMG__/Tick.png") no-repeat scroll right bottom rgba(0, 0, 0, 0);
+    border: 2px solid #ce2929;
+    box-shadow: 0 3px 5px 0 #ccc;
+
+}
+.prop_unavailable {
+    border: 1px dashed #d6d6d8;
+    color: #cdcdcd;
+    cursor: not-allowed;
+    margin: 0;
+}
+
+    </style>
+        <script  type="text/javascript" charset="utf-8">
+        function getinfos(obj){
+            var load=$.thinkbox.loading('加载中');
+              $.post("{:U('Daigou/getgoods')}",{url:$("#maingoodsurl").val()},function(data){
+                $(".daigou-box").html(data).show();
+                $('.nod').hide();
+                load.hide();
+                }); 
+
+        }
+
+        </script>
+            
+    </div>
+<div class="clear"></div>
+<include file="Public:footer" />
+<script type="text/javascript">
+
+	$(document).ready(function(){
+        $('#maingoodsurl').focus();
+		var checkUrl = function(){
+            var urlreg = /(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?/;
+            if(!urlreg.test($('#maingoodsurl').val())){
+                $('#urlerror').show();
+            }else{
+                $('#urlerror').hide();
+            }
+        }
+        $('#maingoodsurl').blur(function(){
+        	checkUrl();
+        })
+        $('#maingoodsurl').click(function(){
+            $(this).val('');
+        })
+
+
+        $(document).on('submit','#insertcart',function(){
+        	if ($.trim($('#goodsname').val())=='') {
+        		$.thinkbox.error('商品名称不能为空');
+        		return false;
+        	};
+        	if ($.trim($('#price').val())<=0) {
+        		$.thinkbox.error('商品价格错误');
+        		return false;
+        	};
+            if ($.trim($('#sku_a').val())=="") {
+                $.thinkbox.error('请选择商品颜色和尺寸');
+                return false;
+            };
+        	var self = $(this);
+			var loading=$.thinkbox.loading('loading');
+    		$.post(self.attr("action"), self.serialize(), success, "json");
+    		return false;
+    		function success(data){
+    			if (data.status) {
+                    loading.hide();
+    				$.thinkbox.confirm('添加购物车成功',{
+				 	'dataEle' : this,
+                    'ok':'去购物车结算',
+                    'cancel':'继续购物',
+				 	'afterHide':function(data){
+				 		if (data==true) {
+				 			window.location.href='/Cart';
+				 		};
+                        if (data==false) {
+                            window.location.reload();
+                        };
+				 	},
+				 });
+    			}else{
+                    loading.hide();
+                    $.thinkbox.error(data.info);
+
+                };
+    		}
+        })
+
+var url="<?php echo $_GET['url'] ?>";
+    if(url!== ''){
+        $('.daigoubtn1').click();
+    }
+	})
+</script>

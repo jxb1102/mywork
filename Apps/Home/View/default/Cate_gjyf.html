@@ -1,0 +1,76 @@
+<include file="Public:header" />
+<div class="middle">
+
+  <div class="column1200">
+  <div class="yufeigusuanbox1 mg_T10">
+           <h3 style="text-align:center;font-size:16px;color:red;">{:L('yfduibi')}</h3>
+           <div class="blank"></div>
+                     <div class="titlebox1124-1">
+                        <volist name="list" id="v" key="k">
+                          <div class="btnppx1124-1">
+                            <a id="s_{$k}" href="javascript:;" onmouseover="show_country({$k});" <if condition="$v['id'] eq $this_zid">class="selected1"<else /> </if> >{$v.name}</a></div>
+                        </volist>
+                     </div>
+                    <volist name="list" id="n" key="kk">
+                      <div class="remengj-box1" <if condition="$n['id'] eq $this_zid"><else />style="display:none;" </if>id="country_{$kk}">
+                        <volist name="n['list']" id="g">
+                              <div class="guojia-1"><a href="{:U('Cate/gjyf','areaid='.$g['id'])}" >{$g.name}&nbsp;</a></div>
+                        </volist>
+                      </div>
+                   </volist>
+          
+      <div  class="jisonggj-box1">　　
+        {:L('jsguojia')}：<span id="country">{$st.name}</span>
+      </div>
+      <style>
+       .preview td{font-size: 13px;font-weight: 600;color:#eee;background-color: rgb(0,176,180);}
+       .preview th{font-weight: 400;border-bottom:1px #dedede solid;}
+      </style>
+        <div class="liebiao1124-box1"> 
+           <table cellspacing="0" cellpadding="5" border="0" align="center" width="100%" class="preview">
+             <tr>
+              <td width="140" height="32" bgcolor="#9c9c9c">{:L('ysfangshi')}</td>
+              <td width="140" bgcolor="#9c9c9c">{:L('shouzhong')}</td>
+              <td width="140" bgcolor="#9c9c9c">{:L('xuzhong')}</td>
+              <td bgcolor="#9c9c9c" width="140">{:L('jszhouqi')}</td>
+              <td bgcolor="#9c9c9c" width="150">{:L('tese')}</td>
+              <td bgcolor="#9c9c9c">{:L('yjwupin')}</td>
+              <td bgcolor="#9c9c9c">{:L('tjxianzhi')}</td>
+             </tr>
+             <volist name="dellist" id="vd">
+                 <tr>
+                  <th>{$vd.dname}</th>
+                  <th><b style="color:red;">{$vd.first_fee}</b>/{$vd.first_weight}</th>
+                  <th><b style="color:red;">{$vd.second_fee}</b>/{$vd.xu_weight}</th>
+                  <th>{$vd.zhouqi}</th>
+                  <th>{$vd.tese}</th>
+                  <th>{$vd.yanjin}</th>
+                  <th>{$vd.tiji}</th>
+                 </tr>
+             </volist>
+           </table>
+        </div>
+ 
+  <div  class="bottom1124-box1"><img src="__IMG__/wenhao333.png">&nbsp;{:L('tishi')}</div>
+ 
+    </div>
+      
+    </div>
+
+<include file="Public:footer" />
+
+<script type="text/javascript"> 
+  function show_country(id){
+      $(".titlebox1124-1").children().children().removeClass();
+      $("#s_"+id).addClass("selected1");
+      $(".remengj-box1").hide();
+      $("#country_"+id).show();
+  }  
+  function show_desc(id){
+      $("#td_ul_"+id).show();
+  }
+  function hide_desc(id){
+      $("#td_ul_"+id).hide();
+  }
+  
+</script>

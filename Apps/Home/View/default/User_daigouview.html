@@ -1,0 +1,121 @@
+<extend name="default/Public/user"/>
+<block name="user-right">
+	<div class="user-right">
+		<div class="user-head">
+			<h2>代购订单详情</h2>
+		</div>
+		<div style="padding:10px;">
+					<table class="yubao-add yubao-list" cellpadding="0" cellspacing="0" style="line-height: 25px;">
+						<tr>
+							<th colspan="3" style="padding:0 10px;text-align: left;">代购单号:{$info.dgsn}&nbsp;&nbsp;|&nbsp;&nbsp;{$info.consignee}&nbsp;&nbsp;|&nbsp;&nbsp;{$info.addtime|date="Y-m-d H:i:s",###}&nbsp;&nbsp;|&nbsp;&nbsp;{$info.status|getdaigoustatus}</th>
+						</tr>
+						<volist name="info.goods" id="g">
+						<tr>
+							<td>
+								<div class="fl">
+									<a href="{$g.goodsurl}" target="_blank" title="{$g.goodsname}">
+										<img src="{$g.goodsimg}" width="60" height="60"></a>
+								</div>
+								<div class="fl" style="width:300px;font-size: 12px;padding-left: 10px;">
+									<a href="{$g.goodsurl}" target="_blank" style="color:green;">{$g.goodsname}</a>
+									<br>
+									<span>尺寸：{$g.goodssize} &nbsp; 颜色：{$g.goodscolor}</span>
+									<br>
+									<span>备注：{$g.goodsremark}</span>
+								</div>
+							</td>
+							<td>快递单号：<if condition="$g.kdsn neq ''">{$g.kdsn}<else />暂无</if><br></td>
+							
+							<td rowspan="{$v.goodscount}" >
+								￥: {$g.goodsprice}(RMB) 
+								
+							</td>
+						
+						</tr>
+					</volist>
+					</table>
+					<div class="blank"></div>
+					<div style="border: 1px solid #dfdfdf;background: #fafafa;text-align: right;padding:10px 20px;line-height: 30px;font-size: 14px;">
+						<if condition="$baomoney neq ''">
+							商业保险：{$baomoney}&nbsp;{:C('MAIN_COIN')}<br>
+						<else />
+						    商业保险：0&nbsp;{:C('MAIN_COIN')}<br>
+						</if>
+						商品金额：
+						<span id="totalgoodsprice">{$info.totalgoodsprice}</span>
+						RMB + 运费：
+						<span id="totalgoodsfreight">{$info.totalgoodsfreight}</span>
+						RMB
+						<br>
+						商品代购费：<span id="goufei">{$info.goufei}</span> RMB<br>					
+						总金额：
+						<span id="totalprice">{$info.totalprice}</span>
+						RMB &nbsp; 共支付金额：
+						<span id="zhifuprice" style="color:red; font-weight:600;font-size:16px;">{$info.zhifuprice}</span>
+						{:C('MAIN_COIN')} 
+						<if condition="$info.status eq 1">
+						<a href="{:U('User/paydaigou','id='.$info['id'])}" style="background:red;color:#fff;display: inline-block;padding: 0 5px;line-height: 20px;">去支付</a>
+					</if>
+					</div>
+					<div class="blank"></div>
+					收货人信息
+					<div style="border: 1px solid #dfdfdf;background: #fafafa;padding:10px 20px;line-height: 30px;font-size: 14px;">
+						收货人：{$info.consignee} &nbsp; 电话：{$info.tel}
+						<br>					
+						收货地址：{$info.areaname} {$info.address} ({$info.zipcode})
+					</div>
+					<div class="blank"></div>
+		</div>
+		<div class="clear"></div>
+	</div>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			if (<?php echo $info['zhifuprice'] ?><=<?php echo $user['money']+$user['xinyong'] ?>) {
+			$('#querenzhifu').show();
+			$('#quchongzhi').hide();
+		}else{
+			$('#querenzhifu').hide();
+			$('#quchongzhi').show();
+		};
+		if (<?php echo $info['zhifuprice'] ?><=0.00) {
+			$('#querenzhifu').hide();
+			$('#quchongzhi').hide();
+		};
+		$('#querenzhifu').click(function(){
+			var id=<?php echo $info['id'] ?>;
+			var loading=$.thinkbox.loading('Loading');
+			$.post('{:U("paydaigouadd")}',{'id':id},function(data){
+				if (data.status) {
+					loading.hide();
+					$.thinkbox.success(data.info);
+					setTimeout(jumpurl(data.url),1500);
+				}else{
+					loading.hide();
+					$.thinkbox.error(data.info);
+				};
+			})
+		})
+			$('.deldaigou').click(function(){
+				var id=$(this).attr('did');
+				$.thinkbox.confirm('确定要删除代购单么',{
+				 	'dataEle' : this,
+				 	'title':'温馨提示',
+                    'ok':'确认删除',
+                    'cancel':'关闭',
+				 	'afterHide':function(data){
+				 		if (data==true) {
+				 			$.post("{:U('User/deldaigou')}",{'id':id},function(data){
+					if (data.status) {
+						$.thinkbox.success(data.info);
+						setTimeout('location.reload()',1500);
+					}else{
+						$.thinkbox.error(data.info);
+					};
+				})
+				 		};
+				 	},
+				 })
+			})
+		})
+	</script>
+</block>

@@ -1,0 +1,145 @@
+<extend name="Public/base"/>
+<block name="active">
+	<li class="active">管理员</li>
+</block>
+<block name="page-content">
+	<div class="page-header">
+		<h1>
+			管理员
+			<small> <i class="icon-double-angle-right"></i>
+				用户添加
+			</small>
+		</h1>
+	</div>
+	<!-- /.page-header -->
+	<div class="row">
+		<div class="col-sm-6">
+			<h3 class="header smaller lighter green"> <i class="icon-bullhorn"></i>
+					添加新用员
+			</h3>
+			<form action="{:U('tjuseradd')}" class="form-horizontal" id="validation-form" method="post">
+			<div class="form-group">
+				<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="username">用户名:</label>
+
+				<div class="col-xs-12 col-sm-9">
+					<div class="clearfix">
+						<input type="text" name="username" id="username" class="col-xs-12 col-sm-6"/>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="title">邮箱:</label>
+
+				<div class="col-xs-12 col-sm-9">
+					<div class="clearfix">
+						<input type="text" name="email" id="email" class="col-xs-12 col-sm-6"/>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="password">密码:</label>
+
+				<div class="col-xs-12 col-sm-9">
+					<div class="clearfix">
+						<input type="text" name="password" id="password" class="col-xs-12 col-sm-6" />
+					</div>
+				</div>
+			</div>
+			
+<div class="form-group">
+	<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="title">&nbsp;</label>
+
+	<div class="col-xs-12 col-sm-9">
+		<div class="clearfix">
+				<button type="submit" class="btn btn-success btn-next no-border">确认添加
+				</button>
+		</div>
+	</div>
+</div>
+
+</form>
+</div>
+
+
+</div>
+
+</block>
+<block name="jiazaijs">
+	<script src="__JS__/bootbox.min.js"></script>
+<script src="__JS__/jquery.gritter.min.js"></script>
+<script src="__JS__/jquery.validate.min.js"></script>
+<script src="__JS__/jquery.dataTables.min.js"></script>
+<script src="__JS__/jquery.dataTables.bootstrap.js"></script>
+</block>
+<block name="script">
+
+<script type="text/javascript">
+
+jQuery(function($){
+	$('.delmember').click(function(){
+					var id=$(this).attr('sid');
+					bootbox.confirm("确定要删除么?", function(result){
+						if(result) {
+							$.post("{:U('memberdel')}",{'id':id,'ajax':1},success,'json');
+							function success(data){
+								if (data.status) {
+									$.gritter.add({
+										// (string | mandatory) the heading of the notification
+										title: '提交成功',
+										// (string | mandatory) the text inside the notification
+										text: data.info,
+										class_name: 'gritter-success gritter-light'
+									});
+									setTimeout(jumpu(data.url),1000);
+								}else{
+									$.gritter.add({
+										title: '提交失败',
+										text: data.info,
+										class_name: 'gritter-error gritter-light'
+									});
+								};
+							}
+						}
+					})
+					
+				})
+	})
+		$("form#validation-form").submit(function(){
+
+    		var self = $(this);
+    		$.post(self.attr("action"), self.serialize(), success, "json");
+
+    		return false;
+
+    		function success(data){
+
+    			if(data.status){
+    				$.gritter.add({
+										// (string | mandatory) the heading of the notification
+										title: '提交成功',
+										// (string | mandatory) the text inside the notification
+										text: data.info,
+										class_name: 'gritter-success gritter-light'
+									});
+									setTimeout(jumpu(data.url),1000);
+
+    			} else {
+
+    				$.gritter.add({
+										// (string | mandatory) the heading of the notification
+										title: '提交失败',
+										// (string | mandatory) the text inside the notification
+										text: data.info,
+										class_name: 'gritter-success gritter-light'
+									});
+
+    			}
+
+    		}
+
+    	});
+    	function jumpu(uri){
+    		window.location.href=uri;
+    	}
+														</script>
+</block>

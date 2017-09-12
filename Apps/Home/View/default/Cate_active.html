@@ -1,0 +1,24 @@
+<include file="Public:header" />
+<div style="clear:both;"></div>
+<div class="middle">
+  <div class="column1200">
+    <p class="global_pic"><img src="__IMG__/activity.jpg" width="1200" height="355" /></p>
+    <div class="activity mg_T10">
+      <h3><span style="color:#CF0000;">最新优惠活动</span></h3>
+      <volist name="list" id="v">
+      <div style="width:570px;margin:15px;float:left;">
+      <p class="activity_title" style="font-size:16px;">&nbsp;{$v.list}</p>
+      <dl class="activity_list">
+        <dt class="left"><a href="http://{$v.url}" target="_blank"><img src="{$v.pic}" width="917" height="320"/></a></dt>
+        <dd class="right"><b class="left">活动网站：</b><span class="left" style="font-size:16px;font-weight:600; color:green;">{$v.web}</span><br /><b class="left">活动商品：</b><span class="left">{$v.list}</span><br /><b class="left">活动详情：</b><span class="left" style="height:60px;overflow:hidden;">{$v.content}</span><b class="left">活动时间：</b><span class="left">{$v.time}</span><br /><a href="http://{$v.url}" class="mg_T10" target="_blank">去逛逛</a></dd>
+      </dl>
+    </div>
+    </volist>
+      
+    </div>
+   <div class="blank"></div>
+   <div class="page">{$_page}</div>
+  </div>
+</div>
+<div style="clear:both;"></div>
+<include file="Public:footer" />

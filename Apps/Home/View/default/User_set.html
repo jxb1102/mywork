@@ -1,0 +1,59 @@
+<extend name="default/Public/user"/>
+<block name="user-right">
+<div class="user-right">
+	<div class="user-head">
+		<h2>{:L('setting_user')}</h2>
+		<ul class="head-nav">
+			<li><span>{:L('default_set')}</span></li>
+			<li><a href="{:U('User/setpass')}">{:L('change_pass')}</a></li>
+			<li><a href="{:U('User/settouxiang')}">{:L('change_avatar')}</a></li>
+		</ul>
+	</div>
+	<form method="post" action="{:U('User/set')}">
+	<ul class="user-form">
+		<li><label>{:L('username')}：</label><span>{$user.username}</span></li>
+		<li><label>{:L('email')}：</label><span><input type="text" name="email" value="{$user.email}"></span></li>
+		<li><label>{:L('nickname')}：</label><span><input type="text" name="nickname" value="{$user.nickname}"></span></li>
+		<li><label>{:L('true_name')}：</label><span><input type="text" name="xingming" id="xingming" value="{$user.xingming}"></span></li>
+		<li><label>{:L('sex')}：</label><span><label style="width:70px;text-align: left;"><input type="radio" name="sex" value="1" <eq name="user.sex" value="1">checked</eq> <eq name="user.sex" value="0">checked</eq>> {:L('boy')} </label><label style="width:70px;text-align: left;"><input type="radio" name="sex" value="2"  <eq name="user.sex" value="2">checked</eq>> {:L('girl')}</label></span></li>
+		<li><label>{:L('mobile')}：</label><span><input type="text" name="mobile" id="tel" value="{$user.mobile}"></span></li>
+		<li><label>{:L('qqnumber')}：</label><span><input type="text" name="qq" value="{$user.qq}"></span></li>
+		<li><label><input type="hidden" name="uid" value="{$user.uid}"></label><span><input type="submit" value="{:L('submit')}" id="submit"></span></li>
+	</ul>
+</form>
+</div>
+<script type="text/javascript">
+	$(function(){
+		$("#submit").click(function(){
+			if($("#xingming").val()==''){
+				alert('姓名不能为空!');
+				return false;
+				}
+			
+			var tel=$("#tel").val();
+			if(tel==''){
+					alert('电话不能为空!');
+					return false;
+				}
+			var regtel=/(^0{0,1}1[3|4|5|6|7|8|9][0-9]{9}$)/;
+			if(!regtel.test(tel)){
+		      alert("请输入有效的电话号码");
+		      return false;
+                }
+			$('form').submit(function(){
+			var self = $(this);
+				$.post(self.attr("action"), self.serialize(), success, "json");
+				return false;
+				function success(data){
+					if (data.status) {
+						$.thinkbox.success(data.info);
+					    setTimeout(jumpurl(data.url),1500);
+					}else{
+						$.thinkbox.error(data.info);
+					};
+				}
+		})
+		})
+	})
+</script>
+</block>

@@ -1,0 +1,218 @@
+<extend name="Public/base"/>
+<block name="active"><li class="active">预报管理</li></block>
+<block name="page-content">
+	<div class="page-header">
+		<h1>
+			预报管理
+			<small> <i class="icon-double-angle-right"></i>
+				快速入库
+			</small>
+		</h1>
+	</div>
+	<!-- /.page-header -->
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="col-sm-6">
+				<div class="space-4"></div>
+				<div class="space-2"></div>
+				<form action="{:U('getbykdsn')}" class="form-horizontal" id="kdsnform" method="post">
+					<div class="form-group">
+						<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="kdsn">快递单号:</label>
+						<div class="col-sm-9">
+							<div class="clearfix">
+								<input type="text" name="kdsn" id="kdsn" class="width-80" value="" autocomplete="off" />				
+							</div>
+						</div>
+					</div>
+				</form>
+			<form action="{:U('kuaisurukuadd')}" class="form-horizontal" id="ybinform" method="post">
+				<div class="form-group">
+					<label class="control-label col-sm-3 no-padding-right"  for="form-field-select-3">选择库位:</label>
+
+					<div class="col-sm-9">
+						<select class="width-70 chosen-select" data-placeholder="选择一个库位" id="form-field-select-3" name="kuwei">
+							<option value="">请先选择一个库位...</option>
+							<volist name="kwlist" id="v">
+								<option value="{$v.title}">{$v.title} ({$v.shuliang})</option>
+							</volist>
+						</select>
+					</div>
+				</div>
+				<div id="ybinfo" style="display:none;">
+					<div class="form-group">
+						<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="rkkdsn">快递单号:</label>
+						<div class="col-sm-9">
+							<div class="clearfix">
+								<input type="text" name="kdsn" id="rkkdsn" class="width-80" value="" disabled />
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="kdname">快递公司:</label>
+						<div class="col-sm-9">
+							<div class="clearfix">
+								<input type="text" name="kdname" id="kdname" class="width-80" value=""  />
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="uname">用户名:</label>
+						<div class="col-sm-9">
+							<!-- <div class="clearfix">
+								<input type="text" name="uname" id="uname" class="width-80" value=""  />
+							</div> -->
+							<select class="width-70 chosen-select1" placeholder="选择一个用户" name="uname" id="uname">
+							<option value="">请选择用户...</option>
+							<volist name="selectusers" id="v">
+								<option value="{$v.username}">{$v.username} (ID:{$v.uid})</option>
+							</volist>
+						</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="bgname">包裹名称:</label>
+						<div class="col-sm-9">
+							<div class="clearfix">
+								<input type="text" name="bgname" id="bgname" class="width-80" value=""  />
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="shuliang">数量:</label>
+						<div class="col-sm-9">
+							<div class="clearfix">
+								<input type="text" name="shuliang" id="shuliang" class="width-80" value="1" />
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="weight">重量:</label>
+						<div class="col-sm-9">
+							<div class="clearfix">
+								<input type="text" name="weight" id="weight" class="width-80" value="" />
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="title">&nbsp;</label>
+						<div class="col-xs-12 col-sm-9">
+							<div class="clearfix">
+								<input type="hidden" name="kdsn" id="hiddenkdsn" value="">
+								<input type="hidden" name="id" id="yubaoid" value="">
+								<button type="submit" class="btn btn-success btn-next no-border">确认添加</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="col-sm-6">
+			<div id="rukuinfo">
+				<input type="hidden" name="rukushu" id="rukushu" value="1">
+			</div>
+		</div>
+	</div>
+</div>
+
+</block>
+<block name="jiazaijs">
+	<script src="__JS__/bootbox.min.js"></script>
+	<script type="text/javascript" src="__COMMONJS__/thinkbox/jquery.thinkbox.js"></script>
+	<script src="__JS__/chosen.jquery.min.js"></script>
+</block>
+<block name="script">
+
+		<script type="text/javascript">
+		function chosenselect(){
+			$(".chosen-select1").chosen(); 
+		}
+		jQuery(function($){
+
+	$(".chosen-select").chosen(); 
+	//$(".chosen-select1").chosen(); 
+				// $('#ybinfo').on('shown', function () {
+				// 	// $(this).find('.chosen-container').each(function(){
+				// 	// 	$(this).find('a:first-child').css('width' , '210px');
+				// 	// 	$(this).find('.chosen-drop').css('width' , '210px');
+				// 	// 	$(this).find('.chosen-search input').css('width' , '200px');
+				// 	// });
+				// $(".chosen-select1").chosen(); 
+				// })
+				$('#form-field-select-3').change(function(){
+					
+					$('#kdsn').focus();
+				})
+	})
+		$("form#kdsnform").submit(function(){
+			if ($('#form-field-select-3').val()=='') {
+				$.thinkbox.error('请选择一个库位');
+				
+				return false;
+			};
+			if ($('#kdsn').val()=='') {
+				$.thinkbox.error('快递单号不能为空');
+				
+				return false;
+			};
+    		var self = $(this);
+    		$('#rkkdsn').val($('#kdsn').val());
+    		$('#hiddenkdsn').val($('#kdsn').val());
+    		$.post(self.attr("action"), self.serialize(), success, "json");
+    		return false;
+    		function success(data){
+    			$('#kdsn').val('');
+    			if(data==1){
+    				$('#ybinfo').show('0',chosenselect);
+    				$('#kdname').removeAttr('disabled');
+    				// $('#kdname').val('');
+    				$('#kdname').focus();
+    				$('#uname').removeAttr('disabled');
+    				// $('#uname').val('');
+					$('#bgname').removeAttr('disabled');
+					// $('#bgname').val('');
+					$('#yubaoid').val('');
+					$('#weight').val('');
+					$.thinkbox.error('快递单号不存在，请自行添加',{"delayClose":500});
+    			} else if(data==2){
+    				$('#ybinfo').hide();
+    	// 			$.gritter.add({
+					// 	text: '该快递单号已经入库',
+					// 	class_name: 'gritter-error'
+					// });
+					$.thinkbox.error('该快递单号已经入库');
+    			}else{
+    				$('#ybinfo').show('0',chosenselect);
+    				$('#yubaoid').val(data.id);
+    				$('#kdname').val(data.kdname);
+    				$('#kdname').attr('disabled','disabled');
+    				$('#uname').val(data.uname);
+    				$('#uname').attr('disabled','disabled');
+    				$('#bgname').val(data.bgname);
+    				$('#bgname').attr('disabled','disabled');
+    				$('#shuliang').val(data.shuliang);
+    				$('#weight').val('');
+    				//$('#weight').focus();
+    				$('form#ybinform').submit();
+    			}
+    		}
+    	});
+    	$("form#ybinform").submit(function(){
+    		var self = $(this);
+    		$.post(self.attr("action"), self.serialize(), success, "json");
+    		return false;
+    		function success(data){
+    			if(data.status){
+    				$('#ybinfo').hide();
+    				$('#kdsn').focus();
+    				var html='<span>'+$('#rukushu').val()+'，单号 '+$('#rkkdsn').val()+' 已入库，库位号：'+$('#form-field-select-3').val()+'</span><br />';
+    				$('#rukuinfo').append(html);
+    				rukushu=$('#rukushu').val();
+    				$('#rukushu').val(++rukushu);
+    				$.thinkbox.success(data.info);
+    			} else {
+    				$.thinkbox.error(data.info);
+    			}
+    		}
+    	});
+</script>
+</block>

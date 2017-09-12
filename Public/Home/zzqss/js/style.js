@@ -1,0 +1,36 @@
+
+function jumpurl(uri){
+	window.location.href=uri
+}
+$(function(){
+	$('.ts1').hover(function(){
+		$(this).parent('li').addClass('teseon');
+		$(this).parent('li').siblings().removeClass('teseon');
+		$('.tsview1').show();
+		$('.tsview1').siblings('.lgs-tsview').hide();
+	})
+	$('.ts2').hover(function(){
+		$(this).parent('li').addClass('teseon');
+		$(this).parent('li').siblings().removeClass('teseon');
+		$('.tsview2').show();
+		$('.tsview2').siblings('.lgs-tsview').hide();
+	})
+	$('.ts3').hover(function(){
+		$(this).parent('li').addClass('teseon');
+		$(this).parent('li').siblings().removeClass('teseon');
+		$('.tsview3').show();
+		$('.tsview3').siblings('.lgs-tsview').hide();
+	})
+	$('.ts4').hover(function(){
+		$(this).parent('li').addClass('teseon');
+		$(this).parent('li').siblings().removeClass('teseon');
+		$('.tsview4').show();
+		$('.tsview4').siblings('.lgs-tsview').hide();
+	})
+	$('.ts5').hover(function(){
+		$(this).parent('li').addClass('teseon');
+		$(this).parent('li').siblings().removeClass('teseon');
+		$('.tsview5').show();
+		$('.tsview5').siblings('.lgs-tsview').hide();
+	})
+})

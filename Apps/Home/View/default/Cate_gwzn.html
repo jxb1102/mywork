@@ -1,0 +1,102 @@
+<include file="Public:header" />
+<div class="middle">
+  <div class="column1200">
+       <div id="shopping-nav">
+    <div class="block block-4">
+      <div class="block-top"></div>
+      <div class="block-box">
+        <div class="nav-wrap">
+          <div class="nav-tab">
+            <ul>
+              <volist name="info" id="vf" key='k'>
+              <li id="nav0{$k}"><span class="png24"></span></li>
+              </volist>
+            </ul>
+          </div>
+          <div class="nav-box">
+            <volist name="info" id='gt'>
+            
+            <div class="show-box">
+               <volist name="gt['goods']" id="gg">
+              <ul>
+                <volist name="gg" id="vg">
+                <li>
+                  <div class="site-box">
+                    <div class="site-logo fl">
+                      <a href="http://{$vg.url}" target="_blank" title="{$vg.title}"><img src="{$vg.pic}" alt="{$vg.title}" height="80" width="190"/></a>
+                      <p class="site-star star-{$vg.start}"><span class="png24">star</span></p>
+                    </div>
+                    <div class="site-info">
+                      <p>{$vg.content}</p>
+                      <p><a href="http://{$vg.url}" target="_blank">http://{$vg.url}</a></p>
+                    </div>
+                  </div>
+                </li>
+              </volist>
+              </ul>
+            </volist>
+              <div class="rolling-box">
+                <volist name="gt['goods']" id="gg" key="ke">
+                  <em <if condition="$ke eq 1"> class="current"</if> ><span class="png24">{$ke}</span></em>
+                </volist>
+              </div>
+                  <a id="btn-prev" <if condition="count($gt['goods']) eq 1"> class="btn-rolling forbid"<else />class="btn-rolling" href="javascript:void(0);" onclick="prevGroup();"</if> ><span class="png24">上一页</span></a>
+                  <a id="btn-next" <if condition="count($gt['goods']) eq 1"> class="btn-rolling forbid"<else />class="btn-rolling" href="javascript:void(0);" onclick="prevGroup();"</if>><span class="png24">下一页</span></a>
+            </div>
+            </volist>
+            <!--last showbox end-->
+          </div>
+          
+         
+        </div>
+      </div>
+      <div class="block-bottom"></div>
+    </div>
+  </div>
+
+  
+ </div>
+</div>
+<div style="clear:both"></div>
+ <!-- <style>
+  .xia{width:1191px; height: 100px; margin: 0 auto; border: 1px solid #dfdfdf; border-radius: 6px; margin-top:15px;  }
+  .xia ul{ margin-left: 50px; margin-top: 10px;}
+  .xia ul img{ border:1px solid #dfdfdf;}
+  .xia li{width:220px;height: 90px; float: left;}
+</style> -->
+<!-- <div class="xia">
+  <ul>
+    <volist name="list" id="v">
+       <li><a href="http://{$v.lurl}" target="_blank"><img src="{$v.limg}" title="{$v.ltitle}"></a></li>
+    </volist>
+  </ul>
+</div> -->
+<div class="hot_shopping mg_T10">
+      <h3><span style="color:#CF0000;">热门网店</span></h3>
+      <div class="hot_left">
+        <h2>店铺分类</h2>
+        <ul class="menu-list mg_T10">
+          <volist name="dianlei" id="vlei" key="vk">
+              <li class="tubiao{$vk} <if condition="$_GET['id']==$vlei['id']">current </if>"><a href="{:U('Cate/gwzn','id='.$vlei['id'])}">{$vlei.title}</a></li>
+          </volist>
+        </ul>
+      </div>
+      <div class="hot_right">
+      <ul style="float:left;">
+        <volist name="diandd" id="dian">
+          <li>
+              <div class="hot_pic">
+                 <a href="{$dian.url}" target="_blank"><img src="{$dian.pic}" alt=""/></a>
+              </div>
+              <dl class="hot_own">
+                 <dt><a href="{$dian.url}" target="_blank" class="left">{$dian.title}</a></dt>
+                 <dd style="height: 60px;overflow: hidden;"><a href="{$dian.url}" target="_blank">{$dian.jianjie}</a></dd>
+              </dl>
+          </li>
+        </volist>
+      </ul> 
+	  <div class="blank"></div>
+    <div class="page">{$_page}</div>
+</div>
+ </div>
+<include file="Public:footer" /> 

@@ -1,0 +1,227 @@
+<include file="Public:header" />
+<div style="clear:both;"></div>
+<style type="text/css">
+		.carthead{border:1px solid #dfdfdf;background: #fafafa;height: 30px;line-height: 30px;}
+		.carthead li{float: left;text-align: center; font-size: 14px;}
+		.cartgoodsbox{width: 100%;border-left: 1px solid #dfdfdf;border-top: 1px solid #dfdfdf;}
+		.cartgoodsbox td,.cartgoodsbox th{border-right: 1px solid #dfdfdf;border-bottom: 1px solid #dfdfdf;padding: 5px 1%;}
+		.cartgoodsbox th{background: #fafafa;text-align: left; font-size: 14px;}
+		.goodsnumjian,.goodsnumjia{width: 20px;text-align: center;line-height: 20px;background: green;color:#fff;display: inline-block;font-weight: bold;cursor: pointer;margin: 0 3px;}
+	</style>
+<div class="lgs-main">
+
+<div class="main_r">
+<div style="border:1px dashed #dfdfdf;border-bottom: none;font-size: 16px;color:#333;padding: 5px 10px;">
+	{:L('mycart')}
+</div>
+
+<div class="main_r_con" style="padding: 10px;border: 1px dashed #dfdfdf;min-height: 400px;color:#8c8c8c;">
+<ul class="carthead">
+	<li style="width:50%;">商品</li>
+	<li style="width:10%;">单价(RMB)</li>
+	<li style="width:12%;">数量</li>
+	<li style="width:10%;">小计(RMB)</li>
+	<li style="width:10%;">国内运费(RMB)</li>
+	<li style="width:8%">操作</li>
+	<div class="clear"></div>
+</ul>
+<div class="blank"></div>
+<volist name="list" id="v">
+<table cellspacing="0" cellpadding="0" class="cartgoodsbox">
+	<tr><th colspan="6">店铺：{$v.goodsseller} </th></tr>
+	<volist name="v.goods" id="g">
+	<tr>
+		<td style="width:51%;">
+			<div class="fl"><a href="{$g.goodsurl}" target="_blank"><img src="{$g.goodsimg}" width="60" height="60"></a></div>
+			<div class="fl" style="width:400px;font-size: 14px;padding-left: 10px;">
+				<a href="{$g.goodsurl}" target="_blank" style="color:green;">{$g.goodsname}</a> <br>
+				<span>尺寸：{$g.goodssize} &nbsp; 颜色：{$g.goodscolor}</span><br>
+				<span>备注：{$g.goodsremark}</span> <a href="###" class="xiugai" style="display:inline-block;padding: 0px 5px;background: red;height: 16px;line-height: 16px;color:#fff;" gid="{$g.id}">修改</a>
+			</div>
+		</td>
+		<td style="width:10%;font-size:16px;">{$g.goodsprice}</td>
+		<td style="width:11%;font-size:16px;"><a href="javascript:void(0);" class="goodsnumjian">-</a><input type="text" name="goodsnum" class="goodsnum" value="{$g.goodsnum}" style="width: 20px;" gid="{$g.id}"><a href="javascript:void(0);" class="goodsnumjia">+</a><input type="hidden" class="maxnum" value="<?php echo $g['maxnum']?$g['maxnum']:1; ?>" name="maxnum"></td>
+		<td style="width:10%; font-size:16px;" class="xiaoji"><?php echo sprintf('%.2f',$g['goodsprice']*$g['goodsnum']) ?></td>
+		<if condition="$key eq 0">
+		<td style="width:10%;" rowspan="{$v.goodscount}" class="goodsfreight">{$v.max(goodsfreight)}</td>
+		</if>
+		<td style="width:8%; font-size:16px;"><a href="javascript:;" gid="{$g.id}" class="delcart" style="color:#8c8c8c;">删除</a></td>
+	</tr>
+</volist>
+</table>
+<div class="blank"></div>
+</volist>
+<div style="border: 1px solid #dfdfdf;background: #fafafa;text-align: right;padding:10px 20px;line-height: 30px;font-size: 16px;">
+	商品金额：<span id="totalgoodsprice">{$price.totalgoodsprice}</span> RMB + 国内运费：<span id="totalgoodsfreight">{$price.totalgoodsfreight}</span> RMB <br>
+	代购服务费:<span id="goufei"> {$price.goufei} </span> RMB<br>
+	总金额：<span id="totalprice">{$price.totalprice}</span> RMB &nbsp; 共需支付金额：<span id="zhifuprice">{$price.zhifuprice}</span> {:C('MAIN_COIN')}
+</div>
+<div class="blank" style="margin-top:10px;"></div>
+<div style="text-align: right;">
+	<a href="{:U('Daigou/index')}" class="cartbtn" style="background: #dfdfdf;color:#333;">继续代购</a>
+	<a href="{:U('Cart/checkout')}" class="cartbtn">去结账</a>
+</div>
+</div>
+</div>
+<div id="xiugaibox" style="width: 200px;display: none;">
+	<form action="{:U('editcart')}" method="post" id="goodsedit">
+	商品尺寸：<input type="text" name="goodssize" id="goodssize" style="width: 100%;"> <br>
+	商品颜色：<input type="text" name="goodscolor" id="goodscolor" style="width: 100%;"> <br>
+	商品备注：<br><textarea name="goodsremark" id="goodsremark" style="width: 100%;"></textarea>
+	<input type="hidden" name="id" id="goodshiddenid" value="">
+	<input type="submit" value="确认修改">
+	</form>
+</div>
+<div class="clear"></div>
+</div>
+<!--zhuti1 end-->
+<div class="clear"></div>
+<include file="Public:footer" />
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('.xiugai').click(function(){
+			var id=$(this).attr('gid');
+			var loading=$.thinkbox.loading('{:L("loading")}');
+			$.post('{:U("getcartinfo")}',{'id':id},function(data){
+				$('#goodssize').val(data.goodssize);
+				$('#goodscolor').val(data.goodscolor);
+				$('#goodsremark').text(data.goodsremark);
+				$('#goodshiddenid').val(data.id);
+				$.thinkbox('#xiugaibox',{'title':'Edit','dataEle':this,'drag':true});
+				loading.hide();
+			})
+			
+		})
+		$('form#goodsedit').submit(function(){
+			var self=$(this);
+			$.post(self.attr('action'),self.serialize(),success,'json');
+			return false;
+			function success(data){
+				if (data.status) {
+					$.thinkbox.success(data.info);
+					setTimeout('location.reload()',1500);
+				}else{
+					$.thinkbox.error(data.info);
+				};
+			}
+		});
+		$('.delcart').click(function(){
+			var did=$(this).attr('gid')
+			$.thinkbox.confirm('确定要删除么',{
+				 	'dataEle' : this,
+				 	'title':'温馨提示',
+                    'ok':'确认删除',
+                    'cancel':'关闭',
+				 	'afterHide':function(data){
+				 		if (data==true) {
+				 			$.post("{:U('del')}",{'did':did},function(data){
+				 				if (data.status) {
+				 					$.thinkbox.success(data.info);
+				 					setTimeout('location.reload()',1000);
+				 				};
+				 			})
+				 		};
+				 	},
+				 });
+		})
+		$('.goodsnumjian').click(function(){
+			if (parseInt($(this).next('.goodsnum').val())<=1) {
+				return false;
+			}else{
+				$(this).next('.goodsnum').val($(this).next('.goodsnum').val()-1);
+				var danjia=$(this).parent('td').prev('td').text();
+				var xiaoji=parseFloat(danjia)*parseInt($(this).next('.goodsnum').val());
+				$(this).parent('td').next('td').text(xiaoji.toFixed(2));
+				changeprice();
+				var id=$(this).next('.goodsnum').attr('gid');
+				var num=$(this).next('.goodsnum').val();
+				$.post("{:U('setnum')}",{'id':id,'num':num},function(data){
+
+				})
+			};
+		})
+		$('.goodsnumjia').click(function(){
+			if (parseInt($(this).prev('.goodsnum').val())>=parseInt($(this).next('.maxnum').val())) {
+				$.thinkbox.error('您最多能购买'+$(this).next('.maxnum').val()+'件');
+				return false;
+			}else{
+				$(this).prev('.goodsnum').val(parseInt($(this).prev('.goodsnum').val())+1);
+				var danjia=$(this).parent('td').prev('td').text();
+				var xiaoji=parseFloat(danjia)*parseInt($(this).prev('.goodsnum').val());
+				$(this).parent('td').next('td').text(xiaoji.toFixed(2));
+				changeprice();
+				var id=$(this).prev('.goodsnum').attr('gid');
+				var num=$(this).prev('.goodsnum').val();
+				$.post("{:U('setnum')}",{'id':id,'num':num},function(data){
+					
+				})
+			};
+		})
+		$('.goodsnum').blur(function(){
+			if ($(this).val()=="") {
+				$.thinkbox.error('数量不能为空');
+				$(this).val('1');
+				var danjia=$(this).parent('td').prev('td').text();
+				var xiaoji=parseFloat(danjia)*parseInt($(this).val());
+				$(this).parent('td').next('td').text(xiaoji.toFixed(2));
+				changeprice();
+				var id=$(this).attr('gid');
+				var num=$(this).val();
+				$.post("{:U('setnum')}",{'id':id,'num':num},function(data){
+				})
+			}else if($(this).val()>parseInt($(this).next().next('.maxnum').val())){
+				$.thinkbox.error('您最多能购买'+$(this).next().next('.maxnum').val()+'件');
+				$(this).val($(this).next().next('.maxnum').val());
+				var danjia=$(this).parent('td').prev('td').text();
+				var xiaoji=parseFloat(danjia)*parseInt($(this).val());
+				$(this).parent('td').next('td').text(xiaoji.toFixed(2));
+				changeprice();
+				var id=$(this).attr('gid');
+				var num=$(this).val();
+				$.post("{:U('setnum')}",{'id':id,'num':num},function(data){
+				})
+			}else if($(this).val()<=0||isNaN($(this).val())){
+				$.thinkbox.error('数量填写错误');
+				$(this).val('1');
+				var danjia=$(this).parent('td').prev('td').text();
+				var xiaoji=parseFloat(danjia)*parseInt($(this).val());
+				$(this).parent('td').next('td').text(xiaoji.toFixed(2));
+				changeprice();
+				var id=$(this).attr('gid');
+				var num=$(this).val();
+				$.post("{:U('setnum')}",{'id':id,'num':num},function(data){
+				})
+			}else{
+				var danjia=$(this).parent('td').prev('td').text();
+				var xiaoji=parseFloat(danjia)*parseInt($(this).val());
+				$(this).parent('td').next('td').text(xiaoji.toFixed(2));
+				changeprice();
+				var id=$(this).attr('gid');
+				var num=$(this).val();
+				$.post("{:U('setnum')}",{'id':id,'num':num},function(data){
+				})
+			};
+		})
+		function changeprice(){
+				var totalgoodsprice=0;
+				$('.xiaoji').each(function(){
+					var xiaoji=$(this).text();
+					totalgoodsprice += parseFloat(xiaoji);
+				})
+				var totalgoodsfreight=0;
+				$('.goodsfreight').each(function(){
+					var freight=$(this).text();
+					totalgoodsfreight += parseFloat(freight);
+				})
+				$('#totalgoodsfreight').text(totalgoodsfreight.toFixed(2));
+
+				$('#totalgoodsprice').text(totalgoodsprice.toFixed(2));
+				var goufei=totalgoodsprice*{:C('GOU_FU')};
+				$("#goufei").html(goufei.toFixed(2));
+				var totalprice=parseFloat(totalgoodsprice)+parseFloat($('#totalgoodsfreight').text())+parseFloat(goufei);
+				$('#totalprice').text(totalprice.toFixed(2));
+				var zhifuprice=totalprice/{:C('MAIN_HUILV')};
+				$('#zhifuprice').text(zhifuprice.toFixed(2));
+			}
+	})
+</script>

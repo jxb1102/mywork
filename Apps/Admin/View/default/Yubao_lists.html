@@ -1,0 +1,434 @@
+<extend name="Public/base"/>
+<block name="active"><li class="active">预报管理</li></block>
+<block name="page-content">
+	<div class="page-header">
+		<h1>
+			预报管理
+			<small> <i class="icon-double-angle-right"></i>
+				预报列表
+			</small>
+		</h1>
+	</div>
+	<!-- /.page-header -->	
+	<div class="row">
+		<div class="col-xs-12">
+			<div>
+				<ul class="nav nav-tabs" id="myTab">
+					<li <eq name="data['status']" value=""> class="active" </eq>>
+						<a href="{:U('Yubao/lists')}"> <i class="green icon-home bigger-110"></i>
+							全部
+						</a>
+					</li>
+					<li <eq name="data['status']" value="1"> class="active" </eq>>
+						<a href="{:U('Yubao/lists','status=1')}">
+							在途中
+						</a>
+					</li>
+
+					<li <eq name="data.status" value="2"> class="active" </eq>>
+						<a  href="{:U('Yubao/lists','status=2')}">
+							已入库
+							<!-- <span class="badge badge-danger">4</span> -->
+						</a>
+					</li>
+
+					<!-- <li <eq name="data.status" value="3"> class="active" </eq>>
+						<a  href="{:U('Yubao/lists','status=3')}">
+							待出库
+						</a>
+					</li> -->
+					<li <eq name="data.status" value="4"> class="active" </eq>>
+						<a  href="{:U('Yubao/lists','status=4')}">
+							已出库
+						</a>
+					</li>
+					<a href="{:U('exportexcel','status='.$status.'&keyword='.$_GET['keyword'])}" style="display:block;float: right;" class="btn btn-danger btn-minier">导出Excel</a>
+				</ul>
+
+			</div>
+			<!-- PAGE CONTENT BEGINS -->		
+			<table id="sample-table-1" class="table table-striped table-bordered table-hover" style="font-size: 12px;">
+				<thead>
+					<tr>
+						<th class="center" style="width:20px;">ID</th>
+						<th>用户</th>
+						<th>快递单号</th>
+						<th>所属订单</th>
+						<th class="hidden-480">快递公司</th>
+						<th>包裹名称</th>
+						<th>数量</th>
+						<th>价值</th>
+						<th>类型</th>
+						<th>原箱/合箱</th>
+						<th>备注</th>
+						<th>状态</th>
+						<th class="hidden-990"><eq name="data.status" value="">添加</eq><eq name="data.status" value="1">添加</eq><eq name="data.status" value="2">入库</eq><eq name="data.status" value="4">出库</eq>时间</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<if condition="$list">
+					<volist name="list" id="v">
+						<tr <gt name="v.bgleixing" value="0">style="color:red;font-weight:bold;"</gt>>
+							<td class="center">{$v.id}</td>
+							<td>{$v.user.username}</td>
+							<td>{$v.kdsn}</td>
+							<td><a href="{:U('Yundan/view','id='.$v['ydid'])}">{$v.dd.sn}</a></td>
+							<td class="hidden-480">{$v.kdname}</td>
+							<td>{$v.bgname}</td>
+							<td>{$v.shuliang}</td>
+							<td>{$v.shenbao}</td>
+							<td>{$v.bgleixing|getbgleixing}</td>
+							<td><eq name="v.chaibao" value="0">原箱</eq><eq name="v.chaibao" value="1">合箱</eq></td>
+							<td>{$v.remark}</td>
+							<td>{$v.status|getyubaostatus}<eq name="v.status" value="2">({$v.kuwei})</eq></td>
+							<td class="hidden-990"><eq name="data.status" value="">{$v.addtime|date="Y-m-d",###}</eq><eq name="data.status" value="1">{$v.addtime|date="Y-m-d",###}</eq><eq name="data.status" value="2">{$v.rukutime|date="Y-m-d",###}</eq><eq name="data.status" value="4">{$v.chukutime|date="Y-m-d",###}</eq></td>
+							<td class="action-buttons">
+								<if condition="$v.status lt 2">
+								<a class="blue ruku" href="#ruku-table" data-toggle="modal" uid="{$v.id}" title="入库"> <i class="icon-download bigger-130"></i>
+								</a>
+							</if>
+								<a class="blue edityubao" href="#modal-table" data-toggle="modal" uid="{$v.id}"> <i class="icon-pencil bigger-130"></i>
+								</a>
+								<if condition="$v.status lt 2">
+								<a class="red delete" href="###" sid="{$v.id}" onclick="return false;"> <i class="icon-trash bigger-130"></i>
+								</a>
+							</if>
+							</td>
+						</tr>
+					</volist>
+					<else />
+					<tr><td colspan="14">没有您要的信息</td></tr>
+				</if>
+				</tbody>
+			</table>
+			<div class="page">{$_page}</div>
+			<div id="modal-table" class="modal fade" tabindex="-1">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header no-padding">
+							<div class="table-header">
+								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+									<span class="white">&times;</span>
+								</button>
+								编辑预报
+							</div>
+						</div>
+						<form class="form-horizontal" id="edit" style="padding:10px;" method="post" action="{:U('edit')}">
+							<div class="modal-body no-padding">
+
+								<div class="form-group">
+									<label class="control-label col-sm-3 no-padding-right" for="uname">所属用户:</label>
+
+									<div class="col-sm-9">
+										<div class="clearfix">
+											<input type="text" name="uname" id="uname" class="col-xs-12 col-sm-6" value="{$info.uname}" />			
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-3 no-padding-right" for="kdsn">快递单号:</label>
+
+									<div class="col-sm-9">
+										<div class="clearfix">
+											<input type="text" name="kdsn" id="kdsn" class="col-xs-12 col-sm-6" value="{$info.kdsn}" disabled />			
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-3 no-padding-right" for="kdname">快递公司:</label>
+
+									<div class="col-sm-9">
+										<div class="clearfix">
+											<input type="text" name="kdname" id="kdname" class="col-xs-12 col-sm-6" value="{$info.kdname}" disabled />			
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-3 no-padding-right" for="bgname">包裹名称:</label>
+
+									<div class="col-sm-9">
+										<div class="clearfix">
+											<input type="text" name="bgname" id="bgname" class="col-xs-12 col-sm-6" value="{$info.bgname}" />			
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-3 no-padding-right" for="shuliang">数量:</label>
+
+									<div class="col-sm-9">
+										<div class="clearfix">
+											<input type="text" name="shuliang" id="shuliang" class="col-xs-12 col-sm-6" value="{$info.shuliang}" />			
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-3 no-padding-right" for="shenbao">价值:</label>
+
+									<div class="col-sm-9">
+										<div class="clearfix">
+											<input type="text" name="shenbao" id="shenbao" class="col-xs-12 col-sm-6" value="{$info.shenbao}" />			
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-3 no-padding-right" for="weight">重量:</label>
+
+									<div class="col-sm-9">
+										<div class="clearfix">
+											<input type="text" name="weight" id="weight" class="col-xs-12 col-sm-6" value="{$info.weight}" />			
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-3 no-padding-right" for="bgleixing">包裹类型:</label>
+
+									<div class="col-sm-9">
+										<div class="clearfix">
+											<select name="bgleixing" id="bgleixing">
+												<option value="0">普通货物</option>
+												<option value="1">敏感货物</option>
+												<option value="2">带电池货物</option>
+											</select>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-3 no-padding-right" for="remark">备注:</label>
+
+									<div class="col-sm-9">
+										<div class="clearfix">
+											<input type="text" name="remark" id="remark" class="col-xs-12 col-sm-6" value="{$info.remark}" />			
+										</div>
+									</div>
+								</div>
+
+								<div style="clear:both;"></div>
+							</div>
+							<div class="modal-footer no-margin-top">
+								<input type="hidden" name="id" id="ybid" value="">			
+								<button type="submit" class="btn btn-sm btn-success"> <i class="icon-ok"></i>
+									提交
+								</button>
+								<button class="btn btn-sm btn-danger" data-dismiss="modal"> <i class="icon-remove"></i>
+									取消
+								</button>
+							</div>
+						</form>
+					</div>
+
+					<!-- /.modal-content -->			
+				</div>
+				<!-- /.modal-dialog -->			
+			</div>
+			<div id="ruku-table" class="modal fade" tabindex="-1">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header no-padding">
+							<div class="table-header">
+								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+									<span class="white">&times;</span>
+								</button>
+								包裹入库
+							</div>
+						</div>
+						<form class="form-horizontal" id="ruku" style="padding:10px;" method="post" action="{:U('ruku')}">
+							<div class="modal-body no-padding">
+
+								<div class="form-group">
+									<label class="control-label col-sm-3 no-padding-right" for="rukuuname">所属用户:</label>
+
+									<div class="col-sm-9">
+										<div class="clearfix">
+											<input type="text" name="uname" id="rukuuname" class="col-xs-12 col-sm-6" value="{$info.uname}" disabled />			
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-3 no-padding-right" for="rukukdsn">快递单号:</label>
+
+									<div class="col-sm-9">
+										<div class="clearfix">
+											<input type="text" name="kdsn" id="rukukdsn" class="col-xs-12 col-sm-6" value="{$info.kdsn}" disabled />			
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-3 no-padding-right" for="rukukdname">快递公司:</label>
+
+									<div class="col-sm-9">
+										<div class="clearfix">
+											<input type="text" name="kdname" id="rukukdname" class="col-xs-12 col-sm-6" value="{$info.kdname}" disabled />			
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-3 no-padding-right" for="rukubgname">包裹名称:</label>
+
+									<div class="col-sm-9">
+										<div class="clearfix">
+											<input type="text" name="bgname" id="rukubgname" class="col-xs-12 col-sm-6" value="{$info.bgname}" disabled />			
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-3 no-padding-right"  for="form-field-select-3">选择库位:</label>
+
+									<div class="col-sm-9">
+										<select class="chosen-select" data-placeholder="选择一个库位" id="form-field-select-3" name="kuwei">
+											<option value="">&nbsp;</option>
+											<volist name="kwlist" id="v">
+												<option value="{$v.title}">{$v.title} ({$v.shuliang})</option>
+											</volist>
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-3 no-padding-right" for="rukuweight">包裹重量:</label>
+
+									<div class="col-sm-9">
+										<div class="clearfix">
+											<input type="text" name="weight" id="rukuweight" class="col-xs-12 col-sm-6" value="" />	kg		
+										</div>
+									</div>
+								</div>
+
+								<div style="clear:both;"></div>
+							</div>
+							<div class="modal-footer no-margin-top">
+								<input type="hidden" name="id" id="rukuybid" value="">			
+								<button type="submit" class="btn btn-sm btn-success"> <i class="icon-ok"></i>
+									提交
+								</button>
+								<button class="btn btn-sm btn-danger" data-dismiss="modal"> <i class="icon-remove"></i>
+									取消
+								</button>
+							</div>
+						</form>
+					</div>
+
+					<!-- /.modal-content -->			
+				</div>
+				<!-- /.modal-dialog -->			
+			</div>
+		</div>
+	</div>
+
+</block>
+<block name="jiazaijs">
+	<script src="__JS__/bootbox.min.js"></script>
+	<script src="__JS__/jquery.gritter.min.js"></script>
+	<script src="__JS__/chosen.jquery.min.js"></script>
+</block>
+<block name="script">
+
+		<script type="text/javascript">
+		jQuery(function($){
+	$('.delete').click(function(){
+					var id=$(this).attr('sid');
+					bootbox.confirm("确定要删除么?", function(result){
+						if(result) {
+							$.post("{:U('delete')}",{'id':id,'ajax':1},function(data){
+								if (data.status) {
+									$.gritter.add({
+										// (string | mandatory) the heading of the notification
+										title: '提交成功',
+										// (string | mandatory) the text inside the notification
+										text: data.info,
+										class_name: 'gritter-success gritter-light'
+									});
+									setTimeout('location.reload()',1000);
+								}else{
+									$.gritter.add({
+										title: '提交失败',
+										text: data.info,
+										class_name: 'gritter-error gritter-light'
+									});
+								};
+							},'json');
+						}
+					})
+					
+				})
+	$('.edityubao').click(function(){
+		var id=$(this).attr('uid');
+		$.post("{:U('getyubao')}",{'id':id},function(data){
+			$('#uname').val(data.uname);
+			$('#kdsn').val(data.kdsn);
+			$('#kdname').val(data.kdname);
+			$('#bgname').val(data.bgname);
+			$('#shuliang').val(data.shuliang);
+			$('#shenbao').val(data.shenbao);
+			$('#remark').val(data.remark);
+			$('#bgleixing').val(data.bgleixing);
+			$('#ybid').val(data.id);
+			$('#weight').val(data.weight);
+			
+		})
+	})
+	$('.ruku').click(function(){
+		var id=$(this).attr('uid');
+		$.post("{:U('getyubao')}",{'id':id},function(data){
+			$('#rukuuname').val(data.uname);
+			$('#rukukdsn').val(data.kdsn);
+			$('#rukukdname').val(data.kdname);
+			$('#rukubgname').val(data.bgname);
+			$('#rukuybid').val(data.id);
+			
+		})
+	})
+	$(".chosen-select").chosen(); 
+				$('#ruku-table').on('shown.bs.modal', function () {
+					$(this).find('.chosen-container').each(function(){
+						$(this).find('a:first-child').css('width' , '210px');
+						$(this).find('.chosen-drop').css('width' , '210px');
+						$(this).find('.chosen-search input').css('width' , '200px');
+					});
+				})
+	})
+		$("form#edit").submit(function(){
+    		var self = $(this);
+    		$.post(self.attr("action"), self.serialize(), success, "json");
+    		return false;
+    		function success(data){
+    			if(data.status){
+    				$.gritter.add({
+						title: '更新成功',
+						text: data.info,
+						class_name: 'gritter-success gritter-light'
+					});
+					setTimeout('location.reload()',1000);
+    			} else {
+    				$.gritter.add({
+						title: '更新失败',
+						text: data.info,
+						class_name: 'gritter-success gritter-light'
+					});
+    			}
+    		}
+    	});
+    	$("form#ruku").submit(function(){
+    		var self = $(this);
+    		//alert(self.serialize());
+    		$.post(self.attr("action"), self.serialize(), success, "json");
+    		return false;
+    		function success(data){
+    			if(data.status){
+    				$.gritter.add({
+						title: '更新成功',
+						text: data.info,
+						class_name: 'gritter-success gritter-light'
+					});
+					setTimeout('location.reload()',1000);
+    			} else {
+    				$.gritter.add({
+						title: '更新失败',
+						text: data.info,
+						class_name: 'gritter-success gritter-light'
+					});
+    			}
+    		}
+    	});
+</script>
+</block>

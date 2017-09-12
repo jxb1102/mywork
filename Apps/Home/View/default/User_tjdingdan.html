@@ -1,0 +1,212 @@
+<extend name="default/Public/user"/>
+<block name="user-right">
+<div class="user-right">
+	<div class="user-head">
+		<h2>{:L('submit_order')}</h2>
+		
+	</div>
+	<style type="text/css">
+		.addedcell{position: relative;}
+		.addedcell .delcell{position: absolute;top: 1px;right: 0;display: block;background: red;color: #fff;padding: 2px 10px;height: 16px;line-height: 16px;}
+		.listcell{position: relative;}
+		.listcell .dellistcell{position: absolute;top: 1px;right: 0;display: block;background: red;color: #fff;padding: 2px 10px;height: 16px;line-height: 16px;}
+		#addresslist{display: none;position: relative;}
+	</style>
+
+				<div class="fengenav" style="border-top: none;">{:L('order_info')}</div>
+				<div style="padding: 20px;">
+					<form action="{:U('User/yubaoinsert')}" method="post">
+					<table class="yubao-add" cellpadding="0" cellspacing="0" style="line-height: 20px;">
+						<tr>
+							<th width="75">{:L('ex_name')}</th>
+							<th width="100">{:L('ex_num')}</th>
+							<th width="100">{:L('baoguo_name')}</th>
+							<th width="70">{:L('jiazhi')}(USD)</th>
+							<th width="80">{:L('baoguo_leixing')}</th>
+							<th width="75">{:L('unpacking')}</th>
+							<th width="80">{:L('baoxian')}</th>
+							<th width="">{:L('remark')}</th>
+						</tr>
+
+						<volist name="yblist" id="v">
+							<tr>
+								<td>{$v.kdname}</td>
+								<td>{$v.kdsn}</td>
+								<td>{$v.bgname}</td>
+								<td>{$v.shenbao}</td>
+								<td>
+									<eq name="v.bgleixing" value="0">{:L('common_goods')}</eq>
+									<eq name="v.bgleixing" value="1">{:L('sensitive_goods')}</eq>
+<!-- 									<eq name="v.bgleixing" value="2">带电池</eq> -->
+								</td>
+								<td>
+									<eq name="v.chaibao" value="0">{:L('no_unpacking')}</eq>
+									<eq name="v.chaibao" value="1">{:L('unpacking')}</eq>
+								</td>
+								<td>
+									<select name="isxian" id="isxian">
+							           <option value="0" selected>否</option>
+							           <option value="1" >是</option>
+						            </select>
+								</td>
+								<td class="listcell">
+									{$v.remark}
+									<!-- <a href="###" class="dellistcell">移除</a> -->
+								</td>
+								<input type="hidden" name="id" value="{$v.id}" class="listid"></tr>
+						</volist>
+
+					</table>
+				<div class="blank"></div>
+				<a href="{:U('User/yubaolist','keyunsong=1')}">{:L('re_select')}</a>
+				<div class="blank"></div>
+				<table class="yubao-add" cellpadding="0" cellspacing="0" style="line-height: 20px;">
+					<tr>
+						<th>{:L('delivery_address')}</th>
+						<th>{:L('shipping_method')}</th>
+					</tr>
+					<tr>
+						<td style="padding:10px;width: 50%;">
+							<div id="defaddress">
+								<if condition="$address">
+								<div style="margin-bottom: 10px;">
+									{:L('consignee')}：{$address.consignee} &nbsp;&nbsp;{:L('telphone')}：{$address.tel}<br>
+									{:L('country')}：{$address.areaname} <br>
+									{:L('address')}：{$address.address} ({$address.zipcode}) <br>
+								</div>
+							</if><input type="hidden" name="addressid" id="addressinputid" value="{$address.id}">
+								<a href="###" id="newaddress" style="color:red;">{:L('check')}{:L('delivery_address')}</a>
+							</div>
+							<div id="addresslist">
+								<ul>
+									<volist name="addresslist" id="v">
+										<li style="padding: 5px 0;border-bottom: 1px dashed #dfdfdf;">
+											<span style="float: left;display:block;width: 25px;padding: 10px 0;">
+												<input type="radio" name="id" value="{$v.id}" class="addressid" <eq name="v.def" value="1">checked</eq>
+											>
+										</span>
+										<span style="float: left;display: block;width: 395px;">
+											{$v.consignee} ({$v.tel})&nbsp;{$v.areaname} &nbsp; {$v.address} ({$v.zipcode})
+										</span>
+										<div class="clear"></div>
+									</li>
+								</volist>
+							</ul>
+							<div class="blank"></div>
+							<a href="###" class="btnqx addnewaddress">{:L('new_address')}</a>
+							<a href="###" class="btnqd querenaddress">{:L('confirm_select')}</a>
+							<div class="address-form">
+
+								<input type="text" name="consignee"  placeholder="{:L('consignee')}">							
+								<div class="blank"></div>
+								<input type="text" name="tel"  placeholder="{:L('mobile')}">							
+								<div class="blank"></div>
+								<select name="areaid" style="width:100%;">
+									<option value="0">{:L('select_country')}</option>
+									<volist name="state" id="v">
+										<option value="{$v.id}">{$v.name}</option>
+									</volist>
+								</select>
+								<div class="blank"></div>
+								<textarea name="address" placeholder="{:L('city_street')}" style="width: 96%;padding: 2%;"></textarea>
+								<div class="blank"></div>
+								<input type="text" name="zipcode" placeholder="{:L('zipcode')}">							
+								<div class="blank"></div>
+								<div style="">
+									<button type="button" class="btnqx quxiaoaddaddress">{:L('cancel')}</button>
+									<button type="button" class="btnqd querenaddaddress">{:L('confirm_address')}</button>
+								</div>
+
+							</div>
+							</div>
+						</td>
+						<td style="padding:10px 20px;width: 50%;">
+							<if condition="$delivery">
+								<volist name="delivery" id="d">
+									<div><input type="radio" name="deliveryid" value="{$d.id}" checked> &nbsp;{$d.dname} </div>
+								</volist>
+								<else />
+								{:L('select_address_first')}
+							</if>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2" style="padding: 10px;"><span style="float:left;">{:L('remark')}：</span><textarea name="remark" style="width: 90%;height: 50px;float: left;padding: 5px;" id="dingdanremark" placeholder="{:L('remark')}"></textarea></td>
+					</tr>
+				</table>
+				<div class="blank"></div>
+				<div style="width: 400px;float: right;"><button type="button" class="btnqd tijiaodingdan">{:L('submit_order')}</button></div>
+				<div class="blank"></div>
+				</form>
+			</div>
+
+</div>
+<script type="text/javascript">
+	$(function(){
+		$('.tijiaodingdan').click(function(){
+			var addressid=$('#addressinputid').val();
+			var deliveryid=$('input[name="deliveryid"]:checked').val();
+			var remark=$('#dingdanremark').val();
+			var isxian=$('#isxian').val();
+			$.post("{:U('User/tjdingdanadd')}",{'addressid':addressid,'deliveryid':deliveryid,'remark':remark,'isxian':isxian},function(data){
+				if (data.status) {
+					alert('订单提交成功，请至订单列表查看包裹最新状态及支付国际运费');
+					setTimeout(jumpurl(data.url),3000);
+				}else{
+					$.thinkbox.error(data.info);
+				};
+			});
+		})
+
+		$('.dellistcell').click(function(){
+			var id=$(this).parent().parent().find('.listid').val();
+			$.post("{:U('User/yubaocartdel')}",{'id':id},function(data){
+				if (data.status) {
+					$('.listid').each(function(){
+						if (data.info==$(this).val()) {
+							$(this).parent().remove();
+						};
+					})
+				}else{
+					$.thinkbox.error(data.info);
+				};
+			});
+		})
+		$('#newaddress').click(function(){
+			$(this).parent().hide();
+			$(this).parent().next().show();
+		})
+		$('.querenaddress').click(function(){
+			var id=$('.addressid:checked').val();
+			$.post("{:U('User/changeaddress')}",{'id':id},function(data){
+				if (data.status) {
+					$.thinkbox.success(data.info);
+					setTimeout('location.reload()',700);
+				};
+			})
+		})
+		$('.addnewaddress').click(function(){
+			$(this).parent().find('.address-form').show();
+		})
+		$('.quxiaoaddaddress').click(function(){
+			$(this).parents('.address-form').hide();
+		})
+		$('.querenaddaddress').click(function(){
+			var consignee=$(this).parents('.address-form').find('input[name="consignee"]').val();
+			var tel=$(this).parents('.address-form').find('input[name="tel"]').val();
+			var areaid=$(this).parents('.address-form').find('select[name="areaid"]').val();
+			var address=$(this).parents('.address-form').find('textarea[name="address"]').val();
+			var zipcode=$(this).parents('.address-form').find('input[name="zipcode"]').val();
+			$.post("{:U('User/addressadd')}",{'consignee':consignee,'tel':tel,'areaid':areaid,'address':address,'zipcode':zipcode},function(data){
+				if (data.status) {
+						$.thinkbox.success(data.info);
+						setTimeout('location.reload()',700);
+					}else{
+						$.thinkbox.error(data.info);
+					};
+			})
+		})
+
+	})
+</script>
+</block>

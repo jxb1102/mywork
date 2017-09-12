@@ -1,0 +1,113 @@
+<div class="bottom mg_T10">
+    <div class="column1200">
+     <ul class="bottom_list">
+        <volist name="cateaa" id="ct">
+             <li><h2>{$ct.title}</h2><div class="blank"></div>
+                <volist name="ct['article']" id="at">
+                <a href="{:U('Article/bangarticle','id='.$at['id'])}">{$at.title}</a>
+                </volist>
+            </li>
+        </volist>
+         <li style="border:none;font-family:'微软雅黑';width:180px;"><div class="erweima"><img src="__IMG__/erweima.png" width="109" height="109" style="padding-bottom:5px;"/><br />&nbsp;&nbsp;关注<font style="color:#E7291D;">神州代运</font></div><div class="share">
+           <a href="{:C('facebook')}" target="_blank"><img src="__IMG__/face.png" title="神州代运facebook官方主页"></a>
+            <a href="{:C('weibo')}" target="_blank"><img src="__IMG__/weobo.png" title="神州代运新浪微博"></a>
+            <a href="{:C('twitter')}" target="_blank"><img src="__IMG__/twitter.png" title="神州代运推特官方主页"></a>
+         </div></li>
+         
+     </ul>
+      
+     <p class="bottom_text" style="margin-right:20px;">备案/许可证编号为：沪ICP备14038017号<br />神州代运所有权&COPY;上海纯通经贸发展有限公司</p>
+            
+     
+     
+     </div>
+</div>
+</body>
+<script>
+
+function initPlaceHolders(){
+    if('placeholder' in document.createElement('input')){ //如果浏览器原生支持placeholder
+        return ;
+    }
+    function target (e){
+        var e=e||window.event;
+        return e.target||e.srcElement;
+    };
+    function _getEmptyHintEl(el){
+        var hintEl=el.hintEl;
+        return hintEl && g(hintEl);
+    };
+    function blurFn(e){
+        var el=target(e);
+        if(!el || el.tagName !='INPUT' && el.tagName !='TEXTAREA') return;//IE下，onfocusin会在div等元素触发 
+        var    emptyHintEl=el.__emptyHintEl;
+        if(emptyHintEl){
+            //clearTimeout(el.__placeholderTimer||0);
+            //el.__placeholderTimer=setTimeout(function(){//在360浏览器下，autocomplete会先blur再change
+                if(el.value) emptyHintEl.style.display='none';
+                else emptyHintEl.style.display='';
+            //},600);
+        }
+    };
+    function focusFn(e){
+        var el=target(e);
+        if(!el || el.tagName !='INPUT' && el.tagName !='TEXTAREA') return;//IE下，onfocusin会在div等元素触发 
+        var emptyHintEl=el.__emptyHintEl;
+        if(emptyHintEl){
+            //clearTimeout(el.__placeholderTimer||0);
+            emptyHintEl.style.display='none';
+        }
+    };
+    if(document.addEventListener){
+        document.addEventListener('focus',focusFn, true);
+        document.addEventListener('blur', blurFn, true);
+    }
+    else{
+        document.attachEvent('onfocusin',focusFn);
+        document.attachEvent('onfocusout',blurFn);
+    }
+
+    var elss=[document.getElementsByTagName('input'),document.getElementsByTagName('textarea')];
+    for(var n=0;n<2;n++){
+        var els=elss[n];
+        for(var i =0;i<els.length;i++){
+            var el=els[i];
+            var placeholder=el.getAttribute('placeholder'),
+                emptyHintEl=el.__emptyHintEl;
+            if(placeholder && !emptyHintEl){
+                emptyHintEl=document.createElement('span');
+                emptyHintEl.innerHTML=placeholder;
+                emptyHintEl.className='emptyhint';
+                emptyHintEl.onclick=function (el){return function(){try{el.focus();}catch(ex){}}}(el);
+                if(el.value) emptyHintEl.style.display='none';
+                el.parentNode.insertBefore(emptyHintEl,el);
+                el.__emptyHintEl=emptyHintEl;
+            }
+        }
+    }
+}
+
+initPlaceHolders();
+
+</script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$(".side ul li").hover(function(){
+		$(this).find(".sidebox").stop().animate({"width":"124px"},200).css({"opacity":"1","filter":"Alpha(opacity=100)","background":"#ae1c1c"})	
+	},function(){
+		$(this).find(".sidebox").stop().animate({"width":"54px"},200).css({"opacity":"0.8","filter":"Alpha(opacity=80)","background":"#000"})	
+	});
+	
+});
+//回到顶部
+function goTop(){
+	$('html,body').animate({'scrollTop':0},600); //滚回顶部的时间，越小滚的速度越快~
+}
+</script>
+<div class="side">
+	<ul>
+	    <li><a href="http://wpa.qq.com/msgrd?v=3&uin={:C('KEFU')}&site=qq&menu=yes" target="_blank"><div class="sidebox"><img src="__IMG__/side_icon04.png">QQ客服</div></a></li>
+		<li style="border:none;"><a href="javascript:goTop();" class="sidetop"><img src="__IMG__/side_icon05.png"></a></li>
+	</ul>
+</div>
+</html>

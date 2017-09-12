@@ -1,0 +1,157 @@
+<extend name="default/Public/user"/>
+<block name="user-right">
+	<script type="text/javascript" src="__COMMONJS__/jquery.print.js"></script>
+	<div class="user-right">
+		<div class="user-head">
+			<h2>{:L('order_info')}</h2>
+		</div>
+		<div style="padding:10px;">
+			<div id="printarea">
+			<table class="yubao-add yubao-list" cellpadding="0" cellspacing="0" style="line-height: 25px;">
+						<tr>
+							<th colspan="4" style="font-weight:600;">{:L('order_info')}</th>
+						</tr>
+						<tr>
+							<td width="120">{:L('order_num')}：</td>
+							<td>{$ddinfo.sn}</td>
+							<td>{:L('add_time')}：</td>
+							<td>{$ddinfo.addtime|date="Y-m-d",###}</td>
+						</tr>
+						<tr>
+							<td>{:L('shipping_method')}：</td>
+							<td width="120">{$ddinfo.delivery.dname} </td>
+							<td>{:L('declared_value')}：({:C('MAIN_COIN')})</td>
+							<td>{$ddinfo.shenbaojiazhi}</td>
+						</tr>
+						<tr>
+							<td width="120">{:L('delivery_info')}：</td>
+							<td colspan="3">{$ddinfo.consignee}({$ddinfo.tel}) &nbsp; {$ddinfo.areaname} {$ddinfo.address}({$ddinfo.zipcode})</td>
+						</tr>
+						
+			</table>
+			<div class="blank"></div>
+			<b style="display: inline-block;padding: 5px 0;color: red;">{:L('forecast_list')}</b>
+			<style>
+            .yubao-list th{font-weight: 600; font-size: 14px;}
+			</style>
+			<table class="yubao-add yubao-list" cellpadding="0" cellspacing="0" style="line-height: 25px;">
+						<tr>
+							<th width="100" s>{:L('ex_num')}</th>
+							<th width="100">{:L('ex_name')}</th>
+							<th width="150">{:L('baoguo_name')}</th>
+							<th>{:L('jiazhi')}({:C('MAIN_COIN')})</th>
+							<th width="80">{:L('baoguo_leixing')}</th>
+							<th>{:L('unpacking')}</th>
+							<th>{:L('remark')}</th>
+							<th>{:L('status')}</th>
+							<th>{:L('operation')}</th>
+						</tr>
+						<volist name="yblist" id="v">
+						<tr>
+							<td>{$v.kdsn}</td>
+							<td>{$v.kdname}</td>
+							<td>{$v.bgname}</td>
+							<td>{$v.shenbao}</td>
+							<td><eq name="v.bgleixing" value="0">{:L('common_goods')}</eq><eq name="v.bgleixing" value="1">{:L('sensitive_goods')}</eq></td>
+							<td><eq name="v.chaibao" value="0">{:L('no_unpacking')}</eq><eq name="v.chaibao" value="1">{:L('hexiang')}</eq></td>
+							<td>{$v.remark}</td>
+							<td>{$v.status|getyubaostatus}</td>
+							<td><eq name="ddinfo.status" value="1"><a href="javascript:;" class="delete" did="{$v.id}" title="{:L('remove_from_order')}"><i class="icon-trash"></i></a> </eq></td>
+						</tr>
+					</volist>
+			</table>
+			<div class="blank"></div>
+			<b style="display: inline-block;padding: 5px 0;color: red;">{:L('parcel_list')}</b>
+			<table class="yubao-add yubao-list" cellpadding="0" cellspacing="0" style="line-height: 25px;">
+						<tr>
+							
+							<th width="130">{:L('guoji_delivery_num')}</th>
+							<th width="60">{:L('long')}cm</th>
+							<th width="60">{:L('wide')}cm</th>
+							<th width="60">{:L('high')}cm</th>
+							<th width="80">{:L('index_volume')}</th>
+							<th width="80">{:L('weight')}</th>
+							<th width="60">{:L('remark')}</th>
+							<th width="130">{:L('pay_types')}</th>
+							<th width="150">商业保险费({:C('MAIN_COIN')})</th>
+							<th width="80">{:L('freight')}({:C('MAIN_COIN')})</th>
+						</tr>
+						<if condition="$bglist">
+						<volist name="bglist" id="v">
+						<tr>
+							
+							<td>{$v.bgsn}</td>
+							<td>{$v.chang}</td>
+							<td>{$v.kuan}</td>
+							<td>{$v.gao}</td>
+							<td>{$v.voweight}</td>
+							<td>{$v.weight} Kg</td>
+							<td>{$v.remark}</td>
+							<td>{$v.shoufeileixing}</td>
+							<td align="right"><b style="color:red;"><if condition="$baomoney">{$baomoney}<else />0</if></b></td>
+							<td align="right"><b style="color:red;" class="freight">{$v.freight}</b></td>
+						</tr>
+					</volist>
+					<else />
+					<tr><td colspan="10" height='25'>  </td></tr>
+				</if>
+			</table>
+			<div class="blank"></div>
+		</div>
+			<div style="border: 1px solid #dfdfdf;padding: 10px;font-size: 14px;text-align: center;line-height: 30px;">
+				<b style="color:red;">{:L('order_status')}：{$ddinfo.status|getyundanstatus}</b> &nbsp; &nbsp;<a href="{:U('User/dayindingdan','id='.$ddinfo['id'])}" target="_blank">{:L('print_order')}</a>&nbsp;&nbsp;
+				<eq name="ddinfo.payed" value="2">
+					<a href="{:U('User/paydingdan','id='.$ddinfo['id'])}" style="display:inline-block;background: red;color: #fff;padding: 2px 2px;">{:L('pay_yukuan')}</a>
+				</eq>
+				<eq name="ddinfo.status" value="3">
+				<div class="blank"></div>
+				<div style="width:150px;line-height: 20px;margin: 0 auto;">
+					<a href="{:U('User/paydingdan','id='.$ddinfo['id'])}" class="btnqd" id="quchongzhi" style="width:100%;">{:L('go_payment')}</a>
+				</div>
+				</eq>
+				<eq name="ddinfo.status" value="5">
+					<div class="blank"></div>
+				<div style="width:150px;line-height: 20px;margin: 0 auto;">
+					<a href="javascript:shouhuo({$ddinfo.id});" class="btnqd" id="quchongzhi" style="width:100%;">{:L('confirm_receipt')}</a>
+				</div>
+				</eq>
+				<div style="clear:both;"></div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+	function shouhuo(id){
+			$.post("{:U('shouhuo')}",{'id':id},function(data){
+				if (data.status) {
+					$.thinkbox.success(data.info);
+					setTimeout(jumpurl(data.url),1000);
+				}else{
+					$.thinkbox.error(data.info);
+				};
+			})
+		}
+		$(function(){
+			$('#printbtn').click(function(){
+				$("#printarea").printArea();
+			})
+			$('.delete').click(function(){
+				var id=$(this).attr('did');
+				 $.thinkbox.confirm('{:L("confirm_yichuorder")}',{
+				 	'dataEle' : this,
+				 	'afterHide':function(data){
+				 		if (data==true) {
+				 			$.post("{:U('User/dingdanyichu')}",{'id':id},function(result){
+				 				if (result.status) {
+				 					$.thinkbox.success(result.info);
+				 					setTimeout('location.reload()',1000);
+				 				}else{
+				 					$.thinkbox.error(result.info);
+				 				};
+				 			})
+				 		};
+				 	}
+				 });
+			});
+		})
+	</script>
+</block>

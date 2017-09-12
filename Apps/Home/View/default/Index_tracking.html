@@ -1,0 +1,51 @@
+<include file="Public:header" />
+<div class="blank"></div>
+<div class="lgs-main">
+<div class="fl" style="width: 250px;height: auto;">
+<div style="border:1px dashed #dfdfdf;border-bottom: none;font-size: 16px;color:#8c8c8c;padding: 5px 10px;"><b>运单查询</b></div>
+<div style="width: 228px;padding:10px;height: auto;border: 1px dashed #dfdfdf;">
+  <form action="{:U('Index/tracking')}" method="post">
+    <textarea name="kdsn" style="width:98%;height:100px;padding:1%;" id="kdsn">{$kdsn}</textarea>
+    <input type="submit" value="查询">
+    <input type="reset" value="清除" class="reset">
+  </form>
+</div>
+</div>
+<div class="main_r " style="width:930px;height: auto; margin-left:269px;">
+<div style="border:1px dashed #dfdfdf;border-bottom: none;font-size: 14px;color:#333;padding: 5px 10px;font-weight:bold;">运单查询</div>
+</div>
+<style type="text/css">
+  .trackingbox{border-top: 1px solid #ccc;border-left: 1px solid #ccc;width: 100%;}
+  .trackingbox td,.trackingbox th{border-right: 1px solid #ccc;border-bottom: 1px solid #ccc;height: 30px;line-height: 30px;padding: 0 10px;}
+  .trackingbox th{background:#f2f2f2;}
+</style>
+<div style="width: 898px;margin-left:270px;border: 1px dashed #ccc;padding:15px;">
+  <volist name="kdlist" id="k">
+  <div style="margin-bottom:20px;"><b>单号：{$k.nu}</b>
+  <if condition="$k.status eq '1'">
+  <table class="trackingbox" cellpadding="0" cellspacing="0">
+    <tr><th class="tableshijian">时间</th><th class="tablezhuangtai">状态</th></tr>
+    <volist name="k['data']" id="v">
+    <tr><td>{$v.time}</td><td>{$v.context}</td></tr>
+  </volist>
+  </table>
+  <div>{$powered}</div>
+  <else/>
+  <div>{$k.message}</div>
+  </if>
+</div>
+</volist>
+</div>
+
+<div class="clear"></div>
+</div>
+<script type="text/javascript">
+  $(function(){
+    $('.tableshijian').css('width','25%');
+    $('.reset').click(function(){
+      $('#kdsn').text('');
+    })
+
+  })
+</script>
+<include file="Public:footer" />

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+
+<title>{$title}星松科技</title>
+<link href="/icon.gif" type="image/gif" rel="shortcut icon" />
+<link href="__CSS__/style.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="__CSS__/shopping-nav.css" />
+
+<script type="text/javascript" src="__JS__/jquery.min.js"></script>
+
+<script type="text/javascript" src="__JS__/lrtk.js"></script>
+
+<script type="text/javascript" src="__JS__/tabulous.js"></script>
+
+<script type="text/javascript" src="__JS__/shopping_nav.js"></script>
+
+<script type="text/javascript" src="__COMMONJS__/thinkbox/jquery.thinkbox.js"></script>
+
+<script type="text/javascript" src="__JS__/style.js"></script>
+
+<script type="text/javascript" src="__JS__/bigpicroll.js"></script>
+
+<SCRIPT>
+
+  function toueme(){
+
+    document.getElementById("top_adv").style.display="none";
+
+  }
+
+</SCRIPT>
+
+</head>
+
+<style>
+
+  body a{text-decoration:none;}
+
+</style>
+
+<body>
+
+<!-- <div id="top_adv"><a style="CURSOR: hand" onClick=toueme()><img 
+
+      src="__IMG__/close.jpg" width=18 height=16></a></div> -->
+
+<div class="top">
+
+  <dl class="head_nav">
+
+  <if condition="$Think.session.user_auth neq ''">
+
+    <dt>欢迎访问{:C('DOMAIN_TITLE')},{$user.nickname}！ <a href="{:U('Public/logout')}">{:L('logout')}</a></dt>
+
+    <else />
+
+    <dt>欢迎访问{:C('DOMAIN_TITLE')}&nbsp;<a href="{:U('Public/login')}">{:L('login')}</a>&nbsp;{:L('huo')}&nbsp;<a href="{:U('Public/reg')}">{:L('reg')}</a></dt>
+
+  </if>
+
+    <dd>
+
+      <a href="/">{:L('site_index')}</a> | <a href="{:U('User/index')}">{:L('my_account')}</a> | <a href="{:U('Cart/index')}">{:L('mycart')}({$cartcount}) |<a href="{:U('User/baoguolist')}"> {:L('yundanchaxun')} | <a href="{:U('Cate/gjyf')}">{:L('guojiyunfei')}</a> | <a href="{:U('Cate/bangzhu')}">{:L('bangzhuzhongxin')}</a>
+
+    </dd>
+
+  </dl>
+
+  <dl class="logo column1200">
+
+    <dt><a href="/"><img src="__IMG__/logo.jpg"  alt="神州代运"/></a><span>{:L('zhuti')}</span></dt>
+
+    <dd>
+
+      <div class="search">
+
+        <a style="background:#C30D24;color:#FFF;padding:8px 24px;">{:L('daigou')}</a><a href="{:U('User/yubaoonly')}" style="background:#92d050;color:#FFF;">{:L('guojizhuanyun')}</a>
+
+        <div class="search_container">
+
+            <form action="{:U('Daigou/index')}" method="get">
+
+              <input name="url" type="text" class="search_bk" id="url" value="{:L('dglian')}">
+
+              <input type="submit" value="{:L('mydaigou')}" class="search_btn">
+
+            </form>
+
+          <!-- <div id="tabs-2">
+
+            <form action="" method="get">
+
+              <input name="" type="text" class="search_bk">
+
+              <input name="" type="搜索" value="我要代运" class="search_btn">
+
+            </form>
+
+          </div> -->
+
+        </div>
+
+        <!--End tabs container--> 
+
+        
+
+      </div>
+
+      
+
+       <script type="text/javascript" >
+
+          $(document).ready(function($) {
+
+               $('#tabs').tabulous({effect: 'scale'});
+
+          });
+
+     </script> 
+
+    </dd>
+
+  </dl>
+
+  <ul class="mainnav column1200">
+
+    <li><a href="{:U('Index/index')}">{:L('site_index')}</a></li>
+
+    <li><a href="{:U('User/yubaoonly')}">{:L('guojizhuanyun')}</a></li>
+
+    <li><a href="{:U('Daigou/index')}">{:L('daigou')}</a></li>
+
+    <li><a href="{:U('Cate/gwzn')}">{:L('gouwuzhinan')}</a></li>
+
+    <li><a href="{:U('Cate/active')}">{:L('youhuihuodong')}</a></li>
+
+    <li><a href="{:U('Cate/lists','id=32')}">{:L('shangyehezuo')}</a></li>
+
+  </ul>
+
+</div>
+
+ <script>
+
+   $(document).ready(function(){
+
+      $('.search_btn').click(function(){
+
+        var url=$("#url").val();
+
+        var urlreg = /(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?/;
+
+        if(url==''){
+
+          return false;
+
+        }
+
+        if(!urlreg.test(url)){
+
+          $('#url').val('请输入有效的网址').css({'color':'red'});
+
+          return false;
+
+        }
+
+      })
+
+      $('#url').focus(function(){
+
+        $('#url').val('').css({'color':''});
+
+      })
+
+   })
+
+ </script>
+

@@ -1,0 +1,44 @@
+<extend name="default/Public/user"/>
+<block name="user-right">
+<div class="user-right">
+	<div class="fengenav" >{:L('recharge_record')}</div>
+		<ul class="user-i-dingdan" style="border:1px #dfdfdf solid; border-radius:4px;margin-top:5px;">
+			<if condition="$huikuanlist">
+				<li>
+					<table class="record-list" cellpadding="0" cellspacing="0">
+						<tr>
+	                        <th width="100">方式</th>
+							<th width="100">{:L('huiyin')}</th>
+							<th width="80">{:L(huiming)}</th>
+							<th width="100">{:L(huihang)}</th>
+							<th width="75">{:L('amount')}({:C('MAIN_COIN')})</th>
+							<th>{:L('renemail')}</th>
+							<th width="70">{:L('huikuan_time')}</th>
+							<!-- <th>添加时间</th> -->
+							<th width="70">{:L('status')}</th>
+						</tr>
+						<volist name="huikuanlist" id="v">
+							<tr>
+	                            <td>{$v.fangshi}</td>
+								<td>{$v.yhname}</td>
+								<td>{$v.zhname}</td>
+								<td>{$v.runame}</td>
+								<td>{$v.amount}</td>
+								<td>{$v.email}</td>
+								<td>{$v.huikuantime|date="Y-m-d",###}</td>
+								<!-- <td>{$v.addtime|date="Y-m-d",###}</td> -->
+								<td><eq name="v.status" value="0">{:L('confirmation')}</eq><eq name="v.status" value="1">{:L('has_recharge')}</eq><eq name="v.status" value="2">{:L('not_daozhang')}</eq>&nbsp;<neq name="v.pic" value=""><a href="{$v.pic}" target="_blank">{:L('vouchers')}</a></neq></td>
+							</tr>
+						</volist>
+					</table>
+					<div class="page">{$_page}</div>
+				</li>
+				<else />	
+				<li class="kong">
+					<span style="color:#999;">{:L('no_chongzhiinfo')}</span>
+
+				</li>
+			</if>
+		</ul>
+</div>
+</block>

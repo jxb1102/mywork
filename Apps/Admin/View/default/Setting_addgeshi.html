@@ -1,0 +1,146 @@
+<extend name="Public/base"/>
+<block name="active">
+	<li class="active">运单格式</li>
+</block>
+<block name="page-content">
+	<div class="page-header">
+		<h1>
+			运单格式
+			<small> <i class="icon-double-angle-right"></i>
+				添加格式
+			</small>
+		</h1>
+	</div>
+	<!-- /.page-header -->
+	<div class="row">
+		<div class="col-sm-12">
+			<form <if condition="$info">
+				action="{:U('editgeshi')}"
+				<else/>
+				action="{:U('addgeshi')}"
+			</if>
+			class="form-horizontal" id="validation-form" method="post">
+			<div class="form-group">
+				<label class="control-label col-xs-12 col-sm-2 no-padding-right" for="title">名称:</label>
+
+				<div class="col-xs-12 col-sm-10">
+					<div class="clearfix">
+						<input type="text" name="title" id="title" class="col-xs-12 col-sm-6" value="{$info.title}" />
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-xs-12 col-sm-2 no-padding-right" for="status">是否启用:</label>
+
+				<div class="col-xs-12 col-sm-10">
+					<div class="clearfix">
+						<label class="blue">
+							<input type="radio" name="status"  class="ace" value="1" <eq name="info.status" value="1"> checked</eq> <if condition="$info eq ''">checked</if> />
+							<span class="lbl">启用</span>
+						</label>
+						 <label class="blue">
+							<input type="radio" name="status"  class="ace" value="0" <eq name="info.status" value="0"> checked</eq>/>
+							<span class="lbl">禁用</span>
+						</label>
+					</div>
+				</div>
+			</div>
+		<div class="form-group">
+				
+			<label class="control-label col-xs-12 col-sm-2 no-padding-right" for="content">文章内容:</label>
+
+			<div class="col-xs-12 col-sm-10">
+				<div class="clearfix">
+					<textarea class="col-sm-11" name="content" style="height: 250px;" id="content">{$info.content}</textarea>
+				</div>
+			</div>
+		</div>
+<div class="form-group">
+	<label class="control-label col-xs-12 col-sm-2 no-padding-right" for="title">&nbsp;</label>
+
+	<div class="col-xs-12 col-sm-10">
+		<div class="clearfix">
+			<if condition="$info">
+				<input type="hidden" name="id" value="{$info.id}">
+				<button type="submit" class="btn btn-success btn-next no-border">确认编辑</button><a href="{:U('geshi')}" class="btn btn-light btn-next no-border">取消</a>
+				<else/>
+				<button type="submit" class="btn btn-success btn-next no-border">确认添加</button><a href="{:U('geshi')}" class="btn btn-light btn-next no-border">取消</a>
+			</if>
+		</div>
+	</div>
+</div>
+
+</form>
+</div>
+</div>
+
+</block>
+<block name="jiazaijs">
+	<script src="__JS__/bootbox.min.js"></script>
+<script src="__JS__/jquery.gritter.min.js"></script>
+<script src="__JS__/jquery.validate.min.js"></script>
+<script src="__JS__/jquery.dataTables.min.js"></script>
+<script src="__JS__/jquery.dataTables.bootstrap.js"></script>
+
+</block>
+<block name="script">
+
+<script type="text/javascript">
+
+jQuery(function($){
+		$.getScript('__COMMONJS__/kindeditor/kindeditor-min.js', function() {
+						KindEditor.basePath = '__COMMONJS__/kindeditor/';
+						KindEditor.create('textarea[name="content"]',{
+							allowFileManager : false,
+          resizeType : 1,
+          allowPreviewEmoticons : false,
+          allowImageUpload : true,
+          items : [
+            'source','|','fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline','strikethrough','lineheight',
+            'removeformat', '|', 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist',
+            'insertunorderedlist', '|','table', 'emoticons', 'image', 'link'],
+           afterBlur: function(){this.sync();},
+        
+						});
+					});
+
+	})
+		$("form#validation-form").submit(function(){
+
+    		var self = $(this);
+    		$.post(self.attr("action"), self.serialize(), success, "json");
+
+    		return false;
+
+    		function success(data){
+
+    			if(data.status){
+    				$.gritter.add({
+										// (string | mandatory) the heading of the notification
+										title: '提交成功',
+										// (string | mandatory) the text inside the notification
+										text: data.info,
+										class_name: 'gritter-success gritter-light'
+									});
+									setTimeout(jumpu(data.url),1000);
+
+    			} else {
+
+    				$.gritter.add({
+										// (string | mandatory) the heading of the notification
+										title: '提交失败',
+										// (string | mandatory) the text inside the notification
+										text: data.info,
+										class_name: 'gritter-success gritter-light'
+									});
+
+    			}
+
+    		}
+
+    	});
+    	function jumpu(uri){
+    		window.location.href=uri;
+    	}
+	</script>
+</block>

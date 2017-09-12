@@ -1,0 +1,90 @@
+<extend name="default/Public/user"/>
+<block name="user-right">
+	<div class="user-right">
+		<div class="user-head" style="height:50px;">
+			<h2>代购列表</h2>
+			<ul class="head-nav">
+			<li><eq name="status" value=""><span>{:L('all')}</span><else /><a href="{:U('User/dingdan')}">{:L('all')}</a></eq></li>
+			<li><eq name="status" value="1"><span>{:L('pending_confirm')}</span><else /><a href="{:U('User/dingdan','status=1')}">{:L('pending_confirm')}</a></eq></li>
+			<li><eq name="status" value="2"><span>{:L('pending_dabao')}</span><else /><a href="{:U('User/dingdan','status=2')}">{:L('pending_dabao')}</a></eq></li>
+			<li><eq name="status" value="3"><span>{:L('pending_pay')}</span><else /><a href="{:U('User/dingdan','status=3')}">{:L('pending_pay')}</a></eq></li>
+			<li><eq name="status" value="4"><span>{:L('pending_shipped')}</span><else /><a href="{:U('User/dingdan','status=4')}">{:L('pending_shipped')}</a></eq></li>
+			<li><eq name="status" value="5"><span>{:L('pending_receipt')}</span><else /><a href="{:U('User/dingdan','status=5')}">{:L('pending_receipt')}</a></eq></li>
+			<li><eq name="status" value="6"><span>{:L('has_receipt')}</span><else /><a href="{:U('User/dingdan','status=6')}">{:L('has_receipt')}</a></eq></li>
+		</ul>
+		<div style="position: absolute;bottom: -1px;left: 30px;width: 200px;height: 29px;">
+			<form action="{:U('User/dingdan','status='.$_GET['status'])}" method="get">
+			<input type="text" name="keywords" value="<?php echo $_GET['keywords'] ?>" style="width: 100px;margin-top: 2px;padding: 2px;" placeholder=""><input type="submit" value="{:L('search')}" style="border: none;background: red;color:#fff;height: 22px;padding: 0 10px;">
+			</form>
+		</div>
+		</div>
+		<div style="padding:10px;">
+			<if condition="$list">
+				<volist name="list" id="v">
+					<table class="yubao-add yubao-list" cellpadding="0" cellspacing="0" style="line-height: 25px;">
+						<tr>
+							<th colspan="4" style="padding:0 10px;text-align: left;">代购单号:{$v.dgsn}&nbsp;&nbsp;|&nbsp;&nbsp;{$v.consignee}&nbsp;&nbsp;|&nbsp;&nbsp;{$v.addtime|date="Y-m-d H:i:s",###}</th>
+						</tr>
+						<volist name="v.goods" id="g">
+						<tr>
+							<td>
+								<div class="fl">
+									<a href="{$g.goodsurl}" target="_blank" title="{$g.goodsname}">
+										<img src="{$g.goodsimg}" width="60" height="60"></a>
+								</div>
+								<div class="fl" style="width:300px;font-size: 12px;padding-left: 10px;">
+									<a href="{$g.goodsurl}" target="_blank" style="color:green;">{$g.goodsname}</a>
+									<br>
+									<span>尺寸：{$g.goodssize} &nbsp; 颜色：{$g.goodscolor}</span>
+									<br>
+									<span>备注：{$g.goodsremark}</span>
+								</div>
+							</td>
+							<td>快递单号：252585659652<br><br>国际单号：</td>
+							<if condition="$key eq 0">
+							<td rowspan="{$v.goodscount}" >
+								￥: {$v.totalprice}(RMB) <br>
+								<if condition="$v.status eq 1">
+								<div style="text-align: center;margin-top: 5px;"><a href="{:U('User/paydaigou','id='.$v['id'])}" style="display:inline-block;background: red;color: #fff;padding: 2px 2px;">支付</a> | <a href="javascript:void(0);" style="display:inline-block;background: red;color: #fff;padding: 2px 2px;" did="{$v.id}" class="deldaigou">删除</a></div>
+							</if>
+							</td>
+						</if>	
+							<td><a href="###">查看详情</a></td>
+						</tr>
+					</volist>
+
+					</table>
+					<div class="blank"></div>
+				</volist>
+				<else />			
+				{:L('no_infos')}
+			</if>
+			<div class="page">{$_page}</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('.deldaigou').click(function(){
+				var id=$(this).attr('did');
+				$.thinkbox.confirm('确定要删除代购单么',{
+				 	'dataEle' : this,
+				 	'title':'温馨提示',
+                    'ok':'确认删除',
+                    'cancel':'关闭',
+				 	'afterHide':function(data){
+				 		if (data==true) {
+				 			$.post("{:U('User/deldaigou')}",{'id':id},function(data){
+					if (data.status) {
+						$.thinkbox.success(data.info);
+						setTimeout('location.reload()',1500);
+					}else{
+						$.thinkbox.error(data.info);
+					};
+				})
+				 		};
+				 	},
+				 })
+			})
+		})
+	</script>
+</block>

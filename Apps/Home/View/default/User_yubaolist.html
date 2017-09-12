@@ -1,0 +1,194 @@
+<extend name="default/Public/user"/>
+<block name="user-right">
+	<div class="user-right">
+		<div class="user-head" style="height:50px;">
+			<h2>{:L('forecast_list')}<span style="font-size:16px;float:right;">包裹入库后请至“<font color="green"><b>可下单</b></font>”提交您的订单</span></h2>
+			<ul class="head-nav">
+			<li><eq name="status" value=""><span>{:L('all')}</span><else /><a href="{:U('User/yubaolist')}">{:L('all')}</a></eq></li>
+			<li><eq name="status" value="1"><span>{:L('on_way')}</span><else /><a href="{:U('User/yubaolist','status=1')}">{:L('on_way')}</a></eq></li>
+			<li><eq name="status" value="2"><span>{:L('storage')}</span><else /><a href="{:U('User/yubaolist','status=2')}">{:L('storage')}</a></eq></li>
+			<li><eq name="status" value="4"><span>{:L('library')}</span><else /><a href="{:U('User/yubaolist','status=4')}">{:L('library')}</a></eq></li>
+			<li><if condition="($status eq 9) AND ($keyunsong eq 1)"><span style="color:green;font-weight:600;">{:L('can_order')}</span><else /><a href="{:U('User/yubaolist','status=2&keyunsong=1')}" style="color:green;font-weight:600;">{:L('can_order')}</a></if></li>
+		</ul>
+		<if condition="($status eq 9) AND ($keyunsong eq 1)">
+		<div style="position: absolute;bottom: -1px;left: 30px;width: 200px;height: 29px;">
+			<form action="{:U('User/yubaolist','keyunsong=1')}" method="get">
+			<input type="text" name="kdsn" value="<?php echo $_GET['kdsn'] ?>" style="width: 100px;margin-top: 2px;padding: 2px;" placeholder="{:L('ex_num')}"><input type="submit" value="{:L('search')}" style="border: none;background: red;color:#fff;height: 22px;padding: 0 10px;">
+			</form>
+		</div>
+		<else />
+		<div style="position: absolute;bottom: -1px;left: 30px;width: 200px;height: 29px;">
+			<form action="{:U('User/yubaolist','status='.$_GET['status'])}" method="get">
+			<input type="text" name="kdsn" value="<?php echo $_GET['kdsn'] ?>" style="width: 100px;margin-top: 2px;padding: 2px;" placeholder="{:L('ex_num')}"> <input type="submit" value="{:L('search')}" style="border: none;background: red;color:#fff;height: 22px;padding: 0 10px;">
+			</form>
+		</div>
+	</if>
+		</div>
+		<div style="padding:10px;">
+			<table class="yubao-add yubao-list" cellpadding="0" cellspacing="0" style="line-height: 25px;">
+				<tr>
+					<if condition="($status eq 9) AND ($keyunsong eq 1)">
+						<th width="20"><input type="checkbox" class="checkall"></th>
+					</if>
+					<th width="100">{:L('ex_name')}</th>
+					<th width="100">{:L('ex_num')}</th>
+					<th width="200">{:L('baoguo_name')}</th>
+					<th width="100">{:L('jiazhi')}(RMB)</th>
+					<th width="60">{:L('baoguo_leixing')}</th>
+					<th width="50">{:L('unpacking')}</th>
+					<th>{:L('remark')}</th>
+					<th width="50">{:L('status')}</th>
+					<th width="80">{:L('add_time')}</th>
+					<!-- <th>商业保险</th> -->
+					<th width="62">{:L('operation')}</th>
+				</tr>
+				<if condition="$list">
+				<volist name="list" id="v">
+				<tr <eq name="v.bgleixing" value="1">style="background:#FFFFE7;color:red;"</eq>>
+					<if condition="($status eq 9) AND ($keyunsong eq 1)">
+						<td style="text-align: center;"><input type="checkbox" class="checkboxid" name="yubaoid[]" value="{$v.id}" <in name="v.id" value="$ybids">checked="true"</in>></td>
+					</if>
+					<td>{$v.kdname}</td>
+					<td>{$v.kdsn}</td>
+					<td>{$v.bgname}</td>
+					<td>{$v.shenbao}</td>
+					<td><eq name="v.bgleixing" value="0">{:L('common_goods')}</eq><eq name="v.bgleixing" value="1">{:L('sensitive_goods')}</eq></td>
+					<td width="50"><eq name="v.chaibao" value="0">{:L('no_unpacking')}</eq><eq name="v.chaibao" value="1">{:L('hexiang')}</eq></td>
+					<td>{$v.remark}</td>
+					<td>{$v.status|getyubaostatus}</td>
+					<td>{$v.addtime|date="Y-m-d",###}</td>
+					<!-- <td>
+						<select name="isxian">
+							<option value="0" selected>否</option>
+							<option value="1" >是</option>
+						</select>
+					</td> -->
+					<td>
+						<gt name="v.ydid" value="0">
+						<a href="{:U('User/dingdanview','id='.$v['ydid'])}" title="{:L('belong_order')}"><i class="icon-eye"></i></a> 
+						</gt>
+						<if condition="($v.status eq 1) OR (($v.ydid eq 0) AND ($v.status eq 2))">
+							<a href="###" title="{:L('edit')}" class="bianji" yid="{$v.id}"><i class="icon-edit"></i></a>
+						</if>
+						<eq name="v.status" value="1">
+							<eq name="v.ydid" value="0">
+								<a href="###" title="{:L('delete')}" class="delete" did="{$v.id}"><i class="icon-trash"></i></a> 
+							</eq> 
+						</eq>
+					</td>
+				</tr>
+				</volist>
+				<else />
+					<tr>
+						<td <if condition="($status eq 9) AND ($keyunsong eq 1)"> colspan="11"<else /> colspan="10"</if>>{:L('no_infos')}</td>
+					</tr>
+				</if>
+			</table>
+			<if condition="($status eq 9) AND ($keyunsong eq 1)">
+				<div style="float: left;width: 120px;margin-top: 10px;">
+					<a href="{:U('User/tjdingdan')}" class="btnqd tijiaodingdan" style="width: 100%;float: left;display:block;"	>{:L('submit_order')}</a>
+			</div>
+			</if>
+			<div class="page">{$_page}</div>
+			<div class="blank"></div>
+		</div>
+		<div id="ybedit" style="display:none;" >
+			<form action="{:U('User/yubaoedit')}" method="post" id="edityubao">
+				<span style="display:inline-block;width: 100px;text-align: left;">{:L('ex_num')}：</span><input type="text" name="kdsn" value=""> <br><br>
+				<span style="display:inline-block;width: 100px;text-align: left;">{:L('ex_name')}：</span><input type="text" name="kdname" value=""> <br><br>
+				<span style="display:inline-block;width: 100px;text-align: left;">{:L('baoguo_name')}：</span><input type="text" name="bgname" value=""><br><br>
+				<span style="display:inline-block;width: 100px;text-align: left;">{:L('jiazhi')}(USD)：</span><input type="text" name="shenbao" value=""><br><br>
+				<span style="display:inline-block;width: 100px;text-align: left;">{:L('baoguo_leixing')}：</span>
+				<select name="bgleixing" id="bgleixing">
+						<option value="0">{:L('common_goods')}</option>
+						<option value="1">{:L('sensitive_goods')}</option>
+				</select><br><br>
+				<span style="display:inline-block;width: 100px;text-align: left;">{:L('unpacking')}：</span>
+				<select name="chaibao" id="chaibao">
+						<option value="0">{:L('no_unpacking')}</option>
+						<option value="1" selected>{:L('hexiang')}</option>
+					</select><br><br>
+				<span style="display:inline-block;width: 100px;text-align: left;">{:L('remark')}：<br></span><input type="text" name="remark" value=""><br><br>
+				<input type="hidden" name="id" value="">
+				<div style="text-align: center;"><button>{:L('submit')}</button></div>
+			</form>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('.bianji').click(function(){
+				var id=$(this).attr('yid');
+				var loading=$.thinkbox.loading('{:L("loading")}');
+
+				$.post("{:U('User/getyubaoinfo')}",{'id':id},function(data){
+					
+					$('input[name="kdsn"]').val(data.kdsn);
+					$('input[name="kdname"]').val(data.kdname);
+					$('input[name="bgname"]').val(data.bgname);
+					$('input[name="shenbao"]').val(data.shenbao);
+					$('input[name="remark"]').val(data.remark);
+					$('input[name="id"]').val(data.id);
+					$('#bgleixing').find('option[value='+data.bgleixing+']').attr('selected',true);
+					$('#bgleixing').find('option').not('option[value='+data.bgleixing+']').attr('selected',false);
+					$('#chaibao').find('option[value='+data.chaibao+']').attr('selected',true);
+					$('#chaibao').find('option').not('option[value='+data.chaibao+']').attr('selected',false);
+					$.thinkbox('#ybedit',{'title':'Edit','dataEle':this,'drag':true});
+					loading.hide();
+				})
+				
+			})
+$('form#edityubao').submit(function(){
+			var self = $(this);
+				$.post(self.attr("action"), self.serialize(), success, "json");
+				return false;
+				function success(data){
+					if (data.status) {
+						$.thinkbox.success(data.info);
+						setTimeout('location.reload()',1100);
+					}else{
+						$.thinkbox.error(data.info);
+					};
+				}
+		})
+			$('.checkboxid').change(function(){
+            postItemChange(this,$(this).is(':checked')?1:0);
+        });
+        $('.checkall').click(function(){
+            var selected = $(this).is(':checked');
+            $('.checkboxid').each(function(index,item){
+                postItemChange(item,selected?1:0);
+                $(item).prop('checked',selected);
+            });
+
+        });
+        var postItemChange = function(item,isSelected){
+            $.post("{:U('User/select')}", {'ybid':$(item).val(),'selected':isSelected}, function(data){
+                if(data.status){
+                    $('.tijiaodingdan').show();
+                }else{
+                	$.thinkbox.error(data.info);
+                }
+            });            
+        };
+        $('.delete').click(function(){
+				var id=$(this).attr('did');
+				 $.thinkbox.confirm('{:L("confirm_delete")} ',{
+				 	'dataEle' : this,
+				 	'afterHide':function(data){
+				 		if (data==true) {
+				 			$.post("{:U('User/yubaodel')}",{'id':id},function(result){
+				 				if (result.status) {
+				 					$.thinkbox.success(result.info);
+				 					setTimeout('location.reload()',1000);
+				 				}else{
+				 					$.thinkbox.error(result.info);
+				 				};
+				 			})
+				 		};
+				 	}
+				 });
+			});
+
+		})
+	</script>
+</block>

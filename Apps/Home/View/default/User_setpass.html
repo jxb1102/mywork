@@ -1,0 +1,38 @@
+<extend name="default/Public/user"/>
+<block name="user-right">
+<div class="user-right">
+	<div class="user-head">
+		<h2>{:L('setting_user')}</h2>
+		<ul class="head-nav">
+			<li><a href="{:U('User/setting')}">{:L('default_set')}</a></li>
+			<li><span>{:L('change_pass')}</span></li>
+			<li><a href="{:U('User/settouxiang')}">{:L('change_avatar')}</a></li>
+		</ul>
+	</div>
+	<form method="post" action="{:U('User/setpass')}">
+	<ul class="user-form">
+		<li><label>{:L('old_pass')}：</label><span><input type="password" name="oldpassword" value=""></span></li>
+		<li><label>{:L('new_pass')}：</label><span><input type="password" name="password" value=""></span></li>
+		<li><label>{:L('re_password')}：</label><span><input type="password" name="repassword" value=""></span></li>
+		<li><label><input type="hidden" name="uid" value="{$user.uid}"></label><span><input type="submit" value="提交"></span></li>
+	</ul>
+</form>
+</div>
+<script type="text/javascript">
+	$(function(){
+		$('form').submit(function(){
+			var self = $(this);
+				$.post(self.attr("action"), self.serialize(), success, "json");
+				return false;
+				function success(data){
+					if (data.status) {
+						$.thinkbox.success(data.info);
+						setTimeout(jumpurl(data.url),1500);
+					}else{
+						$.thinkbox.error(data.info);
+					};
+				}
+		})
+	})
+</script>
+</block>

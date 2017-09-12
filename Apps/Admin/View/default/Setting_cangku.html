@@ -1,0 +1,111 @@
+<extend name="Public/base"/>
+<block name="active"><li class="active">仓库设置</li></block>
+<block name="page-content">
+	<div class="page-header">
+		<h1>
+			系统设置
+			<small> <i class="icon-double-angle-right"></i>
+				仓库设置
+			</small>
+		</h1>
+	</div>
+	<!-- /.page-header -->
+	<div class="row">
+		<div class="col-xs-12">
+			<!-- PAGE CONTENT BEGINS -->
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="space-4"></div>
+					<div class="space-2"></div>
+					<form action="{:U('cangku')}" class="form-horizontal" id="validation-form" method="post">
+						<div class="form-group">
+							<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="address_sheng">省份:</label>
+
+							<div class="col-xs-12 col-sm-9">
+								<div class="clearfix">
+									<input type="text" name="address_sheng" id="address_sheng" class="col-xs-12 col-sm-6" value="{:C('ADDRESS_SHENG')}" />
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+					<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="address_shi">市:</label>
+
+					<div class="col-xs-12 col-sm-9">
+						<div class="clearfix">
+							<input type="text" name="address_shi" id="address_shi" class="col-xs-12 col-sm-6" value="{:C('ADDRESS_SHI')}" />
+						</div>
+					</div>
+				</div>
+						
+				<div class="form-group">
+					<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="address_add">地址:</label>
+
+					<div class="col-xs-12 col-sm-9">
+						<div class="clearfix">
+							<input type="text" name="address_add" id="address_add" class="col-xs-12 col-sm-6" value="{:C('ADDRESS_ADD')}" />
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="address_zip">邮编:</label>
+
+					<div class="col-xs-12 col-sm-9">
+						<div class="clearfix">
+							<input type="text" name="address_zip" id="address_zip" class="col-xs-12 col-sm-6" value="{:C('ADDRESS_ZIP')}" />
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="address_tel">联系电话:</label>
+
+					<div class="col-xs-12 col-sm-9">
+						<div class="clearfix">
+							<input type="text" name="address_tel" id="address_tel" class="col-xs-12 col-sm-6" value="{:C('ADDRESS_TEL')}" />
+						</div>
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="email_from_name">&nbsp;</label>
+
+					<div class="col-xs-12 col-sm-9">
+						<div class="clearfix">
+							<button type="submit" class="btn btn-success btn-sm btn-next no-border">更新设置</button>
+						</div>
+					</div>
+				</div>
+				
+			</form>
+		</div>
+	</div>
+</div>
+</div>
+
+</block>
+<block name="jiazaijs">
+	<script type="text/javascript" src="__COMMONJS__/thinkbox/jquery.thinkbox.js"></script>
+</block>
+<block name="script">
+	
+	<script type="text/javascript">
+		$("form").submit(function(){
+
+    		var self = $(this);
+    		$.post(self.attr("action"), self.serialize(), success, "json");
+    		return false;
+    		function success(data){
+
+    			if(data.status){
+    				$.thinkbox.success(data.info)
+					setTimeout('location.reload()',1500);
+
+    			} else {
+    				$.thinkbox.error(data.info);
+
+    			}
+
+    		}
+
+    	});
+	</script>
+</block>

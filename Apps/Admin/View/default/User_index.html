@@ -1,0 +1,323 @@
+<extend name="Public/base"/>
+<block name="active">
+	<li class="active">用户列表</li>
+</block>
+
+<block name="page-content">
+	<div class="page-header">
+		<h1>
+			用户管理
+			<small> <i class="icon-double-angle-right"></i>
+				用户列表
+			</small>
+		</h1>
+	</div>
+	<!-- /.page-header -->
+
+	<div class="row">
+<div class="col-xs-12">
+<a href="{:U('outputexcel')}" style="display:block;float: right;" class="btn btn-danger btn-minier">导出Excel</a>
+<table id="sample-table-1" class="table table-striped table-bordered table-hover">
+	<thead>
+		<tr>
+			<th class="center" style="width:20px;">ID</th>
+			<th>用户名</th>
+			<th>姓名</th>
+			<th>邮箱</th>
+			<th class="hidden-480">手机</th>
+			<th>积分</th>
+			<th>可消费积分</th>
+			<th>qq</th>
+			<th>身份凭证</th>
+			<th>余额</th>
+			<!-- <th>信用额度</th> -->
+			<th>用户组</th>
+			<!-- <th>国家</th> -->
+			<th>状态</th>
+			<th class="hidden-480">注册时间</th>
+			<th class="hidden-480">最后登陆</th>
+			<th>操作</th>
+		</tr>
+	</thead>
+<style type="text/css">
+	.yuebuzu td{color: red;}
+	.yuechongzu td{color:blue;}
+</style>
+	<tbody>
+		<volist name="list" id="v">
+			<tr <if condition="$v.xinyong gt 0">class="yuebuzu"<else />class="yuechongzu"</if>>
+				<td class="center">{$v.uid}</td>
+
+				<td>{$v.username}</td>
+				<td>{$v.xingming}</td>
+				<td>{$v.email}</td>
+				<td class="hidden-480">{$v.mobile}</td>
+				<td>{$v.score}</td>
+				<td>{$v.huascore}</td>
+				<td>{$v.qq}</td>
+				<td><if condition="$v['ziliao'] eq 0">无<else />有</if></td>
+				<td>{$v.money}</td>
+				<!-- <td><span>{$v.xinyong}</span> <a href="###" class="setxinyong" uid="{$v.uid}">设置</a></td> -->
+				<td>
+					<if condition="$v.utype neq '0'">
+						{$v.utype|get_usertype}
+						<else />
+						{$v.score|getusertype}
+					</if>
+				</td>
+				<!-- <td>{$v.state|getstate}</td> -->
+				<td>{$v.status|getstatus}</td>
+				<td class="hidden-480">{$v.reg_time|date="Y-m-d",###}</td>
+				<td class="hidden-480">{$v.last_login_time|date="Y-m-d",###}</td>
+				<td class="action-buttons">
+					<a class="blue edituser" href="#modal-table" data-toggle="modal" uid="{$v.uid}"> <i class="icon-pencil bigger-130"></i>
+					</a>
+					<a class="red delmember" href="###" sid="{$v.uid}" onclick="return false;"> <i class="icon-trash bigger-130"></i>
+					</a>
+
+				</td>
+			</tr>
+		</volist>
+	</tbody>
+</table>
+<div class="page">{$_page}</div>
+</div>
+<div id="modal-table" class="modal fade" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header no-padding">
+				<div class="table-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+						<span class="white">&times;</span>
+					</button>
+					编辑用户
+				</div>
+			</div>
+<form class="form-horizontal" id="useredit" style="padding:10px;" method="post" action="{:U('useredit')}">
+			<div class="modal-body no-padding">
+				
+
+					<div class="form-group">
+						<label class="control-label col-sm-3 no-padding-right" for="nickname">昵称:</label>
+
+						<div class="col-sm-9">
+							<div class="clearfix">
+								<input type="text" name="nickname" id="nickname" class="col-xs-12 col-sm-6" value="{$info.nickname}" />		
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-sm-3 no-padding-right" for="password">密码:</label>
+
+						<div class="col-sm-9">
+							<div class="clearfix">
+								<input type="text" name="password" id="password" class="col-xs-12 col-sm-6" value="{$info.password}" />		
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-sm-3 no-padding-right" for="ziliao">身份凭证:</label>
+
+						<div class="col-sm-9">
+							<div class="clearfix">
+								<input type="text" name="ziliao" id="ziliao" class="col-xs-12 col-sm-6" value="{$info.ziliao}" />0:无 1:有
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-sm-3 no-padding-right" for="email">邮箱:</label>
+
+						<div class="col-sm-9">
+							<div class="clearfix">
+								<input type="text" name="email" id="email" class="col-xs-12 col-sm-6" value="{$info.email}" />		
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-sm-3 no-padding-right" for="mobile">手机:</label>
+
+						<div class="col-sm-9">
+							<div class="clearfix">
+								<input type="text" name="mobile" id="mobile" class="col-xs-12 col-sm-6" value="{$info.mobile}" />		
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-sm-3 no-padding-right" for="zengscore">增加可消费积分:</label>
+
+						<div class="col-sm-9">
+							<div class="clearfix">
+								<input type="text" name="zengscore" id="zengscore" class="col-xs-12 col-sm-6" value="" />		
+							</div>
+						</div>
+					</div>
+					<input type="hidden" id="score" name="score" value="{$info.score}">
+					<input type="hidden" id="huascore" name="huascore" value="{$info.huascore}">
+					<div class="form-group">
+						<label class="control-label col-sm-3 no-padding-right" for="status">状态:</label>
+
+						<div class="col-sm-9">
+							<div class="clearfix">
+								<label>
+									<input type="radio" class="ace status1" name="status" value="1"/>								
+									<span class="lbl">启用</span>
+								</label>
+								<label>
+									<input type="radio" class="ace status2" name="status" value="0"/>								
+									<span class="lbl">禁用</span>
+								</label>
+							</div>
+						</div>
+					</div>
+				<div class="form-group">
+						<label class="control-label col-sm-3 no-padding-right" for="utype">用户等级:</label>
+
+						<div class="col-sm-9">
+							<div class="clearfix">
+								<select name="utype" id="utype">
+									<option value="0">积分等级</option>
+									<volist name="utypelist" id="u">
+										<option value="{$u.id}">{$u.name}</option>
+									</volist>
+								</select>
+							</div>
+						</div>
+					</div>
+				<div style="clear:both;"></div>
+			</div>
+			<div class="modal-footer no-margin-top">
+				<input type="hidden" name="uid" id="uid" value="">
+				<button type="submit" class="btn btn-sm btn-success"> <i class="icon-ok"></i>
+					提交
+				</button>
+				<button class="btn btn-sm btn-danger" data-dismiss="modal"> <i class="icon-remove"></i>
+					取消
+				</button>
+			</div>
+</form>
+		</div>
+
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+<div id="xinyongedu" style="display:none;">
+	<form action="{:U('xinyong')}" method="post" id="xinyong">
+		<input type="text" name="xinyong" placeholder="信用额度" value="" id="xinyonginput">
+		<input type="hidden" name="uid" value="" id="xinyonguid">
+		<input type="submit" value="提交">
+	</form>
+</div>
+</div>
+
+</block>
+<block name="jiazaijs">
+	<script src="__JS__/bootbox.min.js"></script>
+<script src="__JS__/jquery.gritter.min.js"></script>
+<script src="__JS__/jquery.validate.min.js"></script>
+<script src="__JS__/jquery.dataTables.min.js"></script>
+<script src="__JS__/jquery.dataTables.bootstrap.js"></script>
+<script type="text/javascript" src="__COMMONJS__/thinkbox/jquery.thinkbox.js"></script>
+</block>
+<block name="script">
+
+<script type="text/javascript">
+
+
+jQuery(function($){
+	$('.setxinyong').click(function(){
+		$('#xinyonguid').val($(this).attr('uid'));
+		$('#xinyonginput').val($(this).prev('span').text());
+		$.thinkbox('#xinyongedu',{'title':'信用额度设置','dataEle':this,'drag':true});
+	});
+	$('#xinyong').submit(function(){
+		var self = $(this);
+				$.post(self.attr("action"), self.serialize(), success, "json");
+				return false;
+				function success(data){
+					if (data.status) {
+						$.thinkbox.success(data.info);
+						setTimeout('location.reload()',1100);
+					}else{
+						$.thinkbox.error(data.info);
+					};
+				}
+	});
+	$('.delmember').click(function(){
+					var id=$(this).attr('sid');
+					bootbox.confirm("确定要删除么?", function(result){
+						if(result) {
+							$.post("{:U('userdel')}",{'id':id,'ajax':1},function(data){
+								if (data.status) {
+									$.gritter.add({
+										// (string | mandatory) the heading of the notification
+										title: '提交成功',
+										// (string | mandatory) the text inside the notification
+										text: data.info,
+										class_name: 'gritter-success gritter-light'
+									});
+									setTimeout(jumpu(data.url),1000);
+								}else{
+									$.gritter.add({
+										title: '提交失败',
+										text: data.info,
+										class_name: 'gritter-error gritter-light'
+									});
+								};
+							},'json');
+						}
+					})
+					
+				})
+	$('.edituser').click(function(){
+		var id=$(this).attr('uid');
+		$.post("{:U('getuser')}",{'id':id},function(data){
+			$('#nickname').val(data.nickname);
+			$('#email').val(data.email);
+			$('#mobile').val(data.mobile);
+			if (data.status==1) {$('.status1').click();};
+			if (data.status==0) {$('.status2').click();};
+			$('#utype').val(data.utype);
+			$('#uid').val(data.uid);
+			$('#score').val(data.score);
+			$('#huascore').val(data.huascore);
+			
+		})
+	})
+	})
+$("form#useredit").submit(function(){
+
+    		var self = $(this);
+    		$.post(self.attr("action"), self.serialize(), success, "json");
+    		return false;
+    		function success(data){
+    			if(data.status){
+    				$.gritter.add({
+										// (string | mandatory) the heading of the notification
+										title: '提交成功',
+										// (string | mandatory) the text inside the notification
+										text: data.info,
+										class_name: 'gritter-success gritter-light'
+									});
+									setTimeout(jumpu(data.url),1000);
+
+    			} else {
+
+    				$.gritter.add({
+										// (string | mandatory) the heading of the notification
+										title: '提交失败',
+										// (string | mandatory) the text inside the notification
+										text: data.info,
+										class_name: 'gritter-success gritter-light'
+									});
+
+    			}
+
+    		}
+
+    	});
+    	function jumpu(uri){
+    		window.location.href=uri;
+    	}
+</script>
+</block>

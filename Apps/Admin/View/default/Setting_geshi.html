@@ -1,0 +1,119 @@
+<extend name="Public/base"/>
+<block name="active">
+	<li class="active">运单格式</li>
+</block>
+<block name="page-content">
+	<div class="page-header">
+		<h1>
+			运单格式
+			<small> <i class="icon-double-angle-right"></i>
+				格式列表
+			</small>
+		</h1>
+	</div>
+	<!-- /.page-header -->
+	<div class="row">
+		<div class="col-xs-12">
+			<a class="btn btn-sm btn-danger" href="{:U('addgeshi')}">新增格式</a>
+			<div style="clear:both;height: 10px;"></div>
+			<table id="sample-table-1" class="table table-striped table-bordered table-hover">
+				<thead>
+					<tr>
+						<th style="width:40px;">ID</th>
+						<th style="width:200px;">名称</th>
+						<th>所属配送方式</th>
+						<th width="80">是否启用</th>
+						<th style="width:100px;">操作</th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<volist name="list" id="v">
+						<tr>
+							<td>{$v.id}</td>
+							<td>{$v.title}</td>
+							<td>{$v.delist}</td>
+							<td>{$v.status|getstatus}</td>
+							<td class="action-buttons">
+						
+								<a class="blue" href="{:U('Setting/editgeshi','id='.$v['id'])}"> <i class="icon-pencil bigger-130"></i>
+								</a>
+								<a class="red delnotice" href="###" sid="{$v.id}" onclick="return false;" title="删除"> <i class="icon-trash bigger-130"></i>
+								</a>
+							</td>
+						</tr>
+					</volist>
+				</tbody>
+			</table>
+			<div class="page">
+				{$_page}
+			</div>
+		</div>
+	</div>
+
+</block>
+<block name="jiazaijs">
+	<script src="__JS__/bootbox.min.js"></script>
+<script src="__JS__/jquery.gritter.min.js"></script>
+</block>
+<block name="script">
+
+<script type="text/javascript">
+$(function(){
+		$('.delnotice').click(function(){
+					var id=$(this).attr('sid');
+					bootbox.confirm("确定要删除么?", function(result){
+						if(result) {
+							$.post("{:U('delgeshi')}",{'id':id,'ajax':1},success,'json');
+							function success(data){
+								if (data.status) {
+									$.gritter.add({
+										// (string | mandatory) the heading of the notification
+										title: '提交成功',
+										// (string | mandatory) the text inside the notification
+										text: data.info,
+										class_name: 'gritter-success gritter-light'
+									});
+									setTimeout(jumpu(data.url),1000);
+								}else{
+									$.gritter.add({
+										title: '提交失败',
+										text: data.info,
+										class_name: 'gritter-error gritter-light'
+									});
+								};
+							}
+						}
+					})
+					
+				})
+
+
+
+})
+$("form.form-horizontal").submit(function(){
+    		var self = $(this);
+    		$.post(self.attr("action"), self.serialize(), success, "json");
+    		return false;
+    		function success(data){
+    			if(data.status){
+    				$.gritter.add({
+						title: '提交成功',
+						text:data.info,
+						class_name: 'gritter-success gritter-light'
+					});
+					setTimeout(jumpu(data.url),1000);
+    			} else {
+    				$.gritter.add({
+						title: '提交失败',
+						text:data.info,
+						class_name: 'gritter-success gritter-light'
+					});
+    			}
+    		}
+    	});
+function jumpu(uri){
+    		window.location.href=uri;
+    	}
+</script>
+</block>

@@ -1,0 +1,193 @@
+<include file="Public:header" />
+
+ <script>
+  $(function(){
+    setInterval("getTime();",1000); //每隔一秒执行一次
+    })
+    //取得系统当前时间
+    function getTime(){
+    var myDate = new Date();
+    var year = myDate.getFullYear();    //获取完整的年份(4位,1970-????)
+    var month = myDate.getMonth()+1;       //获取当前月份(0-11,0代表1月)
+    var day = myDate.getDate(); 
+    var hours = myDate.getHours();
+    var minutes = myDate.getMinutes();
+    var seconds = myDate.getSeconds();
+    if(month<10){
+      month='0'+month;
+    }
+    if(day<10){
+      day='0'+day;
+    }
+    if(hours<10){
+      hours='0'+hours;
+    }
+    if(minutes<10){
+      minutes='0'+minutes;
+    }
+    if(seconds<10){
+      seconds='0'+seconds;
+    }
+    $("#time").html(year+"-"+month+"-"+day+" "+hours+":"+minutes+":"+seconds); 
+  } 
+ </script>
+
+<div class="middle">
+  <div class="column1200">
+    <div class="banner">
+      <div id="playBox">
+        <div class="pre"></div>
+        <div class="next"></div>
+        <div class="smalltitle">
+          <ul>
+            <volist name="indexad" id="vk" key="k">
+               <li <if condition="$k eq 1"> class="thistitle"</if> ></li>
+            </volist>
+          </ul>
+        </div>
+        <ul class="oUlplay">
+        <volist name="indexad" id="v">
+            <li><a href="{$v.uri}"><img src="{$v.pic}" /></a>
+            </li>
+        </volist>
+        </ul>
+      </div>
+    </div>
+    <div class="column290">
+
+    <if condition="$Think.session.user_auth neq ''">
+      <div class="login">
+        
+        <h3>{:L('welcome_ni')},<b>{$user.nickname}</b></h3>
+        <ul class="loginlist">
+            <li><a href="{:U('Cart/index')}" style="color:#333;">{:L('mycart')}<font style="color:red">({$cartcount})</font></a></li>
+            <li><a href="{:U('User/yubaolist','status=2')}" style="color:#333;">{:L('index2')}<font style="color:red"></font></a></li>
+            <li><a href="{:U('User/dingdan')}" style="color:#333;">{:L('index3')}<font style="color:red">({$yuncount})</font></a></li>
+            <li><a href="{:U('User/msg')}" style="color:#333;">{:L('index4')}<font style="color:red">({$msgcount})</font></a></li>
+        </ul>
+        <p class="loginend">
+          <a href="{:U('User/setting')}">{:L('setting_user')}</a>&nbsp;|
+          <a href="{:U('User/index')}">{:L('user_center')}</a>&nbsp;|
+          <a href="{:U('Public/logout')}">{:L('logout')}</a>
+        </p>
+
+      </div>
+
+      <else />
+      <div class="login">
+        
+        <form id="toplogin" action="{:U('Public/checklogin')}" method="post" style="padding:3px 0;">
+        <p class="login_username loginbg" >
+          <input name="username" type="text" class="login_set" placeholder="{:L('username')}">
+        </p>
+        <p class="login_username passwordbg" >
+          <input name="password" type="password" class="login_set" placeholder="{:L('password')}"
+        >
+        </p>
+        <div class="yzm">
+        <span style="float:left;">{:L('yzm')}：&nbsp;</span><img src="{:U('Public/verify')}" title="看不清点我刷新" onclick="this.src=this.src+'?'+Math.random()" style="float:left;" id="code"/>&nbsp;&nbsp;<input type="text" name="verify" id="verify" value="" class="" maxlength="6" placeholder="{:L('yzm')}" style="width:80px; height:20px;">
+        <a href="{:U('Public/zhaomima')}" style="float:right;color:blue;font-size:12px;text-decoration:underline">{:L('wwjj')}</a>
+        </div>
+        <!-- <div style="clear:both;"></div> -->
+        <p class="login_username2">
+          <button type="submit" class="login_btn logincolor" id="submit">{:L('login')}</button>
+        </p>
+      </form>
+      <p class="login_username2">
+          <a href="{:U('Public/reg')}"><button  class="login_btn logincolor2" value="免费注册">{:L('reg')}</button></a>
+       </p>
+      </div>
+    </if>
+      <div class="notice">
+        <dl class="notice_title">
+          <dt>{:L('site_notice')}</dt>
+          <dd><a href="{:U('Cate/lists','id=31')}">{:L('more')}>></a></dd>
+        </dl>
+        <ul class="notice_list">
+
+          <volist name="noticelist" id="v">
+             <li><a href="{:U('Article/view','id='.$v['id'])}">{$v.title}</a></li>
+          </volist>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="column1200">
+    <div class="column900 mg_T10">
+      <ul class="zhuanyun">
+        <li><a href="{:U('User/yubaoonly')}"><img src="__IMG__/zhuanyun.jpg" alt="国际转运" /></a><span>{:L('zhuanyun_xiang')}<a href="{:U('Cate/gjzy')}">[{:L('more')}]</a></span><a href="{:U('Cate/zyyanshi')}" class="Demonstrate">{:L('zyyanshi')}</a></li>
+        <li style="width:389px;"><a href="{:U('Daigou/index')}"><img src="__IMG__/daigou.jpg" alt="海外代购" /></a><span>{:L('daigou_xiang')}<a href="{:U('Daigou/index')}">[{:L('more')}]</a></span><a href="{:U('Cate/dgyanshi')}" class="Demonstrate">{:L('dgyanshi')}</a></li>
+      </ul>
+      <style>
+      .logistics img{border:1px solid #eee; border-radius: 5px; padding: 3px;}
+      </style>
+      <ul class="logistics">
+        <h2>{:L('guojiwuliu')}</h2>
+        <volist name="wuliu" id="wg"> 
+           <li><img src="{$wg.pic}" title="{$wg.title}"/></li>
+        </volist>
+      </ul>
+      <ul class="logistics">
+        <h2>{:L('zhufufangshi')}</h2>
+        <volist name="pay" id="pg">
+           <li><img src="{$pg.pic}" title="{$pg.title}" style="padding-left:15px;"/></li>
+        </volist>
+      </ul>
+      <p class="theme_pic mg_T10"><img src="__IMG__/mian.jpg" alt="免" style="padding-right:16px;"/><img src="__IMG__/te.jpg" alt="特"/></p>
+    </div>
+    <div class="column290">
+      <dl class="chaxun mg_T10">
+        <dt style="font-size:16px;color:#5a5a5a;">{:L('yundanchaxun')}</dt>
+        <dd><form action="{:U('Index/tracking')}" method="post">
+          <textarea name="kdsn" cols="" rows="" class="cx"></textarea>
+          <input type="submit" value="{:L('chaxun')}" class="cha">
+          <input type="reset" value="{:L('qingchu')}" class="qing"></form>
+          <span style="float:right; color:#333;font-size:14px;line-height:30px;"><a href="http://m.kuaidi100.com" target="_blank">快递查询</a></span>
+        </dd>
+      </dl>
+    <ul class="freight mg_T10">
+        <h2 style="color:#5a5a5a"><b>{:L('gongju')}</b></h2>
+        <div class="blank"></div>
+        <li><img src="__IMG__/fygs.png" title="{:L('gusuan')}"/>&nbsp;<a href="{:U('Cate/gusuan')}">{:L('gusuan')}</a></li>
+        <li><img src="__IMG__/gjyf.png" title="{:L('guojiyunfei')}"/>&nbsp;<a href="{:U('Cate/gjyf')}">{:L('guojiyunfei')}</a></li>
+        <li><img src="__IMG__/hl.png" title="{:L('huilv')}"/>&nbsp;<a href="http://www.boc.cn/sourcedb/whpj/" target="_blank" >{:L('huilv')}</a></li>
+        <li><img src="__IMG__/cc.png" title="{:L('chicun')}"/>&nbsp;<a href="{:U('Cate/huansuan')}">{:L('chicun')}</a></li>
+      </ul>
+     <ul class="contact">
+         <li><span>{:L('kfemail')}：</span></li>
+         <li><a href="#">service@procurementchina.com</a></li>  
+         <li><span>{:L('touemail')}:</span></li>
+         <li><a href="#">complaint@procurementchina.com</a></li>
+         <li><span>{:L('mobile')}：</span></li>
+         <li><span style="font-size:16px;">{:C('service_tel')}</span></li>
+         <li><span>{:L('time')}：</span>{:C('time')}</li>
+         <li style="background:#666;padding:2px 0;margin-bottom:5px;color:#FFF;"> {:L('bjtime')}：<span id="time" style="color:#FFF;margin-left:5px;"></span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('form#toplogin').submit(function(){
+          var verify=$("#verify").val();
+          if(verify==""){
+             alert('验证码必须填写');
+             return false;
+          }
+          var self = $(this);
+          $.post(self.attr("action"), self.serialize(), success, "json");
+          return false;
+          function success(data){
+            if (data.status) {
+              $.thinkbox.success(data.info);
+              setTimeout('location.reload()',1000);
+            }else{
+              $.thinkbox.error(data.info);
+              $('#code').click();
+            };
+          }
+        })
+    })
+</script>
+<include file="Public:footer" />

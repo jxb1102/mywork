@@ -1,0 +1,131 @@
+<extend name="Public/base"/>
+<block name="active">
+	<li class="active">互动管理</li>
+</block>
+<block name="page-content">
+	<div class="page-header">
+		<h1>
+			互动管理
+			<small> <i class="icon-double-angle-right"></i>
+				评论管理
+			</small>
+		</h1>
+	</div>
+	<!-- /.page-header -->
+	<div class="row">
+		<div class="col-xs-12">
+			<table id="sample-table-1" class="table table-striped table-bordered table-hover">
+				<thead>
+					<tr>
+						<th class="center" style="width:20px;">ID</th>
+						<th style="width:200px;">用户</th>
+						<th>内容</th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<volist name="list" id="v">
+						<tr>
+							<td class="center">{$v.id}</td>
+
+							<td>
+								{$v.user.username} ({$v.user.nickname})
+								<br>
+								<span class="action-buttons">							
+								<a class="blue replymsg" href="###" uid="{$v.id}"> 回复
+								</a>
+								<a class="red delliuyan" href="###" sid="{$v.id}" onclick="return false;" title="删除"> <i class="icon-trash bigger-130"></i>
+								</a>
+							</span>
+							</td>
+							<td>{$v.content} [{$v.add_time|date="Y-m-d",###}] <br>
+								<span class="replycontent" style="display: inline-block;color:red;"><if condition="$v.reply neq ''">{$v.mem.nickname} 回复：{$v.reply} [{$v.reply_time|date="Y-m-d",###}] </if></span>
+								<div class="reply" style="display: none;">
+									<textarea name="reply" class="replyarea" style="width:100%;margin-bottom: 5px;" rid="{$v.id}">{$v.reply}</textarea>
+									<button class="btn btn-minier btn-success no-border tjreply"> 确 定 </button>
+									<button class="btn btn-minier btn-light no-border qxreply"> 取 消 </button>
+								</div>
+							</td>
+						</tr>
+					</volist>
+				</tbody>
+			</table>
+			<div class="page">
+				{$_page}
+			</div>
+		</div>
+	</div>
+
+</block>
+<block name="jiazaijs">
+	<script src="__JS__/bootbox.min.js"></script>
+<script src="__JS__/jquery.gritter.min.js"></script>
+</block>
+<block name="script">
+
+<script type="text/javascript">
+$(function(){
+		$('.delliuyan').click(function(){
+					var id=$(this).attr('sid');
+					bootbox.confirm("确定要删除么?", function(result){
+						if(result) {
+							$.post("{:U('del')}",{'id':id,'ajax':1,'type':'liuyan'},success,'json');
+							function success(data){
+								if (data.status) {
+									$.gritter.add({
+										// (string | mandatory) the heading of the notification
+										title: '提交成功',
+										// (string | mandatory) the text inside the notification
+										text: data.info,
+										class_name: 'gritter-success gritter-light'
+									});
+									setTimeout(jumpu(data.url),1000);
+								}else{
+									$.gritter.add({
+										title: '提交失败',
+										text: data.info,
+										class_name: 'gritter-error gritter-light'
+									});
+								};
+							}
+						}
+					})
+					
+				})
+	$('.qxreply').click(function(){
+		$(this).parent('.reply').hide();
+	})
+	$('.replymsg').click(function(){
+		$(this).parents('td').next('td').find('.reply').show();
+	})
+	$('.tjreply').click(function(){
+		var reply=$(this).prev('.replyarea').val();
+		var rid=$(this).prev('.replyarea').attr('rid');
+		$.post('{:U("reply")}',{'reply':reply,'id':rid},succes,'json');
+		function succes(data){
+			if (data.status) {
+				$.gritter.add({
+										// (string | mandatory) the heading of the notification
+										title: '提交成功',
+										// (string | mandatory) the text inside the notification
+										text: data.info,
+										class_name: 'gritter-success gritter-light'
+									});
+									setTimeout('location.reload()',1000);
+			}else{
+				$.gritter.add({
+										// (string | mandatory) the heading of the notification
+										title: '提交失败',
+										// (string | mandatory) the text inside the notification
+										text: data.info,
+										class_name: 'gritter-success gritter-light'
+									});
+			};
+		}
+	})
+})
+function jumpu(uri){
+    		window.location.href=uri;
+    	}
+</script>
+</block>

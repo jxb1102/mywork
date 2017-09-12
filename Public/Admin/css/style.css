@@ -1,0 +1,4 @@
+.page{height: 30px;padding: 10px 0;float: right;}
+.page span,.page a{display: inline-block;border: 1px solid #ccc;float: left;margin-right: -1px;height: 30px;width: 30px;line-height: 30px;text-align: center;background: #fafafa;color: #428bca;text-decoration: none;position: relative;}
+.page .rows{width: auto;padding: 0 10px;}
+.page .current{background: #6FAED9;color: #fff;border: 1px solid #6FAED9;z-index: 10;}

@@ -1,0 +1,119 @@
+<include file="Public:header" />
+<div class="middle" style="padding:30px 0;">
+  <div class="column1200">
+            <div id="t_left">
+                <h2>
+                    {:L('gusuan2')}</h2>
+                    <form method="post" action="{:U('Cate/gusuan')}">
+                <table>
+                    <tr>
+                        <td>
+                            {:L('zunjing')}
+                            <select class="t_select" id="utype" name="utype">
+                             <option value="">{:L('xuandj')}</option>
+                                <volist name="userlist" id="vu">
+                                   <option value="{$vu.id}">{$vu.name}</option>
+                                </volist>
+                            </select><div class="tip" style="color:#2eb8d7;">{:L('youhui')}</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {:L('shangfei')}：<br />
+                            <input id="money" name="money" class="t_input" />(元)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {:L('yjzhong')}：<br />
+                            <input id="weight" name="weight" class="t_input" />(kg)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {:L('xuandi')}：<br />
+                            <select class="t_select" id="areaid" name="areaid">
+                                <option value="">==请选择收货所在地==</option>
+                                  <volist name="statelist" id="vs">
+                                    <option value="{$vs.id}" >{$vs.name}</option>
+                                  </volist>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input value="提交查询" id="chafeiyong" type="submit" style="width:100px;height:30px;line-height:30px;background:#C30D24;color:#FFF;text-align:center;border-radius:3px;border:none;display:block;">
+                        </td>
+                    </tr>
+                </table>
+            </form>
+                   </div>
+        <if condition="$dinfo neq ''">
+            
+                <div id="t_right">
+                    <h2>{:L('gsjieguo')}</h2>
+                    <style>
+                     .ta01{text-align: center; font-size: 14px; line-height: 25px;width: 100%;border-top: 1px solid #dfdfdf;border-left: 1px solid #dfdfdf;}
+                     .ta01 td{border-right: 1px solid #dfdfdf;border-bottom: 1px solid #dfdfdf;}
+                     .ta01 th{border-right: 1px solid #dfdfdf;border-bottom: 1px solid #dfdfdf;  background: #ebebeb;height: 30px;}
+                    </style>
+                    <table class="ta01" cellpadding="0"cellspacing="0">
+                        <tr>
+                            <th>{:L('ysfangshi')}</th>
+                            <th>{:L('gsprice')}</th>
+                            <th>{:L('fuwufei')}</th>
+                            <th>{:L('baoguanfei')}</th>
+                            <th>{:L('caozuofei')}</th>
+                            <th>{:L('guojiyunfei')}</th>
+                            <th>{:L('zong')}</th>
+                        </tr>
+                    <volist name="dinfo" id="vd">
+                        <tr>
+                            <td >{$vd.dname}</td>
+                            <td>￥:{$vd.money}</td>
+                            <td>￥:{$vd.fwmoney}</td>
+                            <td>￥:{$vd.baoguan_fee}</td>
+                            <td>￥:{$vd.ranyou_fee}</td>
+                            <td>￥:{$vd.yunmoney}</td>
+                            <td style="color:red;">￥:{$vd.zongmoney}</td>
+                        </tr>
+                    </volist>
+                    </table>  
+                </div>
+        <else />
+            <div id="t_right">
+            <img src="__IMG__/rightbg.jpg" style="no-repeat;" >
+            <!-- <iframe name="kuaidi100" src="http://baidu.kuaidi100.com/index2.html" width="540" height="417" marginwidth="0" marginheight="0" hspace="0" vspace="0" frameborder="0" scrolling="no"></iframe> -->
+             
+            </div>
+        </if>
+
+    
+  </div>
+</div>
+<script>
+    $('#chafeiyong').click(function(){
+
+        var utype=$('#utype').val();
+        var weight=$('#weight').val();
+        var money=$('#money').val();
+        var areaid=$('#areaid').val();
+        if(utype==0){
+            alert('请选择会员等级');
+            return false;
+        }
+        if(money<=0){
+            alert('请填写正确的商品价值');
+            return false;
+        }
+        if(weight<=0){
+            alert('请填写正确的重量');
+            return false;
+        }
+        if(areaid==0){
+            alert('请选择收货地址');
+            return false;
+        }
+    })
+</script>
+<include file="Public:footer" />

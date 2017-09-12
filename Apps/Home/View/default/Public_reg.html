@@ -1,0 +1,89 @@
+<include file="Public:header" />
+<div style="clear:both;"></div>
+	<div class="lgs-main" style="margin 0 auto;">
+	<div class="lgs-loginbox">
+		<div class="loginform" style="margin-top:-10px;">
+			<div class="formbg"></div>
+			<div class="formlist" style="padding-top: 20px;">
+				<span class="formtitle formtitlebg">{:L('reg')}</span>
+				<span class="formtitle formtitlebg2"><a href="/">{:L('login')}</a></span>
+				<div style="height:10px;"></div>
+				<form id="join" method="post" action="{:U('Public/register')}">
+					<input type="text" name="username" id="username" value="" class="required"  placeholder="{:L('username')}" />
+					<div style="height:5px;"></div>
+					<input type="text" name="mobile" id="mobile" value="" class="required" maxlength="11"  placeholder="手机号 *">
+					<!-- <div style="height:5px;"></div>
+					<input type="text" name="code" id="code" value="" class="required" minlength="4" maxlength="20"  placeholder="{:L('emailyzm')}" style="width:140px;">&nbsp;&nbsp;<input type="button" value="获取邮箱验证码" id="send" onclick="time(this)">
+					<div style="height:5px;"></div> -->
+					 <div style="height:5px;"></div>
+					<input type="password" name="password" id="password" value="" class="required" minlength="6" maxlength="12" placeholder="{:L('password')} *">
+					<div style="height:5px;"></div>
+					<input type="password" name="repassword" id="repassword" value="" class="required" minlength="6" maxlength="12" placeholder="{:L('re_password')} *">
+					<div style="height:5px;"></div>
+					<!-- <span style="font-size: 16px;color: #333;">{:L('yzm')}：&nbsp;</span><img src="{:U('Public/verify')}" title="看不清点我刷新" onclick="this.src=this.src+'?'+Math.random()" id="scode"/>&nbsp;&nbsp;<input type="text" name="verify" id="verify" value="" class="required" maxlength="6" placeholder="{:L('yzm')}" style="width:88px;"> -->
+					<span style="float:left;font-size: 16px;color: #333;">{:L('yzm')}：&nbsp;</span><img src="{:U('Public/verify')}" title="看不清点我刷新" onclick="this.src=this.src+'?'+Math.random()" style="float:left;" id="scode"/>&nbsp;&nbsp;<input type="text" name="verify" id="verify" value="" class="required" maxlength="6" placeholder="{:L('yzm')}" style="width:88px;">
+					<div style="height:5px;"></div>
+					<input type="checkbox" id="checked" checked="checked"> &nbsp;<span style="color:red;">我已阅读并同意<a href="{:U('Cate/lists','id=33')}" style="color:red;">《ProcurementChina注册协议》</a></span>
+					<div style="height:5px;"></div>
+					<input type="hidden" id="id" value="" name="id">
+					<button type="submit" class="loginbtn" style="background: green"id="submit">{:L('reg')}</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<div style="clear:both;"></div>
+<include file="Public:footer" />
+	<script type="text/javascript">
+		$(function(){
+			$('#send').click(function(){
+				var regemail=/^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+				var email=$('#email').val();
+				if(email==""){alert('请先填写邮箱'); return false;}
+				if(!regemail.test(email)){
+                   alert("请输入有效的邮箱地址");
+                   return false;
+                }
+				$.post("/Public/sendcode",{email:email},function(data){
+					if(data.status==0){
+						alert(data.info); 
+					}else{
+						$('#id').val(data.id); 
+					}
+				},"json")
+			})
+            	
+				$('form#join').submit(function(){
+					if ($("input[type='checkbox']").is(':checked')==false)
+                {
+		            alert("必须同意服务条款才能注册！"); 
+		            return  false; 
+                }
+            	// var code=$("#code").val();
+            	// if(code==""){
+            	// 	alert('邮箱验证码必填！');
+            	// 	return false;
+            	// }
+            	var verify=$("#verify").val();
+            	if(verify==""){
+            		alert('验证码必须填写');
+            		return false;
+            	}
+				var self = $(this);
+				var load=$.thinkbox.loading('注册中...');
+				$.post(self.attr("action"), self.serialize(), success, "json");
+				return false;
+				function success(data){
+					if (data.status) {
+						$.thinkbox.success(data.info);
+						load.hide();
+						setTimeout(jumpurl(data.url),3000);
+					}else{
+						load.hide();
+						$.thinkbox.error(data.info);
+						$('#scode').click();
+					};
+					}
+				})
+		})
+	</script>

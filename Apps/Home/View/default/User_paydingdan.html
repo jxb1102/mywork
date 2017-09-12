@@ -1,0 +1,213 @@
+<extend name="default/Public/user"/>
+<block name="user-right">
+	<div class="user-right">
+		<div class="user-head">
+			<h2>{:L('order_pay')}</h2>
+		</div>
+		<div style="padding:10px;">
+			
+			<table class="yubao-add yubao-list" cellpadding="0" cellspacing="0" style="line-height: 25px;">
+						<tr>
+							<th colspan="4">{:L('order_info')}</th>
+						</tr>
+						<tr>
+							<td>{:L('order_num')}：</td>
+							<td>{$ddinfo.sn}</td>
+							<td>{:L('add_time')}：</td>
+							<td>{$ddinfo.addtime|date="Y-m-d",###}</td>
+						</tr>
+						<tr>
+							<td>{:L('delivery_info')}：</td>
+							<td colspan="3">{$ddinfo.consignee}({$ddinfo.tel}) &nbsp; {$ddinfo.areaname} {$ddinfo.address}({$ddinfo.zipcode})</td>
+						</tr>
+						<input type="hidden" value="{$ddinfo.id}" id="yid">
+			</table>
+			<div class="blank"></div>
+			<table class="yubao-add yubao-list" cellpadding="0" cellspacing="0" style="line-height: 25px;">
+						<tr>
+							<th colspan="6" style="text-align: left;padding: 0 20px;">{:L('parcel_list')}</th>
+						</tr>
+						<tr>
+							<th width="30">{:L('check')}</th>
+							<th>{:L('guoji_delivery_num')}</th>
+							<th width="80">{:L('weight')}</th>
+							<th width="80">{:L('index_volume')}</th>
+							<th>{:L('remark')}</th>
+							<th width="80">{:L('freight')}{:C('MAIN_COIN')}</th>
+						</tr>
+						<volist name="bglist" id="v">
+						<tr>
+							<td align="center">
+								<eq name="v.haspay" value="1">{:L('has_pay')}
+									<else/>
+									<eq name="v.status" value="9">{:L('withholding')}
+										<else />
+									<input type="checkbox" name="bgid[]" value="{$v.id}" checked>
+									</eq>
+								</eq>
+							</td>
+							<td>{$v.bgsn}</td>
+							<td>{$v.weight} Kg</td>
+							<td>{$v.voweight}</td>
+							<td>{$v.remark}</td>
+							<td align="right"><b style="color:red; font-size:16px;" class="freight">{$v.freight}</b></td>
+						</tr>
+					</volist>
+			</table>
+			<div class="blank"></div>
+			<div style="border: 1px solid #dfdfdf;padding: 10px;font-size: 14px;text-align: right;line-height: 30px;">
+				<if condition="$baomoney neq ''">
+				保险费用：<span style="font-size:20px; font-weight:600;dispaly:inline-block;" id="baomoney">{$baomoney}</span>&nbsp;{:C('MAIN_COIN')}<br>
+				<else /> 保险费用：<span style="font-size:20px; font-weight:600;dispaly:inline-block;" id="baomoney">0</span>&nbsp;{:C('MAIN_COIN')}<br></if>
+				积分抵现：<input type="radio" value="0" checked name="huascore" id="no">否&nbsp;<input type="radio" value="1" name="huascore" id="yes">是<br>
+				您将使用&nbsp;<span style="font-size:20px; font-weight:600;dispaly:inline-block;" id="score"></span>&nbsp;积分抵:<span style="font-size:20px; font-weight:600;dispaly:inline-block;" id="huascore">&nbsp;</span>&nbsp;{:C('MAIN_COIN')}<br>
+				{:L('need_to_pay')}
+				<span id="allfreight" style="font-size: 20px;font-weight: bold;display: inline-block;padding: 0 5px;"></span>
+				{:C('MAIN_COIN')}
+				<br>			
+				{:L('your_balance')}：{$money} ({:C('MAIN_COIN')}) &nbsp; <!-- {:L('credit')}：{$user.xinyong} {:C('MAIN_COIN')} -->
+				<div class="blank"></div>
+				<div style="width:200px;float: right;line-height: 20px;">
+					<a href="{:U('User/chongzhi')}" target="_blank" class="btnqd" id="quchongzhi">{:L('recharge')}</a>
+					<a href="javascript:;" class="btnqd" style="background:#2CDE98;border: 1px solid #2CDE98;" id="querenzhifu">{:L('confirm_pay')}</a>
+				</div>
+				<div class="blank"></div>
+				<div style="border:1px #ddd solid; width:200px; float:right; line-height:20px;">
+					<input type="radio" value="0" name="xuanzhi" checked class="zzz" id="alpay"> 支付宝
+					<input type="radio" value="1" name="xuanzhi" class="zzz" id="paypal"> Paypal<br>
+					<a  target="_blank" class="btnqd" id="zhifu">直接支付</a>
+				</div>
+				<div style="clear:both;"></div>
+				<input type="hidden" value="{$pingzheng}" id="pingzheng">
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+	$(function(){
+		var allfreight=0;
+		$('#huascore').html(0);
+		$('#score').html(0);
+		$('#yes').click(function(){
+			$.post("{:U('User/getscore')}",function(data){
+				$('#score').html(data.score);
+                $('#huascore').html(data.huascore);
+		        allfreight=parseFloat(allfreight)-parseFloat($('#huascore').html());
+		        $('#allfreight').html(allfreight.toFixed(2));
+		        $('.zzz:checked').click(); 
+            })
+		})
+		$('#no').click(function(){
+			$('#score').html(0);
+			$.post("{:U('User/getscore')}",function(data){
+                var huascore=data.huascore;
+		        allfreight+=parseFloat(huascore);
+		        $('#allfreight').html(allfreight.toFixed(2));
+		        $('.zzz:checked').click(); 
+            })
+			$('#huascore').html(0);
+		})
+		if($('#baomoney').html()!==''){
+				allfreight+=parseFloat($('#baomoney').html());
+	    }
+		 $('input[name="bgid[]"]:checked').each(function(){
+		 	frei=$(this).parents('tr').find('.freight').html();
+		 	allfreight+=parseFloat(frei);
+		 })
+		 $('#allfreight').html(allfreight.toFixed(2));
+		
+		if (allfreight.toFixed(2)<=<?php echo $money+$xinyong ?>) {
+			$('#querenzhifu').show();
+			$('#quchongzhi').hide();
+		}else{
+			$('#querenzhifu').hide();
+			$('#quchongzhi').show();
+		};
+		if (allfreight.toFixed(2)<=0.00) {
+			$('#querenzhifu').hide();
+			$('#quchongzhi').hide();
+		};
+		$('input[name="bgid[]"]').click(function(){
+			if ($(this).prop('checked')) {
+				frei=$(this).parents('tr').find('.freight').html();
+				yunfei=parseFloat(frei)+parseFloat($('#allfreight').html());
+				$('#allfreight').html(yunfei.toFixed(2));
+				if (yunfei.toFixed(2)<=<?php echo $money+$xinyong ?>) {
+
+					if (yunfei.toFixed(2)<=0.00) {
+						$('#querenzhifu').hide();
+						$('#quchongzhi').hide();
+					}else{
+						$('#querenzhifu').show();
+						$('#quchongzhi').hide();
+					};
+					
+				}else{
+					$('#querenzhifu').hide();
+					$('#quchongzhi').show();
+				};
+			}else{
+				frei=$(this).parents('tr').find('.freight').html();
+				yunfei=parseFloat($('#allfreight').html())-parseFloat(frei);
+				$('#allfreight').html(yunfei.toFixed(2));
+				if (yunfei.toFixed(2)<=<?php echo $money+$xinyong ?>) {
+					if (yunfei.toFixed(2)<=0.00) {
+						$('#querenzhifu').hide();
+						$('#quchongzhi').hide();
+					}else{
+						$('#querenzhifu').show();
+						$('#quchongzhi').hide();
+					};
+				}else{
+					$('#querenzhifu').hide();
+					$('#quchongzhi').show();
+				};
+			};
+		})
+	$('#querenzhifu').click(function(){
+		var ddid=<?php echo $ddinfo['id'] ?>;
+		var bgid="";
+		var baomoney=$('#baomoney').html();
+		var score=$('#score').html();
+		$('input[name="bgid[]"]:checked').each(function(){
+			bgid+=$(this).val()+',';
+		})
+		$.post("{:U('User/paydingdanadd')}",{'ddid':ddid,'bgid':bgid,'baomoney':baomoney,'score':score},function(data){
+			if (data.status) {
+				$.thinkbox.success(data.info);
+				setTimeout(jumpurl(data.url),1500);
+			}else{
+				$.thinkbox.error(data.info);
+			};
+		})
+	})
+	var yid='';
+	var price=$('#allfreight').html();
+	$('input[name="bgid[]"]:checked').each(function(){
+			yid+=$(this).val()+',';
+		})
+	var yp=price+'&oid='+yid;
+	$('#zhifu').attr('href',"{:U('User/zjpay')}?price="+yp);
+	$('#alpay').click(function(){
+		price=$('#allfreight').html();
+		var yp=price+'&oid='+yid;
+		$('#zhifu').attr('href','{:U("User/zjpay")}?price='+yp);
+	})
+	var pz=$('#pingzheng').val();
+	var huilv=<?php echo C('MAIN_USD_HUILV')?>;
+	$('#paypal').click(function(){
+		price=$('#allfreight').html();
+		var yp=price+'&oid='+yid;
+		if(price>=100*huilv){
+			if(pz>0){
+				$("#zhifu").attr('href','{:U("Pay/paypal3")}?price='+yp);
+			}else{
+				alert('金额大于100美金，请联系客服提交身份证或护照或其他有效证件');
+		        return false;
+			}
+		}else{
+			$("#zhifu").attr('href','{:U("Pay/paypal3")}?price='+yp);
+		}
+	})
+	})
+	</script>
+</block>

@@ -1,0 +1,110 @@
+<extend name="default/Public/user"/>
+<block name="user-right">
+<div class="user-right">
+	<div class="user-head">
+		<h2>{:L('delivery_address_management')}</h2>
+		
+	</div>
+
+	<ul class="user-address">
+		<li class="newadd">
+			<span style="display:block;text-align: center;height: 70px;line-height: 70px;margin: 50px 0;" id="newadd">{:L('add_new_address')}</span>
+			<div class="address-form">
+				<form method="post" action="{:U('User/addressadd')}">
+					<input type="text" name="consignee"  placeholder="{:L('consignee')}">
+					<div class="blank"></div>
+					<input type="text" name="tel"  placeholder="{:L('mobile')}">
+					<div class="blank"></div>
+					<select name="areaid" style="width:100%;">
+						<option value="0">{:L('select_country')}</option>
+						<volist name="state" id="v">
+							<option value="{$v.id}">{$v.name}</option>
+						</volist>
+					</select>
+					<div class="blank"></div>
+					<textarea name="address" placeholder="{:L('city_street')}" style="width: 96%;padding: 2%;"></textarea>
+					<div class="blank"></div>
+					<input type="text" name="zipcode" placeholder="{:L('zipcode')}">
+					<div class="blank"></div>
+					<div style="">
+						<button type="button" class="btnqx">{:L('cancel')}</button>
+						<button type="submit" class="btnqd">{:L('confirm_address')}</button>
+					</div>
+				</form>
+			</div>
+		</li>
+		<volist name="addresslist" id="v">
+		<li class="addresslist">
+			<span style="display:block;border-bottom: 1px solid #dfdfdf;padding-bottom:5px; ">{$v.consignee}</span>
+			<div style="line-height: 25px;padding: 10px 0;">{$v.tel} <br>{$v.areaname}&nbsp;&nbsp;<br> {$v.address} ({$v.zipcode})</div>
+			<div><a href="javascript:;" class="user-btn address-edit">{:L('edit')}</a><a href="###" class="user-btn address-del" did="{$v.id}">{:L('delete')}</a></div>
+			<div class="address-form">
+				<form method="post" action="{:U('User/addressedit')}">
+					<input type="text" name="consignee" value="{$v.consignee}"  placeholder="{:L('consignee')}">
+					<div class="blank"></div>
+					<input type="text" name="tel" value="{$v.tel}" placeholder="{:L('mobile')}">
+					<div class="blank"></div>
+					<select name="areaid" style="width:100%;">
+						<option value="0">{:L('select_country')}</option>
+						<volist name="state" id="s">
+							<option value="{$s.id}" <eq name="s.id" value="$v.areaid">selected</eq>>{$s.name}</option>
+						</volist>
+					</select>
+					<div class="blank"></div>
+					<textarea name="address" placeholder="{:L('city_street')}" style="width: 96%;padding: 2%;">{$v.address}</textarea>
+					<div class="blank"></div>
+					<input type="text" name="zipcode" value="{$v.zipcode}" placeholder="{:L('zipcode')}">
+					<div class="blank"></div>
+					<div style="">
+						<input type="hidden" name="id" value="{$v.id}">
+						<button type="button" class="btnqx">{:L('cancel')}</button>
+						<button type="submit" class="btnqd">{:L('confirm_address')}</button>
+					</div>
+				</form>
+			</div>
+		</li>
+	</volist>
+	</ul>
+
+</div>
+<script type="text/javascript">
+	$(function(){
+		$('#newadd').click(function(){
+			$(this).next().show();
+		})
+		$('.btnqx').click(function(){
+			$(this).parents('.address-form').hide();
+		})
+		$('.address-edit').click(function(){
+			$(this).parent().next().show();
+		})
+		$('.address-del').click(function(){
+			var id=$(this).attr('did');
+			if (confirm('{:L("confirm_del_address")}')) {
+				$.post("{:U('User/addressdel')}",{'id':id},function(data){
+					if (data.status) {
+					$.thinkbox.success(data.info);
+					setTimeout(jumpurl(data.url),1500);
+				}else{
+					$.thinkbox.error(data.info);
+				};
+				});
+			};
+			
+		})
+		$('form').submit(function(){
+			var self = $(this);
+				$.post(self.attr("action"), self.serialize(), success, "json");
+				return false;
+				function success(data){
+					if (data.status) {
+						$.thinkbox.success(data.info);
+						setTimeout(jumpurl(data.url),1500);
+					}else{
+						$.thinkbox.error(data.info);
+					};
+				}
+		})
+	})
+</script>
+</block>

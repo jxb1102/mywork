@@ -1,0 +1,674 @@
+<extend name="default/Public/user"/>
+<block name="user-right">
+	<link rel="stylesheet" type="text/css" href="__JS__/uploadify-v3.1/uploadify.css" media="all">
+<script type="text/javascript" src="__JS__/uploadify-v3.1/jquery.uploadify.min.js"></script>
+<script type="text/javascript">
+var PanliFee={"paypal":[{"r":0,"f":<?php echo C('SUN')?>,"b":<?php echo C('MEIYUAN')?>}],"aliPayLocal":[{"r":0,"f":0,"b":0}],"aliPayInter":[{"r":0,"f":0.03,"b":0}],"ipsLocal":[{"r":0,"f":0,"b":0}],"ipsInternational":[{"r":0,"f":0.03,"b":0}],"tenpay":[{"r":0,"f":0.03,"b":0}]};
+</script>
+<div class="user-right" style="border:none;">
+	<div class="user-chongzhi">
+		 <b>{:L('szchongzhi')}</b><br />
+         1、{:L('site1')}<br />
+         2、{:L('site2')}<br />
+         3、{:L('site3')}
+
+	</div>
+	<div id="mainPanel">
+	<div class="fashion">
+            <h2>
+                {:L('fangshi')}<span>({:L('kyyue')}：<b>￥{$yumoney['money']}</b>)</span></h2>
+
+            
+            <ul class="optional" style="clear: both;">
+                <li class="on"><a class="p1" href="javascript:;" onclick="selectPay(this,'PayPalPay')"></a>
+                </li>
+                <li><a class="p2" href="javascript:;" onclick="selectPay(this,'DomesticPay')">
+                </a></li>
+                <li><a class="p3" href="javascript:;" onclick="selectPay(this,'offlinePay')"></a>
+                </li>
+                <li><a class="p4" href="javascript:;" onclick="selectPay(this,'overseaPay')"></a>
+                </li>
+            </ul>
+            <div class="box" id="PayPalPay">
+                <div class="point">
+                    {:L('wxtishi')}
+                </div>
+                <h3>
+                    {:L('miane')}</h3>
+                <ul class="edu">
+                    <li>
+                        <label>
+                            <input checked="checked" name="PayPalPrice" type="radio" value="10.00" onclick="paypal.SP(this);" />$10.00</label></li>
+                    <li>
+                        <label>
+                            <input name="PayPalPrice" type="radio" value="20.00" onclick="paypal.SP(this);" />$20.00</label></li>
+                    <li>
+                        <label>
+                            <input name="PayPalPrice" type="radio" value="50.00" onclick="paypal.SP(this);" />$50.00</label></li>
+                    <li>
+                        <label>
+                            <input name="PayPalPrice" type="radio" value="100.00" onclick="paypal.SP(this);" />$100.00</label></li>
+                    <li>
+                        <label>
+                            <input name="PayPalPrice" type="radio" value="200.00" onclick="paypal.SP(this);" />$200.00</label></li>
+                    <li>
+                        <label>
+                            <input name="PayPalPrice" type="radio" value="500.00" onclick="paypal.SP(this);" />$500.00</label></li>
+                    <li>
+                        <label>
+                            <input name="PayPalPrice" type="radio" value="0.00" id="ppOther" onclick="paypal.SP(this);" />{:L('qita')}:$</label><input
+                                class="number" maxlength="15" id="ppomoney" disabled="disabled" type="text" value=""
+                                onkeyup="value=value.replace(/[^\d\.]/g,'');setmoney('ppOther','ppomoney');paypal.sum($('#ppOther')[0]);" /></li>
+                </ul>
+                <dl class="jiesuan">
+                    <dt>{:L('duisun')}：<span id="PaypalFee"></span></dt>
+                    <dt>{:L('danghuilv')}：<span>{:C('main_usd_huilv')}</span></dt>
+                    <dd>
+                        <span id="dollar">$0.00</span>{:L('zhehou')}<b id="ppRMB">0元</b></dd>
+                </dl>
+                <div class="next_01">
+                    <input type="button"  onclick="paypal.submit();return false;" onmouseover="this.className='by'"
+                        onmouseout="this.className=''" value="{:L('gochongzhi')}" />
+                </div>
+                <input type="hidden" value="{$ziliao}" id="pz">
+                <div class="paypal">
+                    <div class="p_logo">
+                        <img src="/Public/Home/default/images/paypal.gif"
+                            alt="paypal" /></div>
+                    <dl>
+                        <dt><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_display-approved-signup-countries-outside"
+                            target="_blank">了解Paypal</a></dt>
+                        <dd>
+                            {:L('paypal')}</dd>
+                    </dl>
+                </div>
+                
+            </div>
+             <div class="box" id="DomesticPay" style="display: none">
+                <div class="point fg">
+                    {:L('wenti')}
+                </div>
+                <h3>
+                    {:L('miane')} 
+                </h3>
+                <ul class="edu">
+                    <li>
+                        <label>
+                            <input checked="checked" name="dpPrice" type="radio" value="50.00" onclick="china.SP(this)" />￥50.00</label></li>
+                    <li>
+                        <label>
+                            <input name="dpPrice" type="radio" value="100.00" onclick="china.SP(this)" />￥100.00</label></li>
+                    <li>
+                        <label>
+                            <input name="dpPrice" type="radio" value="200.00" onclick="china.SP(this)" />￥200.00</label></li>
+                    <li>
+                        <label>
+                            <input name="dpPrice" type="radio" value="500.00" onclick="china.SP(this)" />￥500.00</label></li>
+                    <li>
+                        <label>
+                            <input name="dpPrice" type="radio" value="1000.00" onclick="china.SP(this)" />￥1000.00</label></li>
+                    <li>
+                        <label>
+                            <input name="dpPrice" type="radio" value="2000.00" onclick="china.SP(this)" />￥2000.00</label></li>
+                    <li>
+                        <label>
+                            <input name="dpPrice" id="dpOther" type="radio" value="0.00" onclick="china.SP(this)" />{:L('qita')}:￥</label><input
+                                id="dpomoney" disabled="disabled" class="number" maxlength="15" type="text" value=""
+                                onkeyup="value=value.replace(/[^\d\.]/g,'');setmoney('dpOther','dpomoney');china.sum($('#dpOther')[0]);" /></li>
+                </ul>
+                <style>
+                .guowai span{width:200px;  float: left;line-height: 30px;}
+                </style>
+                <div class="guowai">
+                    <ul>
+                        <li onclick="overseaClick($(this),'DomesticPay')">
+                            
+                            <label>
+                                <input name="alipay" type="radio" value="aliPayLocal" checked="checked"/><img src="__IMG__/alipay_1.gif" /></label>
+                        </li><br><br>
+                <div style="clear:both;"></div>
+                <span><input name="alipay" type="radio" value="" /><img src="__IMG__/ICBC_OUT.gif" alt="中国工商银行" /></span>
+                <span><input name="alipay" type="radio" value="" /><img src="__IMG__/CMB_OUT.gif" alt="招商银行" /></span>
+                <span><input name="alipay" type="radio" value="" /><img src="__IMG__/CCB_OUT.gif" alt="中国建设银行" /></span>
+                <span><input name="alipay" type="radio" value="" /><img src="__IMG__/BOC_OUT.gif" alt="中国银行" /></span>
+                <span><input name="alipay" type="radio" value="" /><img src="__IMG__/ABC_OUT.gif" alt="中国农业银行" /></span>
+                <span><input name="alipay" type="radio" value="" /><img src="__IMG__/COMM_OUT.gif" alt="交通银行" /></span>
+                <span><input name="alipay" type="radio" value="" /><img src="__IMG__/SPDB_OUT.gif" alt="浦发银行" /></span>
+                <span><input name="alipay" type="radio" value="" /><img src="__IMG__/GDB_OUT.gif" alt="广东发展银行" /></span>
+                <span><input name="alipay" type="radio" value="" /><img src="__IMG__/CITIC_OUT.gif" alt="中信银行" /></span>
+                <span><input name="alipay" type="radio" value="" /><img src="__IMG__/CEB_OUT.gif" alt="中国光大银行" /></span>
+                <span><input name="alipay" type="radio" value="" /><img src="__IMG__/CIB_OUT.gif" alt="兴业银行" /></span>
+                <span><input name="alipay" type="radio" value="" /><img src="__IMG__/SDB_OUT.gif" alt="深圳发展银行" /></span>
+                <span><input name="alipay" type="radio" value="" /><img src="__IMG__/CMBC_OUT.gif" alt="中国民生银行" /></span>
+                <span><input name="alipay" type="radio" value="" /><img src="__IMG__/HZCB_OUT.gif" alt="杭州银行" /></span>
+                <span><input name="alipay" type="radio" value="" /><img src="__IMG__/SHBANK_OUT.gif" alt="上海银行" /></span>
+                <span><input name="alipay" type="radio" value="" /><img src="__IMG__/NBBANK_OUT.gif" alt="宁波银行" /></span>
+                <span><input name="alipay" type="radio" value="" /><img src="__IMG__/SPABANK_OUT.gif" alt="平安银行" /></span>
+                <span><input name="alipay" type="radio" value="" /><img src="__IMG__/BJRCB_OUT.gif" alt="北京农村高安银行" /></span>
+                <span><input name="alipay" type="radio" value="" /><img src="__IMG__/ENV_ICBC_OUT.gif" alt="中国工商银行" /></span>
+                <span><input name="alipay" type="radio" value="" /><img src="__IMG__/ENV_CCB_OUT.gif" alt="中国建设银行" /></span>
+                <span><input name="alipay" type="radio" value="" /><img src="__IMG__/ENV_SPDB_OUT.gif" alt="浦发银行" /></span>
+                <span><input name="alipay" type="radio" value="" /><img src="__IMG__/ENV_ABC_OUT.gif" alt="中国农业银行" /></span>
+                <span><input name="alipay" type="radio" value="" /><img src="__IMG__/FDB_OUT.gif" alt="富滇银行" /></span>
+                <span><input name="alipay" type="radio" value="" /><img src="__IMG__/PSBC_OUT.gif" alt="中国邮政储蓄银行" /></span>
+                    </ul>
+                </div>
+                <dl class="jiesuan">
+                    
+                    <dd>
+                        {:L('czjin')}<b id="dpRMB">50元</b></dd>
+                </dl>
+                <div class="next_01">
+                    <input onclick="china.submit()" type="button" onmouseover="this.className='by'" onmouseout="this.className=''"
+                        value="前往充值" />
+                </div>
+                <div class="yuan">
+                </div>
+            </div>
+
+            <div class="box" id="offlinePay" style="display: none">
+                <div class="point cc" id="offlinePrompt">
+                    {:L('wxtishi2')}
+                </div>
+                <form class="chongzform" method="post" action="{:U('User/chongzhiadd')}">
+                <div class="hk">
+                    <table>
+                        <tr>
+                            <td class="z">
+                                <b>*</b>{:L('changemail')}：
+                            </td>
+                            <td>
+                                <input class="yx" type="text" id="offlineEmail" value="{$yumoney['email']}" name="email" />
+                                <p>
+                                    ({:L('zhu')})
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="z">
+                                <b>*</b>{:L('cztime')}：
+                            </td>
+                            <td>
+                                <input class="rq Wdate" type="text" id="offlineDate" readonly="readonly" onClick="WdatePicker()" name="huikuantime" />
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="hkx" id="offlinePanel" style="padding-bottom: 5px">
+                    <div class="gn" id="offlineArrow">
+                        &nbsp;
+                    </div>
+                    <div class="hk_b" id="BankTransfer">
+                        <table>
+                            <tr>
+                                <td class="z">
+                                    <b>*</b>{:L('huimoney')}：
+                                </td>
+                                <td>
+                                    <div class="jin">
+                                        <input onkeyup="value=value.replace(/[^\d\.]/g,'')" class="kd amount" type="text"  name="amount"/><!-- <b>￥(人民币)</b> -->
+                                    </div>
+                                    <p>
+                                        {:L('zhu3')}</p>
+                                </td>
+                            <tr>
+                                <td class="z">
+                                    <b>*</b>币种：
+                                </td>
+                                <td>
+                                    <input type="text" class="kd" name="bizhong" />
+                                </td>
+                            </tr>
+                            </tr>
+                            <tr>
+                                <td class="z">
+                                    <b>*</b>{:L('huiyin')}：
+                                </td>
+                                <td>
+                                    <input type="text" class="remittanceBank"name="yhname" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="z">
+                                    <b>*</b>{:L(huiming)}：
+                                </td>
+                                <td>
+                                    <div class="jin">
+                                        <input class="kd fname" type="text" /name="zhname"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="z">
+                                    <b>*</b>{:L('huihang')}：
+                                </td>
+                                <td>
+                                    <input type="text" class="abouchementBank" name="runame" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div> 
+                </div>
+                <div class="tijiao">
+                    <input type="submit"  value="{:L('wuwu')}" onmouseover="this.className='on'"
+                        onmouseout="this.className=''" />
+                </div>
+                </form>
+                
+            </div>
+        </div>
+		</div>
+		<input type="hidden" value="{:C('main_usd_huilv')}" id="exchange" />
+	    <script type="text/javascript">
+        function overseaClick(obj, tab) {
+            obj.find("input")[0].checked = true;
+            switch (tab) {
+                case 'overseaPay':
+                    {
+                        if (obj.find("input")[0].value == "aliPayInter") {
+                            oversea.RechargeMethod = PanliFee.aliPayInter;
+                        } else
+                            if (obj.find("input")[0].value == 'tenpay') {
+                                oversea.RechargeMethod = PanliFee.tenpay;
+                            } else {
+                                oversea.RechargeMethod = PanliFee.ipsInternational;
+                            }
+                        oversea.sum($("#overseaPay input:checked")[0]);
+                        break;
+                    }
+                case 'DomesticPay':
+                    {
+                        if (obj.find("input")[0].value == "aliPayInter") {
+                            china.RechargeMethod = PanliFee.aliPayInter;
+                        } else {
+                            china.RechargeMethod = PanliFee.ipsInternational;
+                        }
+                        china.sum($("#DomesticPay input:checked")[0]);
+                        break;
+                    }
+                default:
+                    break;
+            }
+        }
+        function selectPay(dom, id) {
+            $(".optional li").removeAttr("class");
+            $(".box").hide(); $(dom).parent("li").attr("class", "on"); $("#" + id).show();
+            if (id == "overseaPay") {
+                $("#alipayMaintainTip").show();
+            } else {
+                $("#alipayMaintainTip").hide();
+            }
+        }
+
+        function setmoney(radioID, textID) {
+            document.getElementById(radioID).value = document.getElementById(textID).value || 0.00;
+        }
+
+        //paypal
+        var paypal = {
+            money: document.getElementById("dollar"),
+            exchange: document.getElementById("exchange").value,
+            RMB: document.getElementById("ppRMB"),
+            isOther: function () { if ($("#ppOther")[0].checked) $("#ppomoney").attr("class", "number_").removeAttr("disabled"); else $("#ppomoney").attr("class", "number").attr("disabled", "disabled"); },
+
+            sum: function (dom) {
+                this.money.innerHTML = "$" + dom.value;
+                var temp = 0;
+                if (PanliFee.paypal.length > 1) {
+                    if (PanliFee.paypal[0].r >= dom.value) {
+                        $("#PaypalFee").html(PanliFee.paypal[0].f * 100 + "%" + (PanliFee.paypal[0].b > 0 ? ("+" + PanliFee.paypal[0].b + "美元") : ""));
+                        temp = parseFloat(dom.value) * (1 - PanliFee.paypal[0].f) - PanliFee.paypal[0].b;
+                    }
+                    else {
+                        for (var i = PanliFee.paypal.length - 1; i >= 0; i--) {
+                            if (dom.value >= PanliFee.paypal[0].r) {
+                                $("#PaypalFee").html(PanliFee.paypal[i].f * 100 + "%" + (PanliFee.paypal[i].b > 0 ? ("+" + PanliFee.paypal[i].b + "美元") : ""));
+                                temp = parseFloat(dom.value) * (1 - PanliFee.paypal[i].f) - PanliFee.paypal[i].b;
+                                break;
+                            }
+                        }
+                    }
+                }
+                else {
+                    if (PanliFee.paypal[0].f == 0 && PanliFee.paypal[0].b == 0) {
+                        $("#PaypalFee").html("全免");
+                        temp = parseFloat(dom.value);
+                    }
+                    else {
+                        $("#PaypalFee").html(PanliFee.paypal[0].f * 100 + "%" + (PanliFee.paypal[0].b > 0 ? ("+" + PanliFee.paypal[0].b + "美元") : ""));
+                        temp = parseFloat(dom.value) * (1 - PanliFee.paypal[0].f) - PanliFee.paypal[0].b;
+                    }
+                }
+                var r = (temp * this.exchange);
+                this.RMB.innerHTML = parseFloat((r > 0 ? r : 0.00)).toFixed(2) + "元";
+            },
+
+            SP: function (dom) { if (dom.checked && (this.RMB || (this.RMB = document.getElementById("ppRMB"))) && (this.money || (this.money = document.getElementById("dollar"))) && (dom.value >= 0 || !(this.money.innerHTML = "$0.00"))) this.sum(dom); this.isOther(); },
+            submit: function () {
+                var s = parseFloat($("#PayPalPay input:checked").val());
+                var pz=$('#pz').val();
+                if ($('#ppOther')[0].checked && parseFloat($('#ppOther').val()) < 0.001) {
+                    alert('最小充值金额：10美金');
+                    return false;
+                }
+                if (s >=100){
+                    if(pz>0){
+                       window.open("{:U("Pay/paypal")}?price=" + s);
+                    }else{
+                        alert('金额大于100美金，请联系客服提交身份证或护照或其他有效证件');
+                        return false;
+                    }
+                }else{
+                    window,open("{:U("Pay/paypal")}?price=" + s);
+                }
+                
+            }
+        }
+        //国内卡
+        var china = {
+            RMB: document.getElementById("dpRMB"),
+            isOther: function () { if ($("#dpOther")[0].checked) $("#dpomoney").attr("class", "number_").removeAttr("disabled"); else $("#dpomoney").attr("class", "number").attr("disabled", "disabled"); },
+            SP: function (dom) { if (dom.checked && (this.RMB || (this.RMB = document.getElementById("dpRMB")))) this.sum(dom); this.isOther(); },
+
+            sum: function (dom) {
+                var temp = 0;
+                if (PanliFee.ipsLocal.length > 1) {
+                    if (PanliFee.ipsLocal[0].r >= dom.value) {
+                        $("#IpsLocalFee").html(PanliFee.ipsLocal[0].f * 100 + "%" + (PanliFee.ipsLocal[0].b > 0 ? ("+" + PanliFee.ipsLocal[0].b + "元") : ""));
+                        temp = parseFloat(dom.value) * (1 - PanliFee.ipsLocal[0].f) - PanliFee.ipsLocal[0].b;
+                    }
+                    else {
+                        for (var i = PanliFee.ipsLocal.length - 1; i >= 0; i--) {
+                            if (dom.value >= PanliFee.ipsLocal[0].r) {
+                                $("#IpsLocalFee").html(PanliFee.ipsLocal[i].f * 100 + "%" + (PanliFee.ipsLocal[i].b > 0 ? ("+" + PanliFee.ipsLocal[i].b + "元") : ""));
+                                temp = parseFloat(dom.value) * (1 - PanliFee.ipsLocal[i].f) - PanliFee.ipsLocal[i].b;
+                                break;
+                            }
+                        }
+                    }
+                }
+                else {
+                    if (PanliFee.ipsLocal[0].f == 0 && PanliFee.ipsLocal[0].b == 0) {
+                        $("#IpsLocalFee").html("免手续费");
+                        temp = parseFloat(dom.value);
+                    }
+                    else {
+                        $("#IpsLocalFee").html(PanliFee.ipsLocal[0].f * 100 + "%" + (PanliFee.ipsLocal[0].b > 0 ? ("+" + PanliFee.ipsLocal[0].b + "元") : ""));
+                        temp = parseFloat(dom.value) * (1 - PanliFee.ipsLocal[0].f) - PanliFee.ipsLocal[0].b;
+                    }
+                }
+                var r = temp;
+                this.RMB.innerHTML = parseFloat((r > 0 ? r : 0.00)).toFixed(2) + "元";
+            },
+
+            submit: function () {
+                var s = parseFloat($("#DomesticPay input:checked").val());
+                if ($('#dpOther')[0].checked && parseFloat($('#dpOther').val()) < 0.001) {
+                    alert('最小充值金额：50人民币');
+                    return false;
+                } else if ($('#dpOther')[0].checked && parseFloat($('#dpOther').val()) > 2000) {
+                    alert('充值金额须不大于￥2000.00');
+                    return false;
+                }
+                if (s > 0) {
+                        window.open("{:U("User/chongzhi")}?price=" + s);
+                }
+                else
+                    alert("请正确输入要充值的金额");
+            }
+        }
+
+       
+        $(function () {
+            paypal.sum($("#PayPalPay input:checked")[0]);
+            china.sum($("#DomesticPay input:checked")[0]);
+        });
+
+        //初始化日期控件
+        $('#offlineDate').datepick({ maxDate: 0, closeAtTop: false, showDefault: false, showOn: 'focus', buttonImageOnly: false });
+        //线下充值
+        (function () {
+            //IE6确认框跟随滚动
+            if (typeof document.body.style.maxHeight == "undefined") {
+                $('#ConfirmationPanel').css("position", "absolute").css("margin-top", "0px");
+                var divY = (getViewportHeight() - $('#ConfirmationPanel').outerHeight()) / 2;
+                $('#ConfirmationPanel').css("top", (divY + document.documentElement.scrollTop).toString());
+                $(window).scroll(function () { $('#ConfirmationPanel').css("top", divY + document.documentElement.scrollTop + ""); });
+            }
+
+            //3种线下充值选择方法
+            
+            //重置输入框
+            $("#offlineReset").click(function () {
+                $("#offlinePay :text").val('');
+                return false;
+            });
+
+        })();
+    </script>
+	
+	
+
+<div style="clear:both;"></div> 
+    <div class="box" id="overseaPay" style="display: none">
+    <form class="daichongzhi" method="post" action="{:U('User/daichongzhi')}">
+      <div class="hk">
+        <div class="point">
+                    <span>财付通账号：{:C('caifutong')}</span>
+         </div>
+                    <table>
+                        <tr>
+                            <td class="z">
+                                <b>*</b>账号：
+                            </td>
+                            <td>
+                                <input class="yx" type="text" name="zhanghao" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="z">
+                                <b>*</b>充值金额：
+                            </td>
+                            <td>
+                                <input class="yx" type="text" name="amount" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="z">
+                                <b>*</b>备注：
+                            </td>
+                            <td>
+                                <input class="yx" type="text" name="remark" />
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="tijiao">
+                    <input type="submit"  value="提交" onmouseover="this.className='on'"
+                        onmouseout="this.className=''" />
+                </div>
+      </div> 
+    </form>
+</div>
+<div style="clear:both;"></div>
+	<div class="fengenav" id="bank">{:L('bank_list')}</div>
+<ul class="user-address" style="border:1px #dfdfdf solid; border-radius:4px;margin-top:5px;">
+	<volist name="yinhanglist" id="v">
+		<li class="addresslist">
+			<span style="display:block;border-bottom: 1px solid #dfdfdf; ">{:L('bank_name')}：{$v.title}</span>
+			<div style="line-height: 25px;padding: 5px 0;">{:L('account_name')}：{$v.zhname} <br>{:L('account_num')}：{$v.zhanghao}&nbsp;&nbsp;<br> {:L('currency')}：{$v.currency} <br> {:L('remark')}：{$v.remark}</div>
+		</li>
+	</volist>
+	<div style="clear:both;"></div>
+	</ul>
+
+	<div class="blank"></div>
+</div>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+<script type="text/javascript" src="http://lgs821.qiniudn.com/jquery-ui/jquery-ui.js"></script>
+<script type="text/javascript">
+	$(function(){
+		$('.huikuantime').datepicker();
+		$( ".huikuantime" ).datepicker( "option", "dateFormat", "yy-mm-dd");
+		$('#newadd').click(function(){
+			$(this).next().show();
+		})
+		$('.btnqx').click(function(){
+			$(this).parents('.address-form').hide();
+		})
+		$('.address-edit').click(function(){
+			$(this).parent().next().show();
+		})
+		$('.address-del').click(function(){
+			var id=$(this).attr('did');
+			$.post("{:U('User/addressdel')}",{'id':id},delsuccess);
+			return false;
+			function delsuccess(data){
+				if (data.status) {
+					$.thinkbox.success(data.info);
+					setTimeout(jumpurl(data.url),1500);
+				}else{
+					$.thinkbox.error(data.info);
+				};
+			}
+		})
+
+        $('form.chongzform').submit(function(){
+            var self = $(this);
+                $.post(self.attr("action"), self.serialize(), success, "json");
+                return false;
+                function success(data){
+                    if (data.status) {
+                        $.thinkbox.success(data.info);
+                        setTimeout(jumpurl(data.url),1500);
+                    }else{
+                        $.thinkbox.error(data.info);
+                    };
+                }
+        })
+        $('form.daichongzhi').submit(function(){
+            var self = $(this);
+                $.post(self.attr("action"), self.serialize(), success, "json");
+                return false;
+                function success(data){
+                    if (data.status) {
+                        $.thinkbox.success(data.info);
+                        setTimeout(jumpurl(data.url),1500);
+                    }else{
+                        $.thinkbox.error(data.info);
+                    };
+                }
+        })
+
+		$("#pingzheng1").uploadify({
+			'queueSizeLimit' : 1,
+			'removeTimeout' : 0.5,
+			'preventCaching' : true,
+			'multi'    : false,
+			'swf' 			: '__JS__/uploadify-v3.1/uploadify.swf',
+			'uploader' 		: "{:U('User/uploadpingzheng',array('session_id'=>session_id()))}",
+			'buttonText' 	: '<i class="userup-icon"></i>{:L("up_vouchers")}',
+			'width' 		: '258',
+			'height' 		: '30',
+			'fileTypeExts'	: '*.jpg; *.png; *.gif;',
+			'onUploadSuccess' : function(file,data,response){
+				 //var data = $.parseJSON(data);
+				// if(data['status'] == 0){
+				// 	$.thinkbox.error(data['info']);
+				// 	return false;
+				// }
+
+				 $('#img_src1').val(data);
+				$('.uploadify-button-text').css('color','red').html('{:L("up_success")}');
+		     }
+		});
+		$("#pingzheng2").uploadify({
+			'queueSizeLimit' : 1,
+			'removeTimeout' : 0.5,
+			'preventCaching' : true,
+			'multi'    : false,
+			'swf' 			: '__JS__/uploadify-v3.1/uploadify.swf',
+			'uploader' 		: "{:U('User/uploadpingzheng',array('session_id'=>session_id()))}",
+			'buttonText' 	: '<i class="userup-icon"></i>{:L("up_vouchers")}',
+			'width' 		: '258',
+			'height' 		: '30',
+			'fileTypeExts'	: '*.jpg; *.png; *.gif;',
+			'onUploadSuccess' : function(file,data,response){
+				 //var data = $.parseJSON(data);
+				// if(data['status'] == 0){
+				// 	$.thinkbox.error(data['info']);
+				// 	return false;
+				// }
+
+				 $('#img_src2').val(data);
+				$('.uploadify-button-text').css('color','red').html('{:L("up_success")}');
+		     }
+		});
+		$("#pingzheng3").uploadify({
+			'queueSizeLimit' : 1,
+			'removeTimeout' : 0.5,
+			'preventCaching' : true,
+			'multi'    : false,
+			'swf' 			: '__JS__/uploadify-v3.1/uploadify.swf',
+			'uploader' 		: "{:U('User/uploadpingzheng',array('session_id'=>session_id()))}",
+			'buttonText' 	: '<i class="userup-icon"></i>{:L("up_vouchers")}',
+			'width' 		: '258',
+			'height' 		: '30',
+			'fileTypeExts'	: '*.jpg; *.png; *.gif;',
+			'onUploadSuccess' : function(file,data,response){
+				 //var data = $.parseJSON(data);
+				// if(data['status'] == 0){
+				// 	$.thinkbox.error(data['info']);
+				// 	return false;
+				// }
+
+				 $('#img_src3').val(data);
+				$('.uploadify-button-text').css('color','red').html('{:L("up_success")}');
+		     }
+		});
+		$("#pingzheng4").uploadify({
+			'queueSizeLimit' : 1,
+			'removeTimeout' : 0.5,
+			'preventCaching' : true,
+			'multi'    : false,
+			'swf' 			: '__JS__/uploadify-v3.1/uploadify.swf',
+			'uploader' 		: "{:U('User/uploadpingzheng',array('session_id'=>session_id()))}",
+			'buttonText' 	: '<i class="userup-icon"></i>{:L("up_vouchers")}',
+			'width' 		: '258',
+			'height' 		: '30',
+			'fileTypeExts'	: '*.jpg; *.png; *.gif;',
+			'onUploadSuccess' : function(file,data,response){
+				 //var data = $.parseJSON(data);
+				// if(data['status'] == 0){
+				// 	$.thinkbox.error(data['info']);
+				// 	return false;
+				// }
+
+				 $('#img_src4').val(data);
+				$('.uploadify-button-text').css('color','red').html('{:L("up_success")}');
+		     }
+		});
+		$("#pingzheng5").uploadify({
+			'queueSizeLimit' : 1,
+			'removeTimeout' : 0.5,
+			'preventCaching' : true,
+			'multi'    : false,
+			'swf' 			: '__JS__/uploadify-v3.1/uploadify.swf',
+			'uploader' 		: "{:U('User/uploadpingzheng',array('session_id'=>session_id()))}",
+			'buttonText' 	: '<i class="userup-icon"></i>{:L("up_vouchers")}',
+			'width' 		: '258',
+			'height' 		: '30',
+			'fileTypeExts'	: '*.jpg; *.png; *.gif;',
+			'onUploadSuccess' : function(file,data,response){
+				 //var data = $.parseJSON(data);
+				// if(data['status'] == 0){
+				// 	$.thinkbox.error(data['info']);
+				// 	return false;
+				// }
+
+				 $('#img_src5').val(data);
+				$('.uploadify-button-text').css('color','red').html('{:L("up_success")}');
+		     }
+		});
+		
+	})
+</script>
+</block>

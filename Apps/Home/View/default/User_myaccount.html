@@ -1,0 +1,52 @@
+<extend name="default/Public/user"/>
+<block name="user-right">
+<div class="user-right">
+	<div class="user-top">
+		<span class="user-touxiang"><if condition="$user['touxiang'] eq ''"><img src="__IMG__/mr.jpg"><else /> <img src="{$user.touxiang}" height="100" width="100"></if></span>
+		<div class="user-info">
+			<span style="font-size:18px;font-weight: 500;display:block;margin-bottom: 10px;">{$user.xingming} {:L('welcome_ni')}~</span>
+			<span style="display: block;margin-bottom: 10px;">{:L('rank')}：<gt name="user.utype" value="0">{$user.utype|get_usertype}<else/>{$user.score|getusertype}</gt> &nbsp;&nbsp;<a href="{:U('User/setting')}">{:L('setting_user')}</a> &nbsp;&nbsp;<a href="{:U('User/address')}">{:L('delivery_address')}</a> &nbsp;&nbsp; <a href="{:U('User/msg')}">{:L('n_new_msg')} ({$ncount})</a></span>
+			<span style="font-size: 20px;line-height: 40px;color:#FF8D01;">
+				{:L('balance')}：<b>{$user.money}</b> {:C('MAIN_COIN')} &nbsp;<!--  <span style="color:#888;font-size: 14px;">{:L('credit')}：{$user.xinyong} {:C('MAIN_COIN')}</span> -->
+				<a href="{:U('User/chongzhi')}" style="font-size: 16px;background: #ff8d01;padding:5px 10px;border-radius: 5px;color:#fff;display: inline-block;margin-left: 20px;height: 20px;line-height: 20px;">{:L('recharge')}</a>
+			</span>
+		</div>
+
+		<div class="clear"></div>
+	</div>
+	<div class="fengenav">{:L('account_records')}</div>
+	<ul class="user-i-dingdan">
+		<if condition="$list">
+			<li>
+				<table class="record-list" cellpadding="0" cellspacing="0">
+					<tr>
+						<th width="80">{:L('time')}</th>
+						<th width="40">{:L('cate')}</th>
+						<th width="75">{:L('type')}</th>
+						<th>{:L('remark')}</th>
+						<th width="70">{:L('amount')}({:C('MAIN_COIN')})</th>
+						<th width="70">{:L('balance')}({:C('MAIN_COIN')})</th>
+					</tr>
+					<volist name="list" id="v">
+						<tr>
+							<td>{$v.addtime|date="Y-m-d",###}</td>
+							<td><eq name="v.type" value="1">{:L('income')}</eq><eq name="v.type" value="2">{:L('expenditure')}</eq></td>
+							<td>{$v.leixing|getrecordleixing}</td>
+							<td>{$v.remark}</td>
+							<td>{$v.money}</td>
+							<td>{$v.accountmoney}</td>
+						</tr>
+					</volist>
+				</table>
+				<div class="page">{$_page}</div>
+			</li>
+			<else />	
+			<li class="kong">
+				<span style="color:#999;">{:L('no_infos')},&nbsp;</span>
+				<a href="{:U('User/yubaoadd')}">{:L('daiyun_order')}</a>
+				<a href="{:U('User/chongzhi')}">{:L('recharge')}</a>
+			</li>
+		</if>
+	</ul>
+</div>
+</block>
