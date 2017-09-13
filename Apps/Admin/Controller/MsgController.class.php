@@ -34,7 +34,7 @@ class MsgController extends AdminController {
         $reply=I('post.reply');
         $id=I('post.id');
         $msg=M('Msg');
-        $data=array('reply'=>$reply,'reply_time'=>time(),'mid'=>session('user_auth.uid'));
+        $data=array('reply'=>$reply,'reply_time'=>time(),'mid'=>session('user_auth_admin.uid'));
         $msg->where('id='.$id)->setField($data);
         $this->success('回复成功');
     }
@@ -101,7 +101,7 @@ class MsgController extends AdminController {
             'title'=>$title,
             'content'=>$content,
             'uid'=>0,
-            'mid'=>session('user_auth.uid'),
+            'mid'=>session('user_auth_admin.uid'),
             'add_time'=>time(),
         );
         if ($msg->create($data)) {
@@ -131,7 +131,7 @@ class MsgController extends AdminController {
             'title'=>$title,
             'content'=>$content,
             'uid'=>0,
-            'mid'=>session('user_auth.uid'),
+            'mid'=>session('user_auth_admin.uid'),
             'add_time'=>time(),
         );
         if ($msg->create($data)) {
@@ -191,7 +191,7 @@ class MsgController extends AdminController {
             'title'=>$title,
             'content'=>$content,
             'uid'=>0,
-            'mid'=>session('user_auth.uid'),
+            'mid'=>session('user_auth_admin.uid'),
             'add_time'=>time(),
         );
         $user=M('Users');

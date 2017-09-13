@@ -98,7 +98,7 @@ class MemberModel extends Model {
 
     public function logout(){
 
-        session('user_auth', null);
+        session('user_auth_admin', null);
 
         session('user_auth_sign', null);
 

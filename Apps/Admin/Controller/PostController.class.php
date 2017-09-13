@@ -170,8 +170,8 @@ class PostController extends AdminController {
             'cid'=>I('post.cid'),
             'addtime'=>time(),
             'edittime'=>time(),
-            'uid'=>session('user_auth.uid'),
-            'uname'=>session('user_auth.username'),
+            'uid'=>session('user_auth_admin.uid'),
+            'uname'=>session('user_auth_admin.username'),
             'lang'=>$lang,
         );
         if ($data->create($add)) {
@@ -205,8 +205,8 @@ class PostController extends AdminController {
             'content'=>$_POST['content'],
             'cid'=>I('post.cid'),
             'edittime'=>time(),
-            'uid'=>session('user_auth.uid'),
-            'uname'=>session('user_auth.username'),
+            'uid'=>session('user_auth_admin.uid'),
+            'uname'=>session('user_auth_admin.username'),
             'lang'=>$lang,
         );
         if ($data->create($save)) {
