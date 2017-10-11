@@ -138,10 +138,13 @@ class UserController extends UcommonController {
                         $this->error('数据创建失败');
                     }
                 }
-                M('Yundan')->where('id='.$id)->setField('shenbao',$allshenbao);
-                M('YubaoCart')->where('uid='.session('user_auth.uid'))->delete();
-                $this->success('请至订单列表查询包裹最新状态及支付国际运费',U('User/dingdan'));
-            }else{
+                M('Yundan')->where('id=' . $id)->setField('shenbao', $allshenbao);
+                M('YubaoCart')->where('uid=' . session('user_auth.uid'))->delete();
+                $email = 'service@procurementchina.com';
+                $username = session('user_auth.username');
+                send_mail($email, '', '添加预报', '我要预报，用户：' . $username . '', null);
+                $this->success('请至订单列表查询包裹最新状态及支付国际运费', U('User/dingdan'));
+            } else {
                 $this->error('订单添加失败');
             }
         }else{
@@ -553,7 +556,7 @@ class UserController extends UcommonController {
         foreach ($bginfo as $key => $value) {
             $money=M('Users')->where('uid='.session('user_auth.uid'))->getField('money');
             $xinyong=M('Users')->where('uid='.session('user_auth.uid'))->getField('xinyong');
-            if ($money+$xinyong<$value['freight']) {
+            if ($money+$xinyong+$scoremoney<$value['freight']) {
                 $this->error('余额不足以支付您的订单');
             }else{
                 M('Users')->where('uid='.session('user_auth.uid'))->setDec('money',$value['freight']);
